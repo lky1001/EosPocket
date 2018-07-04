@@ -1,8 +1,11 @@
 # EosPocket
 Eos wallet for android.
 
+## Reference
+- https://github.com/plactal/EosCommander
+
 ## Required
-- Android 4.0.3
+- Android 4.3
 
 ## Android error fix
 ```
