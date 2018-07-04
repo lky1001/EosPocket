@@ -1,2 +1,2 @@
 # EosPocket
-Eos wallet for multi platform
+Eos wallet for android.
