@@ -5,7 +5,7 @@ import android.content.Context;
 
 import javax.inject.Singleton;
 
-import app.eospocket.android.eos.app.EosCommanderApp;
+import app.eospocket.android.eos.EosCommanderApp;
 import dagger.Component;
 import io.mithrilcoin.eos.data.EoscDataManager;
 import io.mithrilcoin.eos.data.remote.HostInterceptor;
