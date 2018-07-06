@@ -17,8 +17,9 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
-public class ServiceBuilder {
+class ServiceBuilder {
 
     private static final int CONNECTION_TIMEOUT_IN_SEC = 15;
     private static final int READ_TIMEOUT_IN_SEC = 15;
@@ -52,7 +53,7 @@ public class ServiceBuilder {
 
         RETROFIT_BUILDER.client(okHttpClient);
         RETROFIT_BUILDER.baseUrl(baseUrl);
-        RETROFIT_BUILDER.addConverterFactory(GsonConverterFactory.create());
+        RETROFIT_BUILDER.addConverterFactory(JacksonConverterFactory.create());
         RETROFIT_BUILDER.addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()));
 
         Retrofit retrofit = RETROFIT_BUILDER.build();
