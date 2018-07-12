@@ -2,6 +2,9 @@ package app.eospocket.android.ui.intro;
 
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class IntroPresenter extends BasePresenter<IntroView> {
 
@@ -14,7 +17,17 @@ public class IntroPresenter extends BasePresenter<IntroView> {
 
     @Override
     public void onCreate() {
+        Single.fromCallable(() -> {
+            // todo - check wallet state
+            return true;
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(result -> {
+            mView.startMainActivity();
+        }, e -> {
 
+        });
     }
 
     @Override

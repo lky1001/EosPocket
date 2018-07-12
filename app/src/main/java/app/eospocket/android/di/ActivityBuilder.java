@@ -2,6 +2,8 @@ package app.eospocket.android.di;
 
 import app.eospocket.android.ui.intro.IntroActivity;
 import app.eospocket.android.ui.intro.IntroActivityModule;
+import app.eospocket.android.ui.main.MainActivity;
+import app.eospocket.android.ui.main.MainActivityModule;
 import dagger.Module;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.ContributesAndroidInjector;
@@ -13,4 +15,7 @@ public abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = IntroActivityModule.class)
     abstract IntroActivity bindIntroActivity();
 
+    @PerActivity
+    @ContributesAndroidInjector(modules = MainActivityModule.class)
+    abstract MainActivity bindMainActivity();
 }
