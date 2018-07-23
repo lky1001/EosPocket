@@ -19,7 +19,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-class ServiceBuilder {
+public class ServiceBuilder {
 
     private static final int CONNECTION_TIMEOUT_IN_SEC = 15;
     private static final int READ_TIMEOUT_IN_SEC = 15;

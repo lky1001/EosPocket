@@ -15,8 +15,7 @@ public class IntroPresenter extends BasePresenter<IntroView> {
         this.mEosManager = eosManager;
     }
 
-    @Override
-    public void onCreate() {
+    public void checkWalletExist() {
         Single.fromCallable(() -> {
             // todo - check wallet state
             return true;
@@ -28,6 +27,11 @@ public class IntroPresenter extends BasePresenter<IntroView> {
         }, e -> {
 
         });
+    }
+
+    @Override
+    public void onCreate() {
+
     }
 
     @Override
