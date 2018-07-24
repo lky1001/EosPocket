@@ -4,6 +4,8 @@ import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import java.io.File;
+
 import javax.inject.Singleton;
 
 import app.eospocket.android.common.Constants;
@@ -77,7 +79,9 @@ public abstract class AppModule {
     @Provides
     @Singleton
     static EosWalletManager provideEosWalletManager() {
-        return new EosWalletManager();
+        EosWalletManager eosWalletManager = new EosWalletManager();
+        eosWalletManager.setDir(new File(Constants.DEFAULT_WALLET_DIR));
+        return eosWalletManager;
     }
 
     @Provides

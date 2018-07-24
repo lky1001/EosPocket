@@ -63,7 +63,14 @@ public class IntroActivity extends CommonActivity implements IntroView {
     }
 
     @Override
-    public void startMainActivity() {
-        startActivity(MainActivity.class);
+    public void startLoginActivity() {
+        if (!mIsBackClick && !isFinishing()) {
+        }
+    }
+
+    @Override
+    public void startCreateWalletActivity() {
+        if (!mIsBackClick && !isFinishing()) {
+        }
     }
 }

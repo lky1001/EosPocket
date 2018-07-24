@@ -6,7 +6,7 @@ import android.arch.persistence.room.PrimaryKey;
 
 import java.util.Date;
 
-@Entity( tableName = "eos_network")
+@Entity(tableName = "eos_network")
 public class EosNetwork {
 
     @PrimaryKey(autoGenerate = true)

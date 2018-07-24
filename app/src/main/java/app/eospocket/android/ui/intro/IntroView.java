@@ -4,5 +4,7 @@ import app.eospocket.android.common.mvp.IView;
 
 public interface IntroView extends IView {
 
-    void startMainActivity();
+    void startLoginActivity();
+
+    void startCreateWalletActivity();
 }

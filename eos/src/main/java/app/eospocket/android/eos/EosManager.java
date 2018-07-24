@@ -8,7 +8,10 @@ import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
 import io.mithrilcoin.eos.data.local.repository.EosAccountRepository;
 import io.mithrilcoin.eos.data.local.repository.EosNetworkRepository;
+import io.mithrilcoin.eos.data.remote.model.api.EosChainInfo;
 import io.mithrilcoin.eos.data.wallet.EosWalletManager;
+import io.mithrilcoin.eos.util.Consts;
+import io.reactivex.Single;
 
 /**
  * https://developers.eos.io/eosio-nodeos/reference
@@ -41,5 +44,13 @@ public class EosManager {
         this.mWalletService = walletService;
         this.mEosAccountRepository = eosAccountRepository;
         this.mEosNetworkRepository = eosNetworkRepository;
+    }
+
+    public boolean hasWallet(String walletName) {
+        return mEosWalletManager.walletExists(walletName);
+    }
+
+    public Single<EosChainInfo> getChainInfo() {
+        return mChainService.getInfo();
     }
 }
