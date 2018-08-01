@@ -46,8 +46,8 @@ public class EosManager {
         this.mEosNetworkRepository = eosNetworkRepository;
     }
 
-    public boolean hasWallet(String walletName) {
-        return mEosWalletManager.walletExists(walletName);
+    public Single<Boolean> hasWallet(String walletName) {
+        return Single.fromCallable(() -> mEosWalletManager.walletExists(walletName));
     }
 
     public Single<EosChainInfo> getChainInfo() {

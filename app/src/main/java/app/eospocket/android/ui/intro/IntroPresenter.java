@@ -3,7 +3,6 @@ package app.eospocket.android.ui.intro;
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
 import io.mithrilcoin.eos.util.Consts;
-import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -17,18 +16,18 @@ public class IntroPresenter extends BasePresenter<IntroView> {
     }
 
     public void checkWalletExist() {
-        Single.fromCallable(() -> mEosManager.hasWallet(Consts.DEFAULT_WALLET_NAME))
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(result -> {
-            if (result) {
-                mView.startLoginActivity();
-            } else {
-                mView.startCreateWalletActivity();
-            }
-        }, e -> {
-            // todo - error
-        });
+        mEosManager.hasWallet(Consts.DEFAULT_WALLET_NAME)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(result -> {
+                if (result) {
+                    mView.startLoginActivity();
+                } else {
+                    mView.startCreateWalletActivity();
+                }
+            }, e -> {
+                // todo - error
+            });
     }
 
     @Override
