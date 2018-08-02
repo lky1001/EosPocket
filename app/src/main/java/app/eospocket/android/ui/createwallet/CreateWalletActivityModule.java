@@ -1,7 +1,9 @@
 package app.eospocket.android.ui.createwallet;
 
+import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.eos.EosManager;
-import app.eospocket.android.utils.EncryptUtils;
+import app.eospocket.android.utils.Encryption;
+import app.eospocket.android.utils.KeyStoreUtils;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -14,7 +16,8 @@ public abstract class CreateWalletActivityModule {
 
     @Provides
     static CreateWalletPresenter provideCreateWalletPresenter(CreateWalletView createWalletView,
-            EosManager eosManager, EncryptUtils encryptUtils) {
-        return new CreateWalletPresenter(createWalletView, eosManager, encryptUtils);
+            EosManager eosManager, KeyStoreUtils keyStoreUtils, Encryption encryption,
+            CustomPreference customPreference) {
+        return new CreateWalletPresenter(createWalletView, eosManager, keyStoreUtils, encryption, customPreference);
     }
 }

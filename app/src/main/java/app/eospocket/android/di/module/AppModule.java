@@ -16,7 +16,9 @@ import app.eospocket.android.eos.ServiceBuilder;
 import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
-import app.eospocket.android.utils.EncryptUtils;
+import app.eospocket.android.utils.Encryption;
+import app.eospocket.android.utils.EncryptionImpl;
+import app.eospocket.android.utils.KeyStoreUtils;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -99,7 +101,13 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
-    static EncryptUtils provideEncryptUtils(@ApplicationContext Context context) {
-        return new EncryptUtils(context);
+    static KeyStoreUtils provideKeyStoreUtils(@ApplicationContext Context context) {
+        return new KeyStoreUtils(context);
+    }
+
+    @Provides
+    @Singleton
+    static Encryption provideEncryption() {
+        return new EncryptionImpl();
     }
 }

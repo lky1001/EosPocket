@@ -35,5 +35,6 @@ public class CustomPreference {
 
         public String nodeosHost;
         public int nodeosPort;
+        public String eosWallet;
     }
 }

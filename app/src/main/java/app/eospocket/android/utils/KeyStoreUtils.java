@@ -24,14 +24,14 @@ import javax.inject.Singleton;
 import javax.security.auth.x500.X500Principal;
 
 @Singleton
-public class EncryptUtils {
+public class KeyStoreUtils {
 
     private KeyStore mKeyStore;
 
     private Context mContext;
 
     @Inject
-    public EncryptUtils(Context context) {
+    public KeyStoreUtils(Context context) {
         this.mContext = context;
     }
 

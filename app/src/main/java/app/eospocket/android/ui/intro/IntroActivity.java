@@ -7,20 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.widget.Toast;
-
-import java.security.KeyStoreException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
-import app.eospocket.android.ui.main.MainActivity;
-import app.eospocket.android.utils.EncryptUtils;
 
 public class IntroActivity extends CommonActivity implements IntroView {
 
