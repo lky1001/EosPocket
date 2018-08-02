@@ -16,6 +16,7 @@ import app.eospocket.android.eos.ServiceBuilder;
 import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
+import app.eospocket.android.utils.EncryptUtils;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -94,5 +95,11 @@ public abstract class AppModule {
             EosNetworkRepository eosNetworkRepository) {
         return new EosManager(eosWalletManager, chainService, historyService, walletService,
                 eosAccountRepository, eosNetworkRepository);
+    }
+
+    @Provides
+    @Singleton
+    static EncryptUtils provideEncryptUtils(@ApplicationContext Context context) {
+        return new EncryptUtils(context);
     }
 }

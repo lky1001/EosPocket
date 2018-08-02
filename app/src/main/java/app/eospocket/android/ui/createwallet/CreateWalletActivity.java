@@ -16,7 +16,7 @@ import butterknife.OnClick;
 public class CreateWalletActivity extends CommonActivity implements CreateWalletView {
 
     @Inject
-    private CreateWalletPresenter mCreateWalletPresenter;
+    CreateWalletPresenter mCreateWalletPresenter;
 
     @BindView(R.id.input_password)
     EditText mInputPassword;

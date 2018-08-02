@@ -69,8 +69,6 @@ dependencies {
 
     implementation 'android.arch.core:runtime:1.1.1'
 
-    compile 'com.github.simbiose:Encryption:2.0.1'
-
     // butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'

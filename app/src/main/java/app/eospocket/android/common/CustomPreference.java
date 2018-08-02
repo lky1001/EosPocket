@@ -30,8 +30,6 @@ public class CustomPreference {
         mSharedPreferences = context.getSharedPreferences(CUSTOM_PREFERENCE, Activity.MODE_PRIVATE);
     }
 
-
-
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class EosSettings {
 

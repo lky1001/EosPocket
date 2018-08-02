@@ -1,6 +1,7 @@
 package app.eospocket.android.di;
 
 import app.eospocket.android.ui.createwallet.CreateWalletActivity;
+import app.eospocket.android.ui.createwallet.CreateWalletActivityModule;
 import app.eospocket.android.ui.intro.IntroActivity;
 import app.eospocket.android.ui.intro.IntroActivityModule;
 import app.eospocket.android.ui.main.MainActivity;
@@ -21,6 +22,6 @@ public abstract class ActivityBuilder {
     abstract MainActivity bindMainActivity();
 
     @PerActivity
-    @ContributesAndroidInjector(modules = CreateWalletActivity.class)
+    @ContributesAndroidInjector(modules = CreateWalletActivityModule.class)
     abstract CreateWalletActivity bindCreateWalletActivity();
 }
