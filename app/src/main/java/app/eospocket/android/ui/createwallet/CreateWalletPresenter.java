@@ -1,10 +1,17 @@
 package app.eospocket.android.ui.createwallet;
 
+import android.text.TextUtils;
+import android.util.Log;
+
+import app.eospocket.android.common.Constants;
 import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.utils.Encryption;
 import app.eospocket.android.utils.KeyStoreUtils;
+import io.mithrilcoin.eos.util.Consts;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class CreateWalletPresenter extends BasePresenter<CreateWalletView> {
 
@@ -43,5 +50,27 @@ public class CreateWalletPresenter extends BasePresenter<CreateWalletView> {
     @Override
     public void onDestroy() {
 
+    }
+
+    public void createWallet(String password) {
+        mEosManager.createWallet(Consts.DEFAULT_WALLET_NAME)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(pw -> {
+                    if (!TextUtils.isEmpty(pw)) {
+                        String encryptPassword = mEncryption.encrypt(pw, password);
+                        String enc = mKeyStoreUtils.encryptString(encryptPassword, Constants.KEYSTORE_ALIAS);
+
+                        mCustomPreference.saveEosWallet(enc);
+                    } else {
+                        // todo - error
+                    }
+                }, (e) -> {
+                    if (e instanceof IllegalStateException) {
+                        // todo - wallet exist
+                    } else {
+                        // todo - error msg
+                    }
+                });
     }
 }

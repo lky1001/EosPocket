@@ -3,6 +3,7 @@ package app.eospocket.android.di.module;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.os.Environment;
 
 import java.io.File;
 
@@ -39,7 +40,10 @@ public abstract class AppModule {
     @Provides
     @Singleton
     static CustomPreference provideCustomPreference(@ApplicationContext Context context) {
-        return new CustomPreference(context);
+        CustomPreference customPreference = new CustomPreference(context);
+        customPreference.loadSettings();
+
+        return customPreference;
     }
 
     @Provides
@@ -83,7 +87,7 @@ public abstract class AppModule {
     @Singleton
     static EosWalletManager provideEosWalletManager() {
         EosWalletManager eosWalletManager = new EosWalletManager();
-        eosWalletManager.setDir(new File(Constants.DEFAULT_WALLET_DIR));
+        eosWalletManager.setDir(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Constants.DEFAULT_WALLET_DIR));
         return eosWalletManager;
     }
 
@@ -102,7 +106,10 @@ public abstract class AppModule {
     @Provides
     @Singleton
     static KeyStoreUtils provideKeyStoreUtils(@ApplicationContext Context context) {
-        return new KeyStoreUtils(context);
+        KeyStoreUtils keyStoreUtils = new KeyStoreUtils(context);
+        keyStoreUtils.createNewKeys(Constants.KEYSTORE_ALIAS);
+
+        return keyStoreUtils;
     }
 
     @Provides

@@ -107,7 +107,6 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:enabled="false"
         android:text="@string/create_wallet_text"
         android:background="@color/colorAccent"
         android:textColor="@android:color/white"

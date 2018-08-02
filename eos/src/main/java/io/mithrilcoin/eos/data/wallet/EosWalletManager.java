@@ -110,6 +110,8 @@ public class EosWalletManager {
         String password = genPassword();
         File walletFile = new File( mDir, name + EOS_WALLET_FILE_EXT);
 
+        mDir.mkdir();
+
         if ( walletFile.exists() ) {
             throw new IllegalStateException( String.format("Wallet with name: '%1$s' already exists", name ));
         }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -12,6 +13,7 @@ import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
+import app.eospocket.android.ui.createwallet.CreateWalletActivity;
 
 public class IntroActivity extends CommonActivity implements IntroView {
 
@@ -54,6 +56,17 @@ public class IntroActivity extends CommonActivity implements IntroView {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (checkAllPermissionGranted(grantResults)) {
+            if (requestCode == STORAGE_PERMISSION_REQ) {
+                mIntroPresenter.checkWalletExist();
+            }
+        } else {
+            // todo - explain dialog
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         mIsBackClick = true;
 
@@ -69,6 +82,8 @@ public class IntroActivity extends CommonActivity implements IntroView {
     @Override
     public void startCreateWalletActivity() {
         if (!mIsBackClick && !isFinishing()) {
+            startActivity(CreateWalletActivity.class);
+            finishActivity();
         }
     }
 }

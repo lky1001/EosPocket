@@ -1,5 +1,7 @@
 package app.eospocket.android.eos;
 
+import android.support.annotation.NonNull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -52,5 +54,22 @@ public class EosManager {
 
     public Single<EosChainInfo> getChainInfo() {
         return mChainService.getInfo();
+    }
+
+    public Single<String> createWallet(@NonNull String walletName) {
+        return Single.create(emitter -> {
+            try {
+                String pw = mEosWalletManager.create(walletName);
+
+                if (!emitter.isDisposed()) {
+                    emitter.onSuccess(pw);
+                }
+            } catch (Exception e) {
+                if (!emitter.isDisposed()) {
+                    emitter.onError(e);
+                }
+            }
+        });
+
     }
 }

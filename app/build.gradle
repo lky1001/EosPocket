@@ -52,6 +52,7 @@ dependencies {
     implementation project(':eos')
 
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:animated-vector-drawable:27.1.1'
     implementation 'com.android.support:support-media-compat:27.1.1'
@@ -69,7 +70,7 @@ dependencies {
 
     implementation 'android.arch.core:runtime:1.1.1'
 
-    compile 'com.github.simbiose:Encryption:2.0.1'
+    implementation 'com.github.simbiose:Encryption:2.0.1'
 
     // butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'

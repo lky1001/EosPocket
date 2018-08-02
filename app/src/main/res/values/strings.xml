@@ -3,4 +3,6 @@
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm Password</string>
     <string name="create_wallet_text">Create New Pocket</string>
+
+    <string name="create_wallet_title">Create Wallet</string>
 </resources>
