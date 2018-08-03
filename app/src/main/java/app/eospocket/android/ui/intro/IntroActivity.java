@@ -37,16 +37,7 @@ public class IntroActivity extends CommonActivity implements IntroView {
     private void checkCameraPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    // todo - explain dialog
-                    ActivityCompat.requestPermissions(this,
-                            new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
-                            STORAGE_PERMISSION_REQ);
-                } else {
-                    ActivityCompat.requestPermissions(this,
-                            new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
-                            STORAGE_PERMISSION_REQ);
-                }
+                startCreateWalletActivity();
             } else {
                 mIntroPresenter.checkWalletExist();
             }

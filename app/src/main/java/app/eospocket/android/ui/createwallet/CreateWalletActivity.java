@@ -15,6 +15,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -152,7 +153,19 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
     public void onCreateWalletClick() {
         String password = mInputPassword.getText().toString();
 
-        // check password validation
+        int score = PasswordChecker.calculatePasswordStrength(password);
+
+        if (score < PasswordChecker.STRONG) {
+            Toast.makeText(CreateWalletActivity.this, getString(R.string.error_password_weak), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        boolean isAgree = mAgreeLostPasswordChkBox.isChecked();
+
+        if (!isAgree) {
+            Toast.makeText(CreateWalletActivity.this, getString(R.string.need_all_agree), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         checkCameraPermission();
     }
