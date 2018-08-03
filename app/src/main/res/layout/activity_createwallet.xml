@@ -21,69 +21,78 @@
         android:layout_height="100dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        app:layout_constraintVertical_bias="0.063"
+        app:layout_constraintVertical_bias="0.156"
         app:srcCompat="@drawable/ic_launcher_background" />
 
     <LinearLayout
         android:id="@+id/input_password_layout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="72dp"
+        android:orientation="vertical"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:padding="20sp">
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <com.subhrajyoti.passwordview.PasswordView
+                android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:freezesText="true"
                 android:hint="@string/password_text"
-                android:singleLine="true"
                 android:inputType="textPassword"
-                android:id="@+id/input_password"
-                android:padding="10dp"
-                android:background="@null"/>
+                android:paddingBottom="10dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:indeterminate="false"
                 android:maxHeight="20dip"
                 android:minHeight="20dip"
-                android:layout_weight="1"
-                android:progress="0"/>
+                android:progress="0" />
+
             <TextView
+                android:id="@+id/password_strength"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
                 android:layout_marginLeft="10dp"
-                android:text="Weak"
-                android:id="@+id/password_strength" />
+                android:gravity="center_horizontal"
+                android:text="Weak" />
         </LinearLayout>
+
         <TextView
+            android:id="@+id/login_instructions"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/login_instructions"
             android:text="Your password must be at least 8 characters. With at least 1 number and 1 special character" />
     </LinearLayout>
 
@@ -91,12 +100,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -111,7 +117,8 @@
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="37dp" />
+            android:layout_height="wrap_content"
+            android:text="@string/create_confirm" />
     </LinearLayout>
 
     <Button
@@ -120,17 +127,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/create_wallet_text"
+        android:layout_marginTop="48dp"
         android:background="@color/colorAccent"
+        android:text="@string/create_wallet_text"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.158" />
+        app:layout_constraintVertical_bias="1.0" />
 </android.support.constraint.ConstraintLayout>

@@ -2,7 +2,7 @@
     <string name="app_name">EosPocket</string>
     <string name="password_text">Password</string>
     <string name="confirm_password_text">Confirm Password</string>
-    <string name="create_wallet_text">Create New Pocket</string>
+    <string name="create_wallet_text">Create New Wallet</string>
 
     <string name="create_wallet_title">Create Wallet</string>
 
@@ -10,4 +10,6 @@
     <string name="password_strength_medium">Medium</string>
     <string name="password_strength_strong">Strong</string>
     <string name="password_strength_very_strong">Very Strong</string>
+
+    <string name="create_confirm">I understand that if I forget lose my password I will never be able to access my assets.</string>
 </resources>
