@@ -5,4 +5,9 @@
     <string name="create_wallet_text">Create New Pocket</string>
 
     <string name="create_wallet_title">Create Wallet</string>
+
+    <string name="password_strength_weak">Weak</string>
+    <string name="password_strength_medium">Medium</string>
+    <string name="password_strength_strong">Strong</string>
+    <string name="password_strength_very_strong">Very Strong</string>
 </resources>

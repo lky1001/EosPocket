@@ -8,4 +8,8 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="icons">#ffffff</color>
     <color name="divider">#bdbdbd</color>
+    <color name="password_strength_weak">#ff6363</color>
+    <color name="password_strength_medium">#dcb900</color>
+    <color name="password_strength_strong">#30de33</color>
+    <color name="password_strength_very_strong">#2684ff</color>
 </resources>

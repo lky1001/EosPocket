@@ -5,6 +5,11 @@ import android.support.annotation.NonNull;
 // https://www.javacodeexamples.com/check-password-strength-in-java-example/668
 public class PasswordChecker {
 
+    public static final int WEAK = 0;
+    public static final int MEDIUM = 1;
+    public static final int STRONG = 2;
+    public static final int VERY_STRONG = 3;
+
     public static int calculatePasswordStrength(@NonNull String password) {
 
         //total score of password
@@ -38,7 +43,14 @@ public class PasswordChecker {
             iPasswordScore += 2;
         }
 
-        return iPasswordScore;
-
+        if (iPasswordScore <= 4) {
+            return WEAK;
+        } else if (iPasswordScore <= 6) {
+            return MEDIUM;
+        } else if (iPasswordScore <= 8) {
+            return STRONG;
+        } else {
+            return VERY_STRONG;
+        }
     }
 }

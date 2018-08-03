@@ -60,6 +60,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
 
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+    implementation 'com.github.SubhrajyotiSen:library:1.1.2'
 
     // Dagger dependencies
     implementation 'com.google.dagger:dagger:2.11'

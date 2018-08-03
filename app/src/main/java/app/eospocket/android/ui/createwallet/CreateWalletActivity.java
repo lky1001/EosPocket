@@ -8,14 +8,19 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
+import app.eospocket.android.utils.PasswordChecker;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,11 +38,14 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
     @BindView(R.id.input_password)
     EditText mInputPassword;
 
-    @BindView(R.id.input_confirm_password)
-    EditText mInputConfirmPassword;
-
     @BindView(R.id.agree_lost_password)
     CheckBox mAgreeLostPasswordChkBox;
+
+    @BindView(R.id.progressBar)
+    ProgressBar mPasswordStrengthBar;
+
+    @BindView(R.id.password_strength)
+    TextView mPasswordStrengthView;
 
     @BindView(R.id.btn_create_wallet)
     Button mCreateWalletButton;
@@ -50,6 +58,8 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
         ButterKnife.bind(this);
 
         setTitle(mToolbar, R.string.create_wallet_title);
+
+        mInputPassword.addTextChangedListener(mPasswordWatcher);
 
         mCreateWalletPresenter.onCreate();
     }
@@ -68,10 +78,10 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
                             STORAGE_PERMISSION_REQ);
                 }
             } else {
-
+                createWallet();
             }
         } else {
-
+            createWallet();
         }
     }
 
@@ -79,21 +89,76 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (checkAllPermissionGranted(grantResults)) {
             if (requestCode == STORAGE_PERMISSION_REQ) {
-
+                createWallet();
             }
         } else {
             // todo - explain dialog
         }
     }
 
+    private TextWatcher mPasswordWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String password = s.toString();
+
+            if (TextView.VISIBLE != mPasswordStrengthView.getVisibility()) {
+                return;
+            }
+
+            if (password.isEmpty()) {
+                mPasswordStrengthView.setText("");
+                mPasswordStrengthBar.setProgress(0);
+                return;
+            }
+
+            int score = PasswordChecker.calculatePasswordStrength(password);
+            String strength = getString(R.string.password_strength_weak);
+            int color = ContextCompat.getColor(CreateWalletActivity.this, R.color.password_strength_weak);
+            int progress = 25;
+
+            if (score == PasswordChecker.MEDIUM) {
+                strength = getString(R.string.password_strength_medium);
+                color = ContextCompat.getColor(CreateWalletActivity.this, R.color.password_strength_medium);
+                progress = 50;
+            } else if (score == PasswordChecker.STRONG) {
+                strength = getString(R.string.password_strength_strong);
+                color = ContextCompat.getColor(CreateWalletActivity.this, R.color.password_strength_strong);
+                progress = 75;
+            } else if (score == PasswordChecker.VERY_STRONG) {
+                strength = getString(R.string.password_strength_very_strong);
+                color = ContextCompat.getColor(CreateWalletActivity.this, R.color.password_strength_very_strong);
+                progress = 100;
+            }
+
+            mPasswordStrengthView.setText(strength);
+            mPasswordStrengthView.setTextColor(color);
+
+            mPasswordStrengthBar.getProgressDrawable().setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
+            mPasswordStrengthBar.setProgress(progress);
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
     @OnClick(R.id.btn_create_wallet)
     public void onCreateWalletClick() {
         String password = mInputPassword.getText().toString();
-        String confirmPassword = mInputConfirmPassword.getText().toString();
 
         // check password validation
 
         checkCameraPermission();
+    }
+
+    private void createWallet() {
+        String password = mInputPassword.getText().toString();
 
         mCreateWalletPresenter.createWallet(password);
     }
