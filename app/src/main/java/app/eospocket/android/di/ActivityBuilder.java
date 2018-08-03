@@ -4,6 +4,8 @@ import app.eospocket.android.ui.createwallet.CreateWalletActivity;
 import app.eospocket.android.ui.createwallet.CreateWalletActivityModule;
 import app.eospocket.android.ui.intro.IntroActivity;
 import app.eospocket.android.ui.intro.IntroActivityModule;
+import app.eospocket.android.ui.login.LoginActivity;
+import app.eospocket.android.ui.login.LoginActivityModule;
 import app.eospocket.android.ui.main.MainActivity;
 import app.eospocket.android.ui.main.MainActivityModule;
 import dagger.Module;
@@ -24,4 +26,8 @@ public abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = CreateWalletActivityModule.class)
     abstract CreateWalletActivity bindCreateWalletActivity();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = LoginActivityModule.class)
+    abstract LoginActivity bindLoginActivity();
 }
