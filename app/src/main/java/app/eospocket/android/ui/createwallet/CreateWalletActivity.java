@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
+import app.eospocket.android.ui.main.MainActivity;
 import app.eospocket.android.utils.PasswordChecker;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -151,12 +152,15 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
 
     @OnClick(R.id.btn_create_wallet)
     public void onCreateWalletClick() {
+        mInputPassword.setEnabled(false);
+
         String password = mInputPassword.getText().toString();
 
         int score = PasswordChecker.calculatePasswordStrength(password);
 
         if (score < PasswordChecker.STRONG) {
             Toast.makeText(CreateWalletActivity.this, getString(R.string.error_password_weak), Toast.LENGTH_SHORT).show();
+            mInputPassword.setEnabled(true);
             return;
         }
 
@@ -164,6 +168,7 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
 
         if (!isAgree) {
             Toast.makeText(CreateWalletActivity.this, getString(R.string.need_all_agree), Toast.LENGTH_SHORT).show();
+            mInputPassword.setEnabled(true);
             return;
         }
 
@@ -171,8 +176,42 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
     }
 
     private void createWallet() {
+        showProgressDialog(getString(R.string.loading_msg));
         String password = mInputPassword.getText().toString();
 
         mCreateWalletPresenter.createWallet(password);
+    }
+
+    @Override
+    public void successCreateWallet() {
+        if (isFinishing()) {
+            return;
+        }
+        hideDialog();
+
+        startActivity(MainActivity.class);
+        finishActivity();
+    }
+
+    @Override
+    public void existWallet() {
+        if (isFinishing()) {
+            return;
+        }
+        hideDialog();
+
+        Toast.makeText(CreateWalletActivity.this, getString(R.string.exist_wallet_error), Toast.LENGTH_SHORT).show();
+        mInputPassword.setEnabled(true);
+    }
+
+    @Override
+    public void failCreateWallet() {
+        if (isFinishing()) {
+            return;
+        }
+        hideDialog();
+
+        Toast.makeText(CreateWalletActivity.this, getString(R.string.fail_create_wallet), Toast.LENGTH_SHORT).show();
+        mInputPassword.setEnabled(true);
     }
 }

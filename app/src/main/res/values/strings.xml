@@ -14,4 +14,7 @@
     <string name="create_confirm">I understand that if I forget lose my password I will never be able to access my assets.</string>
     <string name="error_password_weak">Password is weak.</string>
     <string name="need_all_agree">You must agree to the terms of use.</string>
+    <string name="exist_wallet_error">Wallet is already exist. Please restat app.</string>
+    <string name="fail_create_wallet">Failed to create wallet. Please try again.</string>
+    <string name="loading_msg">now loading..</string>
 </resources>

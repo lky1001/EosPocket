@@ -62,14 +62,16 @@ public class CreateWalletPresenter extends BasePresenter<CreateWalletView> {
                         String enc = mKeyStoreUtils.encryptString(encryptPassword, Constants.KEYSTORE_ALIAS);
 
                         mCustomPreference.saveEosWallet(enc);
+
+                        mView.successCreateWallet();
                     } else {
-                        // todo - error
+                        mView.failCreateWallet();
                     }
                 }, (e) -> {
                     if (e instanceof IllegalStateException) {
-                        // todo - wallet exist
+                        mView.existWallet();
                     } else {
-                        // todo - error msg
+                        mView.failCreateWallet();
                     }
                 });
     }
