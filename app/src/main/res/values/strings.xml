@@ -17,4 +17,5 @@
     <string name="exist_wallet_error">Wallet is already exist. Please restat app.</string>
     <string name="fail_create_wallet">Failed to create wallet. Please try again.</string>
     <string name="loading_msg">now loading..</string>
+    <string name="login_text">Login</string>
 </resources>

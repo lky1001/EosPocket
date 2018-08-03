@@ -70,6 +70,10 @@ public class CustomPreference {
         saveSettings();
     }
 
+    public String loadEosWallet() {
+        return mSettings.eosWallet;
+    }
+
     public String looadEosWallet() {
         return mSettings.eosWallet;
     }

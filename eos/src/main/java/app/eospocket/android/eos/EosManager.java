@@ -21,6 +21,9 @@ import io.reactivex.Single;
 @Singleton
 public class EosManager {
 
+    public static final int SUCCESS = 0;
+    public static final int INVALID_PASSWORD = -1;
+
     private EosWalletManager mEosWalletManager;
 
     private ChainService mChainService;
@@ -34,12 +37,10 @@ public class EosManager {
     private EosNetworkRepository mEosNetworkRepository;
 
     @Inject
-    public EosManager(EosWalletManager eosWalletManager,
-            ChainService chainService,
-            HistoryService historyService,
-            WalletService walletService,
-            EosAccountRepository eosAccountRepository,
-            EosNetworkRepository eosNetworkRepository) {
+    public EosManager(@NonNull EosWalletManager eosWalletManager,
+            @NonNull ChainService chainService, @NonNull HistoryService historyService,
+            @NonNull WalletService walletService, @NonNull EosAccountRepository eosAccountRepository,
+            @NonNull EosNetworkRepository eosNetworkRepository) {
         this.mEosWalletManager = eosWalletManager;
         this.mChainService = chainService;
         this.mHistoryService = historyService;
@@ -48,7 +49,7 @@ public class EosManager {
         this.mEosNetworkRepository = eosNetworkRepository;
     }
 
-    public Single<Boolean> hasWallet(String walletName) {
+    public Single<Boolean> hasWallet(@NonNull String walletName) {
         return Single.fromCallable(() -> mEosWalletManager.walletExists(walletName));
     }
 
@@ -70,6 +71,9 @@ public class EosManager {
                 }
             }
         });
+    }
 
+    public Single<Integer> unlock(@NonNull String walletName, @NonNull String password) {
+        return Single.fromCallable(() -> mEosWalletManager.unlock(walletName, password) ? SUCCESS : INVALID_PASSWORD);
     }
 }

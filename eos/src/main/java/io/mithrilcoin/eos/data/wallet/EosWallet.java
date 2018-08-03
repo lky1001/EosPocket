@@ -320,7 +320,7 @@ public class EosWallet implements EosType.Packer, EosType.Unpacker {
         mChecksum = Sha512.ZERO_HASH;
     }
 
-    public void unlock( String password ) {
+    public boolean unlock( String password ) {
         Preconditions.checkArgument( (password != null ) && ( password.length() > 0) );
 
         Sha512 pw = Sha512.from( password.getBytes() );
@@ -330,7 +330,7 @@ public class EosWallet implements EosType.Packer, EosType.Unpacker {
                 mWalletData, getIv(pw) );
 
         if ( null == decrypted ) { // not match!
-            return;
+            return false;
         }
 
 
@@ -354,6 +354,8 @@ public class EosWallet implements EosType.Packer, EosType.Unpacker {
             mChecksum = oldChecksum;
             mKeys = oldKeys;
         }
+
+        return true;
     }
 
     public boolean isNew() {

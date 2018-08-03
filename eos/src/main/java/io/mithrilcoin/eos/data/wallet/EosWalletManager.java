@@ -273,17 +273,17 @@ public class EosWalletManager {
         }
     }
 
-    public void unlock( String name, String password){
+    public boolean unlock( String name, String password){
         if ( ! mWallets.containsKey( name)) {
             open( name );
         }
 
         EosWallet eosWallet = mWallets.get( name );
         if ( ! eosWallet.isLocked() ) {
-            return;
+            return true;
         }
 
-        eosWallet.unlock( password);
+        return eosWallet.unlock( password);
     }
 
     public void importKey( String name, String wif) throws IllegalStateException {
