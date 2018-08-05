@@ -1,5 +1,7 @@
 package app.eospocket.android.di;
 
+import app.eospocket.android.ui.backupmnemoniccode.BackupMnemonicCodeActivity;
+import app.eospocket.android.ui.backupmnemoniccode.BackupMnemonicCodeActivityModule;
 import app.eospocket.android.ui.createwallet.CreateWalletActivity;
 import app.eospocket.android.ui.createwallet.CreateWalletActivityModule;
 import app.eospocket.android.ui.intro.IntroActivity;
@@ -26,6 +28,10 @@ public abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = CreateWalletActivityModule.class)
     abstract CreateWalletActivity bindCreateWalletActivity();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = BackupMnemonicCodeActivityModule.class)
+    abstract BackupMnemonicCodeActivity bindBackupMnemonicCodeActivity();
 
     @PerActivity
     @ContributesAndroidInjector(modules = LoginActivityModule.class)
