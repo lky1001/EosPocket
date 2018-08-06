@@ -1,15 +1,15 @@
 package app.eospocket.android.ui.createwallet;
 
+import android.os.Build;
+import android.security.keystore.UserNotAuthenticatedException;
 import android.text.TextUtils;
 import android.util.Log;
 
-import app.eospocket.android.common.Constants;
-import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
-import app.eospocket.android.utils.Encryption;
-import app.eospocket.android.utils.KeyStoreUtils;
+import app.eospocket.android.security.AuthManager;
 import io.mithrilcoin.eos.util.Consts;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -17,19 +17,12 @@ public class CreateWalletPresenter extends BasePresenter<CreateWalletView> {
 
     private EosManager mEosManager;
 
-    private KeyStoreUtils mKeyStoreUtils;
+    private AuthManager mAuthManager;
 
-    private Encryption mEncryption;
-
-    private CustomPreference mCustomPreference;
-
-    public CreateWalletPresenter(CreateWalletView view, EosManager eosManager, KeyStoreUtils keyStoreUtils,
-            Encryption encryption, CustomPreference customPreference) {
+    public CreateWalletPresenter(CreateWalletView view, EosManager eosManager, AuthManager authManager) {
         super(view);
         this.mEosManager = eosManager;
-        this.mKeyStoreUtils = keyStoreUtils;
-        this.mEncryption = encryption;
-        this.mCustomPreference = customPreference;
+        this.mAuthManager = authManager;
     }
 
     @Override
@@ -53,26 +46,33 @@ public class CreateWalletPresenter extends BasePresenter<CreateWalletView> {
     }
 
     public void createWallet(String password) {
-        mEosManager.createWallet(Consts.DEFAULT_WALLET_NAME)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(pw -> {
-                    if (!TextUtils.isEmpty(pw)) {
-                        String encryptPassword = mEncryption.encrypt(pw, password);
-                        String enc = mKeyStoreUtils.encryptString(encryptPassword, Constants.KEYSTORE_ALIAS);
+        Single.fromCallable(() -> {
+            mAuthManager.setPinCode(password);
 
-                        mCustomPreference.saveEosWallet(enc);
+            Log.i("test", mAuthManager.getPinCode());
 
-                        mView.successCreateWallet();
-                    } else {
-                        mView.failCreateWallet();
-                    }
-                }, (e) -> {
-                    if (e instanceof IllegalStateException) {
-                        mView.existWallet();
-                    } else {
-                        mView.failCreateWallet();
-                    }
-                });
+            return true;
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(result -> {
+            if (result) {
+                mView.successCreateWallet();
+            } else {
+                mView.failCreateWallet();
+            }
+        }, (e) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (e instanceof UserNotAuthenticatedException) {
+
+                }
+            }
+
+            if (e instanceof IllegalStateException) {
+                mView.existWallet();
+            } else {
+                mView.failCreateWallet();
+            }
+        });
     }
 }

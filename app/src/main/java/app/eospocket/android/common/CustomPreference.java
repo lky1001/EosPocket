@@ -65,17 +65,31 @@ public class CustomPreference {
         }
     }
 
-    public void saveEosWallet(String wallet) {
-        mSettings.eosWallet = wallet;
+    public void setInitWallet(boolean isInit) {
+        this.mSettings.initWallet = isInit;
         saveSettings();
     }
 
-    public String loadEosWallet() {
-        return mSettings.eosWallet;
+    public boolean getInitWallet() {
+        return mSettings.initWallet;
     }
 
-    public String looadEosWallet() {
-        return mSettings.eosWallet;
+    public void setPinCode(String pinCode) {
+        this.mSettings.pinCode = pinCode;
+        saveSettings();
+    }
+
+    public String getPinCode() {
+        return this.mSettings.pinCode;
+    }
+
+    public void setKeyStoreVersion(int keyStoreVersion) {
+        mSettings.keyStoreVersion = keyStoreVersion;
+        saveSettings();
+    }
+
+    public int getKeyStoreVersion() {
+        return mSettings.keyStoreVersion;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -83,6 +97,8 @@ public class CustomPreference {
 
         String nodeosHost;
         int nodeosPort;
-        String eosWallet;
+        String pinCode;
+        boolean initWallet;
+        int keyStoreVersion;
     }
 }

@@ -3,6 +3,7 @@ package app.eospocket.android.di.module;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 
 import java.io.File;
@@ -17,9 +18,10 @@ import app.eospocket.android.eos.ServiceBuilder;
 import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
-import app.eospocket.android.utils.Encryption;
-import app.eospocket.android.utils.EncryptionImpl;
-import app.eospocket.android.utils.KeyStoreUtils;
+import app.eospocket.android.security.AuthManager;
+import app.eospocket.android.security.keystore.KeyStore;
+import app.eospocket.android.security.keystore.KeyStoreApi18Impl;
+import app.eospocket.android.security.keystore.KeyStoreApi23Impl;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -105,16 +107,35 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
-    static KeyStoreUtils provideKeyStoreUtils(@ApplicationContext Context context) {
-        KeyStoreUtils keyStoreUtils = new KeyStoreUtils(context);
-        keyStoreUtils.createNewKeys(Constants.KEYSTORE_ALIAS);
+    static KeyStore provideKeyStore(@ApplicationContext Context context, CustomPreference customPreference) {
+        KeyStore keyStore = null;
 
-        return keyStoreUtils;
+        if (!customPreference.getInitWallet()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                keyStore = new KeyStoreApi23Impl(context);
+            } else {
+                keyStore = new KeyStoreApi18Impl(context);
+            }
+        } else {
+            // check os update
+            if (customPreference.getKeyStoreVersion() >= Build.VERSION_CODES.M) {
+                keyStore = new KeyStoreApi23Impl(context);
+            } else {
+                keyStore = new KeyStoreApi18Impl(context);
+            }
+        }
+
+        keyStore.init();
+
+        return keyStore;
     }
 
     @Provides
     @Singleton
-    static Encryption provideEncryption() {
-        return new EncryptionImpl();
+    static AuthManager privateAuthManager(CustomPreference customPreference, KeyStore keyStore) {
+        AuthManager authManager = new AuthManager(customPreference, keyStore);
+        authManager.init();
+
+        return authManager;
     }
 }

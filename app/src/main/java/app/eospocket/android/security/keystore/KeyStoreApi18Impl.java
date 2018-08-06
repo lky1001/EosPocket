@@ -1,86 +1,83 @@
-package app.eospocket.android.utils;
+package app.eospocket.android.security.keystore;
 
 import android.content.Context;
 import android.os.Build;
 import android.security.KeyPairGeneratorSpec;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
-import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.security.auth.x500.X500Principal;
 
 @Singleton
-public class KeyStoreUtils {
+public class KeyStoreApi18Impl implements KeyStore {
 
-    private KeyStore mKeyStore;
+    private static final String CIPHER_ALGORITHM = "RSA/ECB/PKCS1Padding";
+
+    private java.security.KeyStore mKeyStore;
 
     private Context mContext;
 
-    @Inject
-    public KeyStoreUtils(Context context) {
-        this.mContext = context;
+    public KeyStoreApi18Impl(Context context) {
+        this.mContext = mContext;
     }
 
-    private void init() {
+    @Override
+    public void init() {
         try {
-            mKeyStore = KeyStore.getInstance("AndroidKeyStore");
+            mKeyStore = java.security.KeyStore.getInstance(ANDROID_KEY_STORE);
             mKeyStore.load(null);
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void createNewKeys(@NonNull String alias) {
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+    @Override
+    public boolean createKeys(@NonNull String alias) {
         if (mKeyStore == null) {
-            init();
+            return false;
         }
 
         try {
             if (!mKeyStore.containsAlias(alias)) {
                 Calendar start = Calendar.getInstance();
                 Calendar end = Calendar.getInstance();
-                end.add(Calendar.YEAR, 100);
+                end.add(Calendar.YEAR, KEY_EXPIRED_IN_YEAR);
 
-                KeyPairGeneratorSpec spec = null;
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    spec = new KeyPairGeneratorSpec.Builder(mContext)
-                            .setAlias(alias)
-                            .setSubject(new X500Principal("CN=Sample Name, O=Android Authority"))
-                            .setSerialNumber(BigInteger.ONE)
-                            .setStartDate(start.getTime())
-                            .setEndDate(end.getTime())
-                            .build();
-                }
-
-                KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", "AndroidKeyStore");
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    generator.initialize(spec);
-                }
-
-                KeyPair keyPair = generator.generateKeyPair();
+                KeyPairGenerator generator = KeyPairGenerator.getInstance(KEY_ALGORITHM_RSA, ANDROID_KEY_STORE);
+                generator.initialize(new KeyPairGeneratorSpec.Builder(mContext)
+                        .setAlias(alias)
+                        .setSubject(new X500Principal("CN=Eos Pocket, O=Android Authority"))
+                        .setSerialNumber(BigInteger.ONE)
+                        .setStartDate(start.getTime())
+                        .setEndDate(end.getTime())
+                        .build());
+                generator.generateKeyPair();
             }
+
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return false;
     }
 
     @Nullable
+    @Override
     public String encryptString(@NonNull String text, @NonNull String alias) {
         if (mKeyStore == null) {
             init();
@@ -89,9 +86,9 @@ public class KeyStoreUtils {
         byte [] values = null;
 
         try {
-            KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry) mKeyStore.getEntry(alias, null);
+            java.security.KeyStore.PrivateKeyEntry privateKeyEntry = (java.security.KeyStore.PrivateKeyEntry) mKeyStore.getEntry(alias, null);
 
-            Cipher inCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            Cipher inCipher = Cipher.getInstance(CIPHER_ALGORITHM);
             inCipher.init(Cipher.ENCRYPT_MODE, privateKeyEntry.getCertificate().getPublicKey());
 
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -113,6 +110,7 @@ public class KeyStoreUtils {
     }
 
     @Nullable
+    @Override
     public String decryptString(@NonNull String text, @NonNull String alias) {
         if (mKeyStore == null) {
             init();
@@ -121,9 +119,9 @@ public class KeyStoreUtils {
         String results = null;
 
         try {
-            KeyStore.PrivateKeyEntry privateKeyEntry = (KeyStore.PrivateKeyEntry)mKeyStore.getEntry(alias, null);
+            java.security.KeyStore.PrivateKeyEntry privateKeyEntry = (java.security.KeyStore.PrivateKeyEntry)mKeyStore.getEntry(alias, null);
 
-            Cipher output = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            Cipher output = Cipher.getInstance(CIPHER_ALGORITHM);
             output.init(Cipher.DECRYPT_MODE, privateKeyEntry.getPrivateKey());
             CipherInputStream cipherInputStream = new CipherInputStream(
                     new ByteArrayInputStream(Base64.decode(text, Base64.DEFAULT)), output);

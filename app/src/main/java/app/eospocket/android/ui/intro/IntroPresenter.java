@@ -1,22 +1,22 @@
 package app.eospocket.android.ui.intro;
 
 import app.eospocket.android.common.mvp.BasePresenter;
-import app.eospocket.android.eos.EosManager;
-import io.mithrilcoin.eos.util.Consts;
+import app.eospocket.android.security.AuthManager;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class IntroPresenter extends BasePresenter<IntroView> {
 
-    private EosManager mEosManager;
+    private AuthManager mAuthManager;
 
-    public IntroPresenter(IntroView view, EosManager eosManager) {
+    public IntroPresenter(IntroView view, AuthManager authManager) {
         super(view);
-        this.mEosManager = eosManager;
+        this.mAuthManager = authManager;
     }
 
     public void checkWalletExist() {
-        mEosManager.hasWallet(Consts.DEFAULT_WALLET_NAME)
+        Single.fromCallable(() -> mAuthManager.isWalletInitialized())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(result -> {

@@ -1,6 +1,9 @@
 package app.eospocket.android.ui.createwallet;
 
 import android.Manifest;
+import android.app.KeyguardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -158,11 +161,11 @@ public class CreateWalletActivity extends CommonActivity implements CreateWallet
 
         int score = PasswordChecker.calculatePasswordStrength(password);
 
-        if (score < PasswordChecker.STRONG) {
+        /*if (score < PasswordChecker.STRONG) {
             Toast.makeText(CreateWalletActivity.this, getString(R.string.error_password_weak), Toast.LENGTH_SHORT).show();
             mInputPassword.setEnabled(true);
             return;
-        }
+        }*/
 
         boolean isAgree = mAgreeLostPasswordChkBox.isChecked();
 
