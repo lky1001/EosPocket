@@ -4,6 +4,8 @@ import app.eospocket.android.ui.backupmnemoniccode.BackupMnemonicCodeActivity;
 import app.eospocket.android.ui.backupmnemoniccode.BackupMnemonicCodeActivityModule;
 import app.eospocket.android.ui.createwallet.CreateWalletActivity;
 import app.eospocket.android.ui.createwallet.CreateWalletActivityModule;
+import app.eospocket.android.ui.importaccount.ImportAccountActivity;
+import app.eospocket.android.ui.importaccount.ImportAccountModule;
 import app.eospocket.android.ui.intro.IntroActivity;
 import app.eospocket.android.ui.intro.IntroActivityModule;
 import app.eospocket.android.ui.login.LoginActivity;
@@ -36,4 +38,8 @@ public abstract class ActivityBuilder {
     @PerActivity
     @ContributesAndroidInjector(modules = LoginActivityModule.class)
     abstract LoginActivity bindLoginActivity();
+
+    @PerActivity
+    @ContributesAndroidInjector(modules = ImportAccountModule.class)
+    abstract ImportAccountActivity bindImportAccountActivity();
 }

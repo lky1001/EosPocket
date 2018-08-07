@@ -18,4 +18,8 @@
     <string name="fail_create_wallet">Failed to create wallet. Please try again.</string>
     <string name="loading_msg">now loading..</string>
     <string name="login_text">Login</string>
+    <string name="private_key_text">Private Key</string>
+    <string name="account_name_text">Account Name</string>
+    <string name="import_account_msg">Eos Pocket does not send any data to server.</string>
+    <string name="import_text">Import</string>
 </resources>

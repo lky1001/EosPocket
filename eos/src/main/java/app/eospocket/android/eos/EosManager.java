@@ -1,6 +1,7 @@
 package app.eospocket.android.eos;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,7 +11,7 @@ import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
 import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
-import io.mithrilcoin.eos.data.remote.model.api.EosChainInfo;
+import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
 import io.mithrilcoin.eos.data.wallet.EosWalletManager;
 import io.reactivex.Single;
 
@@ -71,5 +72,10 @@ public class EosManager {
 
     public EosPrivateKey genPrivateKey() {
         return new EosPrivateKey();
+    }
+
+    @Nullable
+    public String findAccountByPublicKey(@NonNull EosPublicKey eosPublicKey) {
+        return null;
     }
 }
