@@ -33,6 +33,7 @@
             android:freezesText="true"
             android:hint="@string/private_key_text"
             android:paddingBottom="10dp"
+            android:enabled="false"
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
@@ -60,42 +61,85 @@
             android:singleLine="true" />
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <TextView
+        android:id="@+id/msg_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="@string/import_account_msg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/input_account_name_layout" />
+
+    <LinearLayout
         android:id="@+id/input_password_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="12dp"
         android:orientation="vertical"
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_account_name_layout">
+        app:layout_constraintTop_toBottomOf="@+id/msg_text">
 
-        <EditText
-            android:id="@+id/input_password"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.subhrajyoti.passwordview.PasswordView
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:freezesText="true"
+                android:hint="@string/password_text"
+                android:inputType="textPassword"
+                android:paddingBottom="10dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp"
+                android:singleLine="true" />
+        </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:freezesText="true"
-            android:hint="@string/password_text"
-            android:inputType="textPassword"
-            android:paddingBottom="10dp"
-            android:enabled="false"
-            android:singleLine="true" />
-    </android.support.design.widget.TextInputLayout>
+            android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="36dp"
-        android:text="@string/import_account_msg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_password_layout" />
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:indeterminate="false"
+                android:maxHeight="20dip"
+                android:minHeight="20dip"
+                android:progress="0" />
+
+            <TextView
+                android:id="@+id/password_strength"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_horizontal"
+                android:text="Weak" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/login_instructions"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Your password must be at least 8 characters. With at least 1 number and 1 special character" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_import_account"

@@ -42,7 +42,7 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
     public void findAccount(@Nullable String privateKey) {
         Single.fromCallable(() -> {
-            EosPrivateKey eosPrivateKey = new EosPrivateKey();
+            EosPrivateKey eosPrivateKey = new EosPrivateKey(privateKey);
             EosPublicKey eosPublicKey = eosPrivateKey.getPublicKey();
             // todo get account by public key
             mEosManager.findAccountByPublicKey(eosPublicKey);
@@ -53,7 +53,7 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
         .subscribe((result) -> {
 
         }, e -> {
-
+            e.printStackTrace();
         });
     }
 }
