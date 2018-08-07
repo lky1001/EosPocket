@@ -22,14 +22,16 @@ import app.eospocket.android.security.AuthManager;
 import app.eospocket.android.security.keystore.KeyStore;
 import app.eospocket.android.security.keystore.KeyStoreApi18Impl;
 import app.eospocket.android.security.keystore.KeyStoreApi23Impl;
+import app.eospocket.android.utils.EncryptUtil;
+import app.eospocket.android.wallet.PocketAppManager;
+import app.eospocket.android.wallet.db.AppDatabase;
+import app.eospocket.android.wallet.repository.EosAccountRepository;
+import app.eospocket.android.wallet.repository.EosAccountRepositoryImpl;
+import app.eospocket.android.wallet.repository.EosAccountTokenRepository;
+import app.eospocket.android.wallet.repository.EosAccountTokenRepositoryImpl;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import io.mithrilcoin.eos.data.local.db.AppDatabase;
-import io.mithrilcoin.eos.data.local.repository.EosAccountRepository;
-import io.mithrilcoin.eos.data.local.repository.EosAccountRepositoryImpl;
-import io.mithrilcoin.eos.data.local.repository.EosNetworkRepository;
-import io.mithrilcoin.eos.data.local.repository.EosNetworkRepositoryImpl;
 import io.mithrilcoin.eos.data.wallet.EosWalletManager;
 
 @Module
@@ -63,8 +65,8 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
-    static EosNetworkRepository provideEosNetworkRepository(AppDatabase database) {
-        return new EosNetworkRepositoryImpl(database);
+    static EosAccountTokenRepository provideEosAccountTokenRepository(AppDatabase database) {
+        return new EosAccountTokenRepositoryImpl(database);
     }
 
     @Provides
@@ -98,11 +100,8 @@ public abstract class AppModule {
     static EosManager provideEosManager(EosWalletManager eosWalletManager,
             ChainService chainService,
             HistoryService historyService,
-            WalletService walletService,
-            EosAccountRepository eosAccountRepository,
-            EosNetworkRepository eosNetworkRepository) {
-        return new EosManager(eosWalletManager, chainService, historyService, walletService,
-                eosAccountRepository, eosNetworkRepository);
+            WalletService walletService) {
+        return new EosManager(eosWalletManager, chainService, historyService, walletService);
     }
 
     @Provides
@@ -130,12 +129,26 @@ public abstract class AppModule {
         return keyStore;
     }
 
+
     @Provides
     @Singleton
-    static AuthManager privateAuthManager(CustomPreference customPreference, KeyStore keyStore) {
+    static EncryptUtil provideEncryptUtil() {
+        return new EncryptUtil();
+    }
+
+    @Provides
+    @Singleton
+    static AuthManager provideAuthManager(CustomPreference customPreference, KeyStore keyStore) {
         AuthManager authManager = new AuthManager(customPreference, keyStore);
         authManager.init();
 
         return authManager;
+    }
+
+    @Provides
+    @Singleton
+    static PocketAppManager providePocketAppManager(EosAccountRepository eosAccountRepository,
+            EosAccountTokenRepository eosAccountTokenRepository, EncryptUtil encryptUtil) {
+        return new PocketAppManager(eosAccountRepository, eosAccountTokenRepository, encryptUtil);
     }
 }

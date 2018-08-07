@@ -5,14 +5,13 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.eospocket.android.eos.model.ChainInfo;
 import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
-import io.mithrilcoin.eos.data.local.repository.EosAccountRepository;
-import io.mithrilcoin.eos.data.local.repository.EosNetworkRepository;
+import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
 import io.mithrilcoin.eos.data.remote.model.api.EosChainInfo;
 import io.mithrilcoin.eos.data.wallet.EosWalletManager;
-import io.mithrilcoin.eos.util.Consts;
 import io.reactivex.Single;
 
 /**
@@ -32,28 +31,21 @@ public class EosManager {
 
     private WalletService mWalletService;
 
-    private EosAccountRepository mEosAccountRepository;
-
-    private EosNetworkRepository mEosNetworkRepository;
-
     @Inject
     public EosManager(@NonNull EosWalletManager eosWalletManager,
             @NonNull ChainService chainService, @NonNull HistoryService historyService,
-            @NonNull WalletService walletService, @NonNull EosAccountRepository eosAccountRepository,
-            @NonNull EosNetworkRepository eosNetworkRepository) {
+            @NonNull WalletService walletService) {
         this.mEosWalletManager = eosWalletManager;
         this.mChainService = chainService;
         this.mHistoryService = historyService;
         this.mWalletService = walletService;
-        this.mEosAccountRepository = eosAccountRepository;
-        this.mEosNetworkRepository = eosNetworkRepository;
     }
 
     public Single<Boolean> hasWallet(@NonNull String walletName) {
         return Single.fromCallable(() -> mEosWalletManager.walletExists(walletName));
     }
 
-    public Single<EosChainInfo> getChainInfo() {
+    public Single<ChainInfo> getChainInfo() {
         return mChainService.getInfo();
     }
 
@@ -75,5 +67,9 @@ public class EosManager {
 
     public Single<Integer> unlock(@NonNull String walletName, @NonNull String password) {
         return Single.fromCallable(() -> mEosWalletManager.unlock(walletName, password) ? SUCCESS : INVALID_PASSWORD);
+    }
+
+    public EosPrivateKey genPrivateKey() {
+        return new EosPrivateKey();
     }
 }

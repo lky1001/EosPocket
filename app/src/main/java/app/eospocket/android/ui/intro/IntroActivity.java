@@ -1,26 +1,27 @@
 package app.eospocket.android.ui.intro;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
 import app.eospocket.android.ui.createwallet.CreateWalletActivity;
+import app.eospocket.android.ui.main.MainActivity;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class IntroActivity extends CommonActivity implements IntroView {
 
-    private static final int STORAGE_PERMISSION_REQ = 9929;
-
     @Inject
     IntroPresenter mIntroPresenter;
+
+    @BindView(R.id.intro_image)
+    ImageView mIntroImage;
 
     private boolean mIsBackClick = false;
 
@@ -29,32 +30,13 @@ public class IntroActivity extends CommonActivity implements IntroView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        checkCameraPermission();
+        ButterKnife.bind(this);
+
+        Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.intro);
+        mIntroImage.startAnimation(anim);
 
         mIntroPresenter.onCreate();
-    }
-
-    private void checkCameraPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                startCreateWalletActivity();
-            } else {
-                mIntroPresenter.checkWalletExist();
-            }
-        } else {
-            mIntroPresenter.checkWalletExist();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (checkAllPermissionGranted(grantResults)) {
-            if (requestCode == STORAGE_PERMISSION_REQ) {
-                mIntroPresenter.checkWalletExist();
-            }
-        } else {
-            // todo - explain dialog
-        }
+        mIntroPresenter.initWallet();
     }
 
     @Override
@@ -74,6 +56,14 @@ public class IntroActivity extends CommonActivity implements IntroView {
     public void startCreateWalletActivity() {
         if (!mIsBackClick && !isFinishing()) {
             startActivity(CreateWalletActivity.class);
+            finishActivity();
+        }
+    }
+
+    @Override
+    public void startMainActivity() {
+        if (!mIsBackClick && !isFinishing()) {
+            startActivity(MainActivity.class);
             finishActivity();
         }
     }

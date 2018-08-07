@@ -1,5 +1,7 @@
 package app.eospocket.android.ui.intro;
 
+import java.util.concurrent.TimeUnit;
+
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.security.AuthManager;
 import io.reactivex.Single;
@@ -13,6 +15,20 @@ public class IntroPresenter extends BasePresenter<IntroView> {
     public IntroPresenter(IntroView view, AuthManager authManager) {
         super(view);
         this.mAuthManager = authManager;
+    }
+
+    public void initWallet() {
+        Single.fromCallable(() -> {
+            return true;
+        })
+        .subscribeOn(Schedulers.io())
+                .delay(3, TimeUnit.SECONDS)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(result -> {
+            mView.startMainActivity();
+        }, e -> {
+
+        });
     }
 
     public void checkWalletExist() {

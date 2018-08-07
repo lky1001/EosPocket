@@ -7,4 +7,6 @@ public interface IntroView extends IView {
     void startLoginActivity();
 
     void startCreateWalletActivity();
+
+    void startMainActivity();
 }

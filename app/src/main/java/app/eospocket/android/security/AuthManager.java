@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 
 import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.security.keystore.KeyStore;
+import app.eospocket.android.utils.EncryptUtil;
 
 @Singleton
 public class AuthManager {
