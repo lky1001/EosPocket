@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
+import app.eospocket.android.eos.request.KeyAccountsRequest;
 import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
 import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
 import io.reactivex.Single;
@@ -44,14 +45,19 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
         Single.fromCallable(() -> {
             EosPrivateKey eosPrivateKey = new EosPrivateKey(privateKey);
             EosPublicKey eosPublicKey = eosPrivateKey.getPublicKey();
-            // todo get account by public key
-            mEosManager.findAccountByPublicKey(eosPublicKey);
-            return "account";
+            return eosPublicKey.toString();
+        })
+        .flatMap(publicKey -> {
+            KeyAccountsRequest request = new KeyAccountsRequest();
+            request.publicKey = publicKey;
+            return mEosManager.findAccountByPublicKey(request);
         })
         .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe((result) -> {
-
+        .subscribe(result -> {
+            if (result != null && !result.accounts.isEmpty()) {
+                mView.getAccount(result.accounts.get(0));
+            }
         }, e -> {
             e.printStackTrace();
         });

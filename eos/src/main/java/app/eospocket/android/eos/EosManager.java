@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.eos.model.ChainInfo;
+import app.eospocket.android.eos.request.KeyAccountsRequest;
 import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
@@ -75,7 +77,7 @@ public class EosManager {
     }
 
     @Nullable
-    public String findAccountByPublicKey(@NonNull EosPublicKey eosPublicKey) {
-        return null;
+    public Single<AccountList> findAccountByPublicKey(@NonNull KeyAccountsRequest request) {
+        return mHistoryService.getAccountsByKey(request);
     }
 }

@@ -145,4 +145,9 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
             return;
         }
     }
+
+    @Override
+    public void getAccount(String account) {
+        mInputAccountName.setText(account);
+    }
 }
