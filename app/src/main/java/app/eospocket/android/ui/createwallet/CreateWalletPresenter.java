@@ -2,13 +2,11 @@ package app.eospocket.android.ui.createwallet;
 
 import android.os.Build;
 import android.security.keystore.UserNotAuthenticatedException;
-import android.text.TextUtils;
 import android.util.Log;
 
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.security.AuthManager;
-import io.mithrilcoin.eos.util.Consts;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;

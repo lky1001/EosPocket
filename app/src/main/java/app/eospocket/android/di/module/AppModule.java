@@ -111,14 +111,14 @@ public abstract class AppModule {
 
         if (!customPreference.getInitWallet()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                keyStore = new KeyStoreApi23Impl(context, customPreference);
+                keyStore = new KeyStoreApi23Impl(customPreference);
             } else {
                 keyStore = new KeyStoreApi18Impl(context);
             }
         } else {
             // check os update
             if (customPreference.getKeyStoreVersion() >= Build.VERSION_CODES.M) {
-                keyStore = new KeyStoreApi23Impl(context, customPreference);
+                keyStore = new KeyStoreApi23Impl(customPreference);
             } else {
                 keyStore = new KeyStoreApi18Impl(context);
             }

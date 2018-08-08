@@ -31,7 +31,7 @@ public class KeyStoreApi18Impl implements KeyStore {
     private Context mContext;
 
     public KeyStoreApi18Impl(Context context) {
-        this.mContext = mContext;
+        this.mContext = context;
     }
 
     @Override

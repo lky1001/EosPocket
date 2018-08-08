@@ -1,7 +1,6 @@
 package app.eospocket.android.security.keystore;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
@@ -38,8 +37,6 @@ public class KeyStoreApi23Impl implements KeyStore {
 
     private java.security.KeyStore mKeyStore;
 
-    private Context mContext;
-
     private boolean mUserAuthRequired = false;
 
     private int mUserAuthValidDurationSec = 300;
@@ -47,8 +44,7 @@ public class KeyStoreApi23Impl implements KeyStore {
     private CustomPreference mCustomPreference;
 
     @Inject
-    public KeyStoreApi23Impl(Context context, CustomPreference customPreference) {
-        this.mContext = context;
+    public KeyStoreApi23Impl(CustomPreference customPreference) {
         this.mCustomPreference = customPreference;
     }
 

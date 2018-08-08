@@ -27,4 +27,5 @@
     <string name="invalid_pin_code">Invalid your pin code</string>
     <string name="invalid_fingerprint">Invalid your fingerprint</string>
     <string name="skip_text">Skip</string>
+    <string name="import_account_text">Import Account</string>
 </resources>

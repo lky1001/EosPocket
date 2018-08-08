@@ -1,8 +1,6 @@
 package app.eospocket.android.ui.intro;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.security.keystore.UserNotAuthenticatedException;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.Animation;
@@ -12,8 +10,6 @@ import android.widget.Toast;
 
 import com.beautycoder.pflockscreen.PFFLockScreenConfiguration;
 import com.beautycoder.pflockscreen.fragments.PFLockScreenFragment;
-import com.beautycoder.pflockscreen.security.PFFingerprintPinCodeHelper;
-import com.beautycoder.pflockscreen.security.PFSecurityException;
 
 import javax.inject.Inject;
 
@@ -124,9 +120,7 @@ public class IntroActivity extends CommonActivity implements IntroView {
             new PFLockScreenFragment.OnPFLockScreenCodeCreateListener() {
                 @Override
                 public void onCodeCreated(String encodedCode) {
-                    mIntroPresenter.setUsePinCode(true);
-                    mIntroPresenter.setPinCode(encodedCode);
-                    mCustomPreference.setInitWallet(true);
+                    mIntroPresenter.createWallet(true, encodedCode);
                     startMainActivity();
                 }
             };

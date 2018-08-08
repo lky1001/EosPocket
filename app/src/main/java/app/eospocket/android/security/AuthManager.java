@@ -1,8 +1,6 @@
 package app.eospocket.android.security;
 
 import android.os.Build;
-import android.security.keystore.UserNotAuthenticatedException;
-import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,7 +10,6 @@ import javax.inject.Singleton;
 
 import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.security.keystore.KeyStore;
-import app.eospocket.android.utils.EncryptUtil;
 
 @Singleton
 public class AuthManager {

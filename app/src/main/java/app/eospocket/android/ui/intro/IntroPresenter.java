@@ -1,6 +1,5 @@
 package app.eospocket.android.ui.intro;
 
-import android.security.keystore.UserNotAuthenticatedException;
 import android.text.TextUtils;
 
 import java.util.concurrent.TimeUnit;
@@ -95,11 +94,9 @@ public class IntroPresenter extends BasePresenter<IntroView> {
         return mAuthManager.getPinCode();
     }
 
-    public void setPinCode(String pinCode) {
-        mAuthManager.setPinCode(pinCode);
-    }
-
-    public void setUsePinCode(boolean usePinCode) {
+    public void createWallet(boolean usePinCode, String pinCode) {
         mAuthManager.setUsePinCode(usePinCode);
+        mAuthManager.setPinCode(pinCode);
+        mAuthManager.walletInitialized();
     }
 }

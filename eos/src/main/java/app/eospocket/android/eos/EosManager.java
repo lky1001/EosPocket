@@ -13,7 +13,6 @@ import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
 import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
-import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
 import io.mithrilcoin.eos.data.wallet.EosWalletManager;
 import io.reactivex.Single;
 
