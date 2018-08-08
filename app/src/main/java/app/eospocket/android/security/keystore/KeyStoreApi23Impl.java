@@ -1,5 +1,6 @@
 package app.eospocket.android.security.keystore;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.security.keystore.KeyGenParameterSpec;
@@ -26,6 +27,8 @@ import javax.crypto.spec.GCMParameterSpec;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.eospocket.android.common.CustomPreference;
+
 @Singleton
 public class KeyStoreApi23Impl implements KeyStore {
 
@@ -37,13 +40,16 @@ public class KeyStoreApi23Impl implements KeyStore {
 
     private Context mContext;
 
-    private boolean mUserAuthRequired = true;
+    private boolean mUserAuthRequired = false;
 
     private int mUserAuthValidDurationSec = 300;
 
+    private CustomPreference mCustomPreference;
+
     @Inject
-    public KeyStoreApi23Impl(Context context) {
+    public KeyStoreApi23Impl(Context context, CustomPreference customPreference) {
         this.mContext = context;
+        this.mCustomPreference = customPreference;
     }
 
     @Override
@@ -106,6 +112,14 @@ public class KeyStoreApi23Impl implements KeyStore {
             Cipher inCipher = Cipher.getInstance(CIPHER_ALGORITHM);
             inCipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
+            byte[] iv = inCipher.getIV();
+
+            if (iv == null) {
+                return null;
+            }
+
+            mCustomPreference.storeEncryptedIv(iv, alias);
+
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             CipherOutputStream cipherOutputStream = new CipherOutputStream(
                     outputStream, inCipher);
@@ -124,6 +138,7 @@ public class KeyStoreApi23Impl implements KeyStore {
         return Base64.encodeToString(values, Base64.DEFAULT);
     }
 
+    @SuppressLint("NewApi")
     @Nullable
     @Override
     public String decryptString(@NonNull String text, @NonNull String alias) {
@@ -137,7 +152,11 @@ public class KeyStoreApi23Impl implements KeyStore {
             SecretKey secretKey = (SecretKey) mKeyStore.getKey(alias, null);
 
             Cipher output = Cipher.getInstance(CIPHER_ALGORITHM);
-            output.init(Cipher.DECRYPT_MODE, secretKey);
+
+            byte[] iv = mCustomPreference.retrieveEncryptedIv(alias);
+
+            output.init(Cipher.DECRYPT_MODE, secretKey, new GCMParameterSpec(128, iv));
+
             CipherInputStream cipherInputStream = new CipherInputStream(
                     new ByteArrayInputStream(Base64.decode(text, Base64.DEFAULT)), output);
 

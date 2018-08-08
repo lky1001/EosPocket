@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -65,6 +66,25 @@ public class CustomPreference {
         }
     }
 
+    public void storeEncryptedIv(byte[] data, String name) {
+        String base64 = Base64.encodeToString(data, Base64.DEFAULT);
+        SharedPreferences.Editor edit = mSharedPreferences.edit();
+        edit.putString(name, base64);
+        edit.apply();
+    }
+
+    public byte[] retrieveEncryptedIv(String name) {
+        String base64 = mSharedPreferences.getString(name, null);
+        if (base64 == null) return null;
+        return Base64.decode(base64, Base64.DEFAULT);
+    }
+
+    public void destroyEncryptedIv(String name) {
+        SharedPreferences.Editor edit = mSharedPreferences.edit();
+        edit.remove(name);
+        edit.apply();
+    }
+
     public void setInitWallet(boolean isInit) {
         this.mSettings.initWallet = isInit;
         saveSettings();
@@ -92,11 +112,21 @@ public class CustomPreference {
         return mSettings.keyStoreVersion;
     }
 
+    public void setUsePinCode(boolean usePinCode) {
+        mSettings.usePinCode = usePinCode;
+        saveSettings();
+    }
+
+    public boolean getUsePinCode() {
+        return mSettings.usePinCode;
+    }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class EosSettings {
 
         String nodeosHost;
         int nodeosPort;
+        boolean usePinCode = true;
         String pinCode;
         boolean initWallet;
         int keyStoreVersion;

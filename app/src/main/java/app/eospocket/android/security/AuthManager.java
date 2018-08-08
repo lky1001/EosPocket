@@ -39,13 +39,20 @@ public class AuthManager {
         }
     }
 
-    public void setPinCode(String pinCode) throws UserNotAuthenticatedException {
+    public void setUsePinCode(boolean use) {
+        mCustomPreference.setUsePinCode(use);
+    }
+
+    public boolean getUsePinCode() {
+        return mCustomPreference.getUsePinCode();
+    }
+
+    public void setPinCode(String pinCode) {
         String enc = mKeyStore.encryptString(pinCode, ALIAS_PINCODE);
-        Log.i("test", enc);
         mCustomPreference.setPinCode(enc);
     }
 
-    public String getPinCode() throws UserNotAuthenticatedException {
+    public String getPinCode() {
         String enc = mCustomPreference.getPinCode();
 
         return mKeyStore.decryptString(enc, ALIAS_PINCODE);

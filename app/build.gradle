@@ -61,6 +61,7 @@ dependencies {
 
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
     implementation 'com.github.SubhrajyotiSen:library:1.1.2'
+    implementation 'com.github.thealeksandr:PFLockScreen-Android:1.0.0-beta2'
 
     implementation 'org.bouncycastle:bcprov-jdk15on:1.60'
     implementation 'com.madgag.spongycastle:core:1.58.0.0'

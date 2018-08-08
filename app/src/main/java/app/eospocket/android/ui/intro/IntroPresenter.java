@@ -1,5 +1,8 @@
 package app.eospocket.android.ui.intro;
 
+import android.security.keystore.UserNotAuthenticatedException;
+import android.text.TextUtils;
+
 import java.util.concurrent.TimeUnit;
 
 import app.eospocket.android.common.mvp.BasePresenter;
@@ -10,7 +13,13 @@ import io.reactivex.schedulers.Schedulers;
 
 public class IntroPresenter extends BasePresenter<IntroView> {
 
+    public static final int ERROR = 0;
+    public static final int PINCODE_SETTING = 1;
+    public static final int LOGIN = 2;
+    public static final int MAIN = 3;
+
     private AuthManager mAuthManager;
+    private boolean usePinCode;
 
     public IntroPresenter(IntroView view, AuthManager authManager) {
         super(view);
@@ -19,13 +28,29 @@ public class IntroPresenter extends BasePresenter<IntroView> {
 
     public void initWallet() {
         Single.fromCallable(() -> {
-            return true;
+            if (mAuthManager.getUsePinCode()) {
+                if (!TextUtils.isEmpty(mAuthManager.getPinCode())) {
+                    return LOGIN;
+                } else {
+                    return PINCODE_SETTING;
+                }
+            } else {
+                return MAIN;
+            }
         })
         .subscribeOn(Schedulers.io())
                 .delay(3, TimeUnit.SECONDS)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(result -> {
-            mView.startMainActivity();
+            if (result == PINCODE_SETTING) {
+                mView.initPinCode();
+            } else if (result == LOGIN) {
+                mView.login();
+            } else if (result == MAIN) {
+                mView.startMainActivity();
+            } else {
+                // todo error
+            }
         }, e -> {
 
         });
@@ -64,5 +89,17 @@ public class IntroPresenter extends BasePresenter<IntroView> {
     @Override
     public void onDestroy() {
 
+    }
+
+    public String getPinCode() {
+        return mAuthManager.getPinCode();
+    }
+
+    public void setPinCode(String pinCode) {
+        mAuthManager.setPinCode(pinCode);
+    }
+
+    public void setUsePinCode(boolean usePinCode) {
+        mAuthManager.setUsePinCode(usePinCode);
     }
 }

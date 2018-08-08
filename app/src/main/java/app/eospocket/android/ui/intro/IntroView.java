@@ -9,4 +9,8 @@ public interface IntroView extends IView {
     void startCreateWalletActivity();
 
     void startMainActivity();
+
+    void initPinCode();
+
+    void login();
 }

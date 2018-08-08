@@ -15,8 +15,8 @@ public interface KeyStore {
     boolean createKeys(@NonNull String alias);
 
     @Nullable
-    String encryptString(@NonNull String text, @NonNull String alias) throws UserNotAuthenticatedException;
+    String encryptString(@NonNull String text, @NonNull String alias);
 
     @Nullable
-    String decryptString(@NonNull String text, @NonNull String alias) throws UserNotAuthenticatedException;
+    String decryptString(@NonNull String text, @NonNull String alias);
 }
