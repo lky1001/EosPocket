@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.util.Base64;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -29,7 +30,7 @@ public class CustomPreference {
 
     private final SharedPreferences mSharedPreferences;
 
-    private EosSettings mSettings;
+    private EosSetting mSettings;
 
     @Inject
     public CustomPreference(@NonNull Context context) {
@@ -43,16 +44,20 @@ public class CustomPreference {
 
         if (!TextUtils.isEmpty(data)) {
             try {
-                mSettings = mapper.readValue(data, EosSettings.class);
+                mSettings = mapper.readValue(data, EosSetting.class);
             } catch (IOException e) {
-                mSettings = new EosSettings();
+                mSettings = new EosSetting();
+                mSettings.setUsePinCode(true);
+                saveSettings();
             }
         } else {
-            mSettings = new EosSettings();
+            mSettings = new EosSetting();
+            mSettings.setUsePinCode(true);
+            saveSettings();
         }
     }
 
-    public void saveSettings() {
+    private void saveSettings() {
         ObjectMapper mapper = new ObjectMapper();
 
         try {
@@ -86,49 +91,38 @@ public class CustomPreference {
     }
 
     public void setInitWallet(boolean isInit) {
-        this.mSettings.initWallet = isInit;
+        this.mSettings.setInitWallet(isInit);
         saveSettings();
     }
 
     public boolean getInitWallet() {
-        return mSettings.initWallet;
+        return mSettings.isInitWallet();
     }
 
     public void setPinCode(String pinCode) {
-        this.mSettings.pinCode = pinCode;
+        this.mSettings.setPinCode(pinCode);
         saveSettings();
     }
 
     public String getPinCode() {
-        return this.mSettings.pinCode;
+        return this.mSettings.getPinCode();
     }
 
     public void setKeyStoreVersion(int keyStoreVersion) {
-        mSettings.keyStoreVersion = keyStoreVersion;
+        mSettings.setKeyStoreVersion(keyStoreVersion);
         saveSettings();
     }
 
     public int getKeyStoreVersion() {
-        return mSettings.keyStoreVersion;
+        return mSettings.getKeyStoreVersion();
     }
 
     public void setUsePinCode(boolean usePinCode) {
-        mSettings.usePinCode = usePinCode;
+        mSettings.setUsePinCode(usePinCode);
         saveSettings();
     }
 
     public boolean getUsePinCode() {
-        return mSettings.usePinCode;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class EosSettings {
-
-        String nodeosHost;
-        int nodeosPort;
-        boolean usePinCode = true;
-        String pinCode;
-        boolean initWallet;
-        int keyStoreVersion;
+        return mSettings.isUsePinCode();
     }
 }
