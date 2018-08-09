@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
+import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
 import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
 import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
@@ -60,6 +61,24 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
             }
         }, e -> {
             e.printStackTrace();
+        });
+    }
+
+    public void findAccountName(String accountName) {
+        Single.fromCallable(() -> {
+            AccountRequest request = new AccountRequest();
+            request.accountName = accountName;
+
+            return request;
+        })
+        .flatMap(request -> mEosManager.findAccountByName(request))
+        .subscribeOn(Schedulers.computation())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(result -> {
+            mView.foundAccount(result);
+        }, e -> {
+            e.printStackTrace();
+            mView.noAccount();
         });
     }
 }

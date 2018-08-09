@@ -8,6 +8,8 @@ import javax.inject.Singleton;
 
 import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.eos.model.ChainInfo;
+import app.eospocket.android.eos.model.EosAccount;
+import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
 import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
@@ -43,10 +45,12 @@ public class EosManager {
         this.mWalletService = walletService;
     }
 
+    @NonNull
     public Single<Boolean> hasWallet(@NonNull String walletName) {
         return Single.fromCallable(() -> mEosWalletManager.walletExists(walletName));
     }
 
+    @NonNull
     public Single<ChainInfo> getChainInfo() {
         return mChainService.getInfo();
     }
@@ -67,16 +71,23 @@ public class EosManager {
         });
     }
 
+    @NonNull
     public Single<Integer> unlock(@NonNull String walletName, @NonNull String password) {
         return Single.fromCallable(() -> mEosWalletManager.unlock(walletName, password) ? SUCCESS : INVALID_PASSWORD);
     }
 
+    @NonNull
     public EosPrivateKey genPrivateKey() {
         return new EosPrivateKey();
     }
 
-    @Nullable
+    @NonNull
     public Single<AccountList> findAccountByPublicKey(@NonNull KeyAccountsRequest request) {
         return mHistoryService.getAccountsByKey(request);
+    }
+
+    @NonNull
+    public Single<EosAccount> findAccountByName(@NonNull AccountRequest request) {
+        return mChainService.getAccount(request);
     }
 }

@@ -5,6 +5,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -15,6 +16,7 @@ import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
+import app.eospocket.android.eos.model.EosAccount;
 import app.eospocket.android.utils.PasswordChecker;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,6 +29,12 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R.id.private_key_layout)
+    View mPrivateKeyLayout;
+
+    @BindView(R.id.input_account_name_layout)
+    View mAccountNameLayout;
 
     @BindView(R.id.input_private_key)
     EditText mInputPrivateKey;
@@ -43,8 +51,13 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
     @BindView(R.id.password_strength)
     TextView mPasswordStrengthView;
 
+    @BindView(R.id.btn_next)
+    Button mNextButton;
+
     @BindView(R.id.btn_import_account)
     Button mImportAccountButton;
+
+    private EosAccount mEosAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +67,23 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
         ButterKnife.bind(this);
 
         mImportAccountPresenter.onCreate();
+
+        mInputAccountName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mImportAccountPresenter.findAccountName(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         mInputPrivateKey.addTextChangedListener(new TextWatcher() {
             @Override
@@ -130,6 +160,19 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
         });
     }
 
+    @OnClick(R.id.btn_next)
+    public void onNextClick() {
+        if (mEosAccount == null) {
+            Toast.makeText(ImportAccountActivity.this, getString(R.string.invalid_account_msg),
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            mAccountNameLayout.setVisibility(View.GONE);
+            mPrivateKeyLayout.setVisibility(View.VISIBLE);
+            mNextButton.setVisibility(View.GONE);
+            mImportAccountButton.setVisibility(View.VISIBLE);
+        }
+    }
+
     @OnClick(R.id.btn_import_account)
     public void onImportAccountClick() {
         mInputPassword.setEnabled(false);
@@ -149,5 +192,15 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
     @Override
     public void getAccount(String account) {
         mInputAccountName.setText(account);
+    }
+
+    @Override
+    public void noAccount() {
+        mEosAccount = null;
+    }
+
+    @Override
+    public void foundAccount(EosAccount result) {
+        mEosAccount = result;
     }
 }

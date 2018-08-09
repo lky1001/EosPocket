@@ -28,4 +28,6 @@
     <string name="invalid_fingerprint">Invalid your fingerprint</string>
     <string name="skip_text">Skip</string>
     <string name="import_account_text">Import Account</string>
+    <string name="next_text">Next</string>
+    <string name="invalid_account_msg">Please input your account name.</string>
 </resources>
