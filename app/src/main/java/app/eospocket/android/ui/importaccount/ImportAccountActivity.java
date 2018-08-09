@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -50,6 +51,9 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
 
     @BindView(R.id.password_strength)
     TextView mPasswordStrengthView;
+
+    @BindView(R.id.reg_later_checkbox)
+    CheckBox mRegLaterCheckBox;
 
     @BindView(R.id.btn_next)
     Button mNextButton;
@@ -175,17 +179,21 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
 
     @OnClick(R.id.btn_import_account)
     public void onImportAccountClick() {
-        mInputPassword.setEnabled(false);
+        if (mRegLaterCheckBox.isChecked()) {
+            mImportAccountPresenter.importAccount(mEosAccount.accountName);
+        } else {
+            mInputPassword.setEnabled(false);
 
-        String password = mInputPassword.getText().toString();
+            String password = mInputPassword.getText().toString();
 
-        int score = PasswordChecker.calculatePasswordStrength(password);
+            int score = PasswordChecker.calculatePasswordStrength(password);
 
-        if (score < PasswordChecker.STRONG) {
-            Toast.makeText(ImportAccountActivity.this, getString(R.string.error_password_weak),
-                    Toast.LENGTH_SHORT).show();
-            mInputPassword.setEnabled(true);
-            return;
+            if (score < PasswordChecker.STRONG) {
+                Toast.makeText(ImportAccountActivity.this, getString(R.string.error_password_weak),
+                        Toast.LENGTH_SHORT).show();
+                mInputPassword.setEnabled(true);
+                return;
+            }
         }
     }
 
@@ -202,5 +210,15 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
     @Override
     public void foundAccount(EosAccount result) {
         mEosAccount = result;
+    }
+
+    @Override
+    public void successImport() {
+
+    }
+
+    @Override
+    public void existAccount() {
+
     }
 }

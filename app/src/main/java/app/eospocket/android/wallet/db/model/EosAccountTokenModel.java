@@ -6,8 +6,6 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,12 +17,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity( tableName = "eos_account", indices={@Index(value = "account_name")})
-public class EosAccount {
-
-    public static final int ACCOUNT_TYPE_ALL = 0;
-    public static final int ACCOUNT_TYPE_USER = 1;
-    public static final int ACCOUNT_TYPE_CONTRACT = 2;
+@Entity( tableName = "eos_account_token", indices={@Index(value = "account_name")})
+public class EosAccountTokenModel {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
@@ -34,18 +28,19 @@ public class EosAccount {
     @NonNull
     public String name;
 
-    @ColumnInfo(name = "account_type")
-    public Integer type;
-
-    @ColumnInfo(name = "account_pub_key")
+    @ColumnInfo(name = "token_name")
     @NonNull
-    public String publicKey;
+    public String tokenName;
 
-    @ColumnInfo(name = "account_priv_key")
+    @ColumnInfo(name = "token_symbol")
     @NonNull
-    public String privateKey;
+    public String symbol;
 
-    private Date created;
+    @ColumnInfo(name = "balance")
+    @NonNull
+    public float balance;
 
-    private Date updated;
+    @ColumnInfo(name = "token_contract")
+    @NonNull
+    public String contract;
 }

@@ -38,8 +38,8 @@ public class EncryptUtil {
      */
     static byte[] iv = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     //
-    private static Key key;
-    private static Cipher cipher;
+    private Key key;
+    private Cipher cipher;
 
     /**
      * Gets encrypt string.
@@ -50,7 +50,7 @@ public class EncryptUtil {
      * @throws NoSuchAlgorithmException the no such algorithm exception
      * @throws InvalidKeySpecException  the invalid key spec exception
      */
-    public static String getEncryptString(String content, String password)
+    public String getEncryptString(String content, String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         String salt = getRandomString(32);//盐
         char[] chars = password.toCharArray();//加密密码明文
@@ -70,7 +70,7 @@ public class EncryptUtil {
      * @throws NoSuchAlgorithmException the no such algorithm exception
      * @throws InvalidKeySpecException  the invalid key spec exception
      */
-    public static String getDecryptString(String content, String password)
+    public String getDecryptString(String content, String password)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         String  salt = content.substring(0,32);//盐
         char[] chars = password.toCharArray();//加密密码明文
@@ -88,7 +88,7 @@ public class EncryptUtil {
      * @param length the length
      * @return random string
      */
-    public static String getRandomString(int length) { //length表示生成字符串的长度
+    public String getRandomString(int length) { //length表示生成字符串的长度
         String base = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();
         StringBuffer sb = new StringBuffer();
@@ -110,7 +110,7 @@ public class EncryptUtil {
      * @throws NoSuchAlgorithmException the no such algorithm exception
      * @throws InvalidKeySpecException  the invalid key spec exception
      */
-    public static byte[] pbkdf2(char[] password, byte[] salt,
+    public byte[] pbkdf2(char[] password, byte[] salt,
                                 int iterations, int bytes)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
 
@@ -126,7 +126,7 @@ public class EncryptUtil {
      * @param keyBytes 加密密钥
      * @return byte [ ]
      */
-    public static byte[] encrypt(byte[] content, byte[] keyBytes) {
+    public byte[] encrypt(byte[] content, byte[] keyBytes) {
         byte[] encryptedText = null;
         init(keyBytes);
         try {
@@ -144,7 +144,7 @@ public class EncryptUtil {
      *
      * @param keyBytes the key bytes
      */
-    public static void init(byte[] keyBytes) {
+    public void init(byte[] keyBytes) {
 
         // 如果密钥不足16位，那么就补足.  这个if 中的内容很重要
         int base = 16;
@@ -181,7 +181,7 @@ public class EncryptUtil {
      * @param keyBytes      解密密钥
      * @return byte [ ]
      */
-    public static byte[] decrypt(byte[] encryptedData, byte[] keyBytes) {
+    public byte[] decrypt(byte[] encryptedData, byte[] keyBytes) {
         byte[] encryptedText = null;
         init(keyBytes);
         try {

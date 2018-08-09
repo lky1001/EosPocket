@@ -4,12 +4,12 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
-import app.eospocket.android.wallet.db.model.EosAccountToken;
+import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import io.mithrilcoin.eos.data.local.db.Converters;
 
 @Database(entities = {
     EosAccountDao.class,
-    EosAccountToken.class
+    EosAccountTokenModel.class
 }, version = AppDatabase.VERSION, exportSchema = false)
 @TypeConverters({ Converters.class })
 public abstract class AppDatabase extends RoomDatabase {
@@ -18,5 +18,5 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract EosAccountDao eosAccountDao();
 
-    public abstract EosAccountToken eosAccountToken();
+    public abstract EosAccountTokenModel eosAccountToken();
 }

@@ -10,4 +10,8 @@ public interface ImportAccountView extends IView {
     void noAccount();
 
     void foundAccount(EosAccount result);
+
+    void successImport();
+
+    void existAccount();
 }
