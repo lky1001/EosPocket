@@ -3,6 +3,7 @@ package app.eospocket.android.wallet.repository;
 import java.util.List;
 
 import app.eospocket.android.wallet.db.model.EosAccountModel;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 public interface EosAccountRepository {
@@ -14,4 +15,6 @@ public interface EosAccountRepository {
     void delete(String accountName);
 
     void deleteAll();
+
+    Flowable<List<EosAccountModel>> getEosAccounts();
 }

@@ -43,6 +43,9 @@ public class EosAccountModel {
     @ColumnInfo(name = "account_priv_key")
     private String privateKey;
 
+    @ColumnInfo(name = "permission")
+    private String permission;
+
     private Date created;
 
     private Date updated;

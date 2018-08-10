@@ -4,6 +4,7 @@ import java.util.List;
 
 import app.eospocket.android.wallet.db.AppDatabase;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 public class EosAccountRepositoryImpl implements EosAccountRepository {
@@ -32,5 +33,10 @@ public class EosAccountRepositoryImpl implements EosAccountRepository {
     @Override
     public void deleteAll() {
         mAppDatabase.eosAccountDao().deleteAll();
+    }
+
+    @Override
+    public Flowable<List<EosAccountModel>> getEosAccounts() {
+        return mAppDatabase.eosAccountDao().getEosAccounts();
     }
 }

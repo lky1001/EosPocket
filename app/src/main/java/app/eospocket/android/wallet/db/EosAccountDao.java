@@ -8,6 +8,7 @@ import android.arch.persistence.room.Query;
 import java.util.List;
 
 import app.eospocket.android.wallet.db.model.EosAccountModel;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 
 @Dao
@@ -24,4 +25,7 @@ public interface EosAccountDao {
 
     @Query("DELETE FROM eos_account")
     void deleteAll();
+
+    @Query("SELECT * FROM eos_account")
+    Flowable<List<EosAccountModel>> getEosAccounts();
 }
