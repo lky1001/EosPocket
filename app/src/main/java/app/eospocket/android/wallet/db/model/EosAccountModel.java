@@ -38,11 +38,9 @@ public class EosAccountModel {
     private Integer type;
 
     @ColumnInfo(name = "account_pub_key")
-    @NonNull
     private String publicKey;
 
     @ColumnInfo(name = "account_priv_key")
-    @NonNull
     private String privateKey;
 
     private Date created;

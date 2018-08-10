@@ -194,6 +194,10 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
                 mInputPassword.setEnabled(true);
                 return;
             }
+
+            mImportAccountPresenter.importAccount(mEosAccount.accountName,
+                    mInputPrivateKey.getText().toString(),
+                    password);
         }
     }
 
@@ -204,21 +208,26 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
 
     @Override
     public void noAccount() {
+        mNextButton.setEnabled(false);
         mEosAccount = null;
     }
 
     @Override
     public void foundAccount(EosAccount result) {
+        mNextButton.setEnabled(true);
         mEosAccount = result;
     }
 
     @Override
     public void successImport() {
-
+        Toast.makeText(ImportAccountActivity.this, getString(R.string.success_import_account),
+                Toast.LENGTH_SHORT).show();
+        finishActivity();
     }
 
     @Override
     public void existAccount() {
-
+        Toast.makeText(ImportAccountActivity.this, getString(R.string.account_name_aleady_exist),
+                Toast.LENGTH_SHORT).show();
     }
 }
