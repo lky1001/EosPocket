@@ -17,7 +17,7 @@ import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
-import app.eospocket.android.eos.model.EosAccount;
+import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.utils.PasswordChecker;
 import butterknife.BindView;
 import butterknife.ButterKnife;

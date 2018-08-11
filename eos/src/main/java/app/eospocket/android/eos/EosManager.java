@@ -1,14 +1,13 @@
 package app.eospocket.android.eos;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.eos.model.ChainInfo;
-import app.eospocket.android.eos.model.EosAccount;
+import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
 import app.eospocket.android.eos.services.ChainService;
