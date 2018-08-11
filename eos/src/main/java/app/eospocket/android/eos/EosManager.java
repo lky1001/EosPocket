@@ -8,7 +8,9 @@ import javax.inject.Singleton;
 import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.eos.model.ChainInfo;
 import app.eospocket.android.eos.model.account.EosAccount;
+import app.eospocket.android.eos.model.action.ActionList;
 import app.eospocket.android.eos.request.AccountRequest;
+import app.eospocket.android.eos.request.ActionRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
 import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
@@ -88,5 +90,10 @@ public class EosManager {
     @NonNull
     public Single<EosAccount> findAccountByName(@NonNull AccountRequest request) {
         return mChainService.getAccount(request);
+    }
+
+    @NonNull
+    public Single<ActionList> getAccountActions(@NonNull ActionRequest request) {
+        return mHistoryService.getAccountActions(request);
     }
 }
