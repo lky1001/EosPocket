@@ -94,6 +94,11 @@ public class MainActivity extends CommonActivity implements MainView {
                 });
     }
 
+    private void getAccount() {
+        String accountName = "";
+
+        mMainPresenter.getAccount(accountName);
+    }
 
     @OnClick(R.id.btn_import_account)
     public void onImportAccountClick() {
