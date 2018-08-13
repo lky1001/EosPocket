@@ -7,14 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Action {
 
     @JsonProperty("account_action_seq")
-    private long accountActionSeq;
+    public long accountActionSeq;
+
+    @JsonProperty("action_trace")
+    public ActionTrace actionTrace;
 
     @JsonProperty("block_num")
-    private long blockNum;
+    public long blockNum;
 
     @JsonProperty("block_time")
-    private String blockTime;
+    public String blockTime;
 
     @JsonProperty("global_action_seq")
-    private long globalActionSeq;
+    public long globalActionSeq;
 }

@@ -6,10 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ActionList {
+public class Act {
 
-    public List<Action> actions;
+    public String account;
 
-    @JsonProperty("last_irreversible_block")
-    public long lastIrreversibleBlock;
+    public List<Authorization> authorization;
+
+    public Data data;
+
+    @JsonProperty("hex_data")
+    public String hexData;
+
+    public String name;
 }
