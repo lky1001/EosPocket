@@ -8,4 +8,6 @@ public class Constants {
     public static final String KEYSTORE_ALIAS = "eos_pocket";
     public static final String KEYSTORE_PRIV_KEY_ALIAS = "priv_alias";
     public static final int PIN_CODE_LENGTH = 6;
+
+    public static final int ACTIONS_PER_PAGE = 1000;
 }

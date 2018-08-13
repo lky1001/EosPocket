@@ -3,7 +3,7 @@ package app.eospocket.android.ui.importaccount;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.security.keystore.KeyStore;
 import app.eospocket.android.utils.EncryptUtil;
-import app.eospocket.android.wallet.repository.EosAccountRepository;
+import app.eospocket.android.wallet.PocketAppManager;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -17,8 +17,8 @@ public abstract class ImportAccountModule {
     @Provides
     static ImportAccountPresenter provideImportAccountPresenter(ImportAccountView importAccountView,
             EosManager eosManager, EncryptUtil encryptUtil, KeyStore keyStore,
-            EosAccountRepository eosAccountRepository) {
+            PocketAppManager pocketAppManager) {
         return new ImportAccountPresenter(importAccountView, eosManager, encryptUtil, keyStore,
-                eosAccountRepository);
+                pocketAppManager);
     }
 }

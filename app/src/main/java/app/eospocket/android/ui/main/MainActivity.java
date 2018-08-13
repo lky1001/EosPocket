@@ -104,4 +104,9 @@ public class MainActivity extends CommonActivity implements MainView {
     public void onImportAccountClick() {
         startActivity(ImportAccountActivity.class);
     }
+
+    @Override
+    public void showTokens() {
+
+    }
 }

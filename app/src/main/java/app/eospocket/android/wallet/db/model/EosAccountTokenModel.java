@@ -26,21 +26,21 @@ public class EosAccountTokenModel {
 
     @ColumnInfo(name = "account_name")
     @NonNull
-    public String name;
+    private String name;
 
     @ColumnInfo(name = "token_name")
     @NonNull
-    public String tokenName;
+    private String tokenName;
 
     @ColumnInfo(name = "token_symbol")
     @NonNull
-    public String symbol;
+    private String symbol;
 
     @ColumnInfo(name = "balance")
     @NonNull
-    public float balance;
+    private float balance;
 
     @ColumnInfo(name = "token_contract")
     @NonNull
-    public String contract;
+    private String contract;
 }

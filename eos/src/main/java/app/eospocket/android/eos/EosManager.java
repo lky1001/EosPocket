@@ -35,6 +35,7 @@ public class EosManager {
     private HistoryService mHistoryService;
 
     private WalletService mWalletService;
+    private Object userActionCount;
 
     @Inject
     public EosManager(@NonNull EosWalletManager eosWalletManager,

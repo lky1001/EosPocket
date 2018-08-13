@@ -10,4 +10,8 @@ public class Data {
     public String quant;
 
     public String receiver;
+
+    public String to;
+
+    public String quantity;
 }

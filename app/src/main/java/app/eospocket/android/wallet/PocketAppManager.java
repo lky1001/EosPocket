@@ -9,6 +9,7 @@ import javax.inject.Singleton;
 
 import app.eospocket.android.utils.EncryptUtil;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
+import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import app.eospocket.android.wallet.repository.EosAccountTokenRepository;
 import io.reactivex.Single;
@@ -36,5 +37,9 @@ public class PocketAppManager {
 
     public void insert(@NonNull EosAccountModel eosAccountModel) {
         mEosAccountRepository.insert(eosAccountModel);
+    }
+
+    public void insertAllTokens(List<EosAccountTokenModel> eosAccountTokenModels) {
+        mEosAccountTokenRepository.insertAll(eosAccountTokenModels);
     }
 }
