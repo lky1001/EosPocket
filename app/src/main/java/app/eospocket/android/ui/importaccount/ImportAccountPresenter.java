@@ -13,8 +13,8 @@ import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
 import app.eospocket.android.security.keystore.KeyStore;
 import app.eospocket.android.utils.EncryptUtil;
+import app.eospocket.android.wallet.PocketAppManager;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
-import app.eospocket.android.wallet.repository.EosAccountRepository;
 import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
 import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
 import io.reactivex.Single;
@@ -29,16 +29,16 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
     private KeyStore mKeyStore;
 
-    private EosAccountRepository mEosAccountRepository;
+    private PocketAppManager mPocketAppManager;
 
     public ImportAccountPresenter(ImportAccountView view, EosManager eosManager, EncryptUtil encryptUtil,
-            KeyStore keyStore, EosAccountRepository eosAccountRepository) {
+            KeyStore keyStore, PocketAppManager pocketAppManager) {
         super(view);
 
         this.mEosManager = eosManager;
         this.mEncryptUtil = encryptUtil;
         this.mKeyStore = keyStore;
-        this.mEosAccountRepository = eosAccountRepository;
+        this.mPocketAppManager = pocketAppManager;
     }
 
     @Override
@@ -106,7 +106,7 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
     }
 
     public void importAccount(@NonNull String accountName, @Nullable String privateKey, @Nullable String password) {
-        mEosAccountRepository.findAccount(accountName)
+        mPocketAppManager.findAccount(accountName)
         .map(accounts -> {
             if (accounts.isEmpty()) {
                 EosAccountModel eosAccountModel = EosAccountModel
@@ -128,7 +128,7 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
                     }
                 }
 
-                mEosAccountRepository.insert(eosAccountModel);
+                mPocketAppManager.insert(eosAccountModel);
 
                 return true;
             }
