@@ -7,4 +7,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.BottomNavigationView">
+        <item name="android:textColor">@color/bottom_nav_item</item>
+    </style>
+
+    <style name="AppTheme.BottomNavigationView.Active">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AppTheme.BottomNav" parent="@style/Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="itemIconTint">@color/bottom_nav_item</item>
+        <item name="itemTextAppearanceActive">@style/AppTheme.BottomNavigationView.Active</item>
+        <item name="itemTextAppearanceInactive">@style/AppTheme.BottomNavigationView</item>
+        <item name="labelVisibilityMode">selected</item>
+        <item name="android:theme">@style/ThemeOverlay.MaterialComponents.Dark</item>
+    </style>
+
 </resources>
