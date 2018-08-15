@@ -19,19 +19,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/navigation_token"
-        android:icon="@android:drawable/ic_media_play"
+        android:icon="@drawable/ic_coin"
         android:title="@string/title_token"
+        android:iconTint="@android:color/white"
         app:contentDescription="@string/title_token" />
 
     <item
         android:id="@+id/navigation_stake"
-        android:icon="@android:drawable/ic_media_rew"
+        android:icon="@drawable/ic_allinclusive"
         android:title="@string/title_stake"
+        android:iconTint="@android:color/white"
         app:contentDescription="@string/title_stake" />
 
     <item
         android:id="@+id/navigation_setting"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_setting"
         android:title="@string/title_setting"
+        android:iconTint="@android:color/white"
         app:contentDescription="@string/title_setting" />
 </menu>
