@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import app.eospocket.android.R;
+import app.eospocket.android.common.CommonFragment;
 import app.eospocket.android.ui.main.MainNavigationFragment;
 import butterknife.ButterKnife;
-import dagger.android.support.DaggerFragment;
 
-public class SettingFragment extends DaggerFragment implements MainNavigationFragment, SettingView {
+public class SettingFragment extends CommonFragment implements MainNavigationFragment, SettingView {
 
     @Inject
     SettingPresenter mSettingPresenter;

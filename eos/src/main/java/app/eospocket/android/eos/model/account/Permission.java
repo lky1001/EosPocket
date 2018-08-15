@@ -11,6 +11,6 @@ public class Permission {
     @JsonProperty("perm_name")
     public String permName;
 
-    @JsonProperty("perm_name")
+    @JsonProperty("required_auth")
     public RequiredAuth requiredAuth;
 }
