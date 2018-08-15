@@ -13,7 +13,7 @@ public abstract class MainActivityModule {
     public abstract MainView view(MainActivity mainActivity);
 
     @Provides
-    static MainPresenter provideMainPresenter(MainView  mainView, EosManager eosManager,
+    static MainPresenter provideMainPresenter(MainView mainView, EosManager eosManager,
             PocketAppManager pocketAppManager) {
         return new MainPresenter(mainView, eosManager, pocketAppManager);
     }
