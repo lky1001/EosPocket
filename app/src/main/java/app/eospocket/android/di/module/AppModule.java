@@ -16,6 +16,7 @@ import app.eospocket.android.di.ApplicationContext;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.ServiceBuilder;
 import app.eospocket.android.eos.services.ChainService;
+import app.eospocket.android.eos.services.CoinMarketCapService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
 import app.eospocket.android.security.AuthManager;
@@ -89,6 +90,12 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
+    static CoinMarketCapService provideCoinMarketCapService() {
+        return ServiceBuilder.createService(CoinMarketCapService.class, Constants.COINMARKETCAP_HOST);
+    }
+
+    @Provides
+    @Singleton
     static EosWalletManager provideEosWalletManager() {
         EosWalletManager eosWalletManager = new EosWalletManager();
         eosWalletManager.setDir(new File(Environment.getExternalStorageDirectory().getAbsolutePath() + Constants.DEFAULT_WALLET_DIR));
@@ -100,8 +107,9 @@ public abstract class AppModule {
     static EosManager provideEosManager(EosWalletManager eosWalletManager,
             ChainService chainService,
             HistoryService historyService,
-            WalletService walletService) {
-        return new EosManager(eosWalletManager, chainService, historyService, walletService);
+            WalletService walletService,
+            CoinMarketCapService coinMarketCapService) {
+        return new EosManager(eosWalletManager, chainService, historyService, walletService, coinMarketCapService);
     }
 
     @Provides

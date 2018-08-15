@@ -9,11 +9,13 @@ import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.eos.model.ChainInfo;
 import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.eos.model.action.ActionList;
+import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCap;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.ActionRequest;
 import app.eospocket.android.eos.request.CurrencyRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
 import app.eospocket.android.eos.services.ChainService;
+import app.eospocket.android.eos.services.CoinMarketCapService;
 import app.eospocket.android.eos.services.HistoryService;
 import app.eospocket.android.eos.services.WalletService;
 import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
@@ -36,16 +38,18 @@ public class EosManager {
     private HistoryService mHistoryService;
 
     private WalletService mWalletService;
-    private Object userActionCount;
+
+    private CoinMarketCapService mCoinMarketCapService;
 
     @Inject
     public EosManager(@NonNull EosWalletManager eosWalletManager,
             @NonNull ChainService chainService, @NonNull HistoryService historyService,
-            @NonNull WalletService walletService) {
+            @NonNull WalletService walletService, @NonNull CoinMarketCapService coinMarketCapService) {
         this.mEosWalletManager = eosWalletManager;
         this.mChainService = chainService;
         this.mHistoryService = historyService;
         this.mWalletService = walletService;
+        this.mCoinMarketCapService = coinMarketCapService;
     }
 
     @NonNull
@@ -108,5 +112,9 @@ public class EosManager {
 
                    return 0.0f;
                 });
+    }
+
+    public Single<CoinMarketCap> getMarketPrice(@NonNull String id) {
+        return mCoinMarketCapService.getPrice(id);
     }
 }

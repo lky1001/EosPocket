@@ -12,4 +12,5 @@
     <color name="password_strength_medium">#dcb900</color>
     <color name="password_strength_strong">#30de33</color>
     <color name="password_strength_very_strong">#2684ff</color>
+    <color name="balance_usd_text_color">#bdbdbd</color>
 </resources>

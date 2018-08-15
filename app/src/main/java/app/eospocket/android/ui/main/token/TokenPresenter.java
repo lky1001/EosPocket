@@ -1,6 +1,7 @@
 package app.eospocket.android.ui.main.token;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,4 +181,14 @@ public class TokenPresenter extends BasePresenter<TokenView> {
         });
     }
 
+    public void getMarketPrice(@NonNull String id) {
+        mEosManager.getMarketPrice(id)
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(coinMarketCapData -> {
+            mView.setMarketPrice(coinMarketCapData);
+        }, e -> {
+            e.printStackTrace();
+        });
+    }
 }

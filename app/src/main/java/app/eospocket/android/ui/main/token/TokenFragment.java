@@ -14,6 +14,8 @@ import javax.inject.Inject;
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonFragment;
 import app.eospocket.android.common.Constants;
+import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCap;
+import app.eospocket.android.eos.model.coinmarketcap.CoinQuotes;
 import app.eospocket.android.ui.importaccount.ImportAccountActivity;
 import app.eospocket.android.ui.main.MainNavigationFragment;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
@@ -34,6 +36,9 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
 
     @BindView(R.id.eos_balance_text)
     TextView mEosBalanceText;
+
+    @BindView(R.id.account_name_text)
+    TextView mAccountNameText;
 
     @Inject
     EosAccountRepository mEosAccountRepository;
@@ -81,6 +86,8 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
                         mImportAccountButton.setVisibility(View.GONE);
                         mTokenPresenter.getEosBalance(eosAccountModels.get(0));
                         mTokenPresenter.getTokens(eosAccountModels.get(0).getName());
+                        mTokenPresenter.getMarketPrice(Constants.EOS_COINMARKETCAP_ID);
+                        mAccountNameText.setText(eosAccountModels.get(0).getName());
                     } else {
                         mImportAccountButton.setVisibility(View.VISIBLE);
                     }
@@ -119,6 +126,17 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
 
     @Override
     public void setEosBalance(Float balance) {
-        mEosBalanceText.setText(balance + Constants.EOS_SYMBOL);
+        if (isAdded()) {
+            mEosBalanceText.setText(balance + Constants.EOS_SYMBOL);
+        }
+    }
+
+    @Override
+    public void setMarketPrice(CoinMarketCap coinMarketCapData) {
+        if (isAdded() && coinMarketCapData != null) {
+            CoinQuotes quotes = coinMarketCapData.data.quotes.get("USD");
+
+
+        }
     }
 }

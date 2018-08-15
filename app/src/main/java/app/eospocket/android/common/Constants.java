@@ -13,4 +13,7 @@ public class Constants {
 
     public static final String EOS_TOKEN_CONTRACT = "eosio.token";
     public static final String EOS_SYMBOL = "EOS";
+
+    public static final String COINMARKETCAP_HOST = "https://api.coinmarketcap.com/";
+    public static final String EOS_COINMARKETCAP_ID = "1765";
 }
