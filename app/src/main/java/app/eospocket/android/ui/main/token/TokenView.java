@@ -5,4 +5,6 @@ import app.eospocket.android.common.mvp.IView;
 public interface TokenView extends IView {
 
     void showTokens();
+
+    void setEosBalance(Float balance);
 }

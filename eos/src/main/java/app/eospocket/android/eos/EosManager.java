@@ -11,6 +11,7 @@ import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.eos.model.action.ActionList;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.ActionRequest;
+import app.eospocket.android.eos.request.CurrencyRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
 import app.eospocket.android.eos.services.ChainService;
 import app.eospocket.android.eos.services.HistoryService;
@@ -96,5 +97,16 @@ public class EosManager {
     @NonNull
     public Single<ActionList> getAccountActions(@NonNull ActionRequest request) {
         return mHistoryService.getAccountActions(request);
+    }
+
+    public Single<Float> getTokenBalance(@NonNull CurrencyRequest request) {
+        return mChainService.getCurrencyBalance(request)
+                .map(balance -> {
+                   if (!balance.isEmpty()) {
+                       return Float.parseFloat(balance.get(0).split(" ")[0]);
+                   }
+
+                   return 0.0f;
+                });
     }
 }

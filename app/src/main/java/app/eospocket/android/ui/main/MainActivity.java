@@ -41,7 +41,9 @@ public class MainActivity extends CommonActivity implements MainView {
     private void initUi() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, mTokenFragment)
+                .add(R.id.fragment_container, mTokenFragment)
+                .add(R.id.fragment_container, mStakeFragment)
+                .add(R.id.fragment_container, mSettingFragment)
                 .commit();
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -54,19 +56,25 @@ public class MainActivity extends CommonActivity implements MainView {
             case R.id.navigation_token:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, mTokenFragment)
+                        .show(mTokenFragment)
+                        .hide(mStakeFragment)
+                        .hide(mSettingFragment)
                         .commit();
                 return true;
             case R.id.navigation_stake:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, mStakeFragment)
+                        .hide(mTokenFragment)
+                        .show(mStakeFragment)
+                        .hide(mSettingFragment)
                         .commit();
                 return true;
             case R.id.navigation_setting:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.fragment_container, mSettingFragment)
+                        .hide(mTokenFragment)
+                        .hide(mStakeFragment)
+                        .show(mSettingFragment)
                         .commit();
                 return true;
         }

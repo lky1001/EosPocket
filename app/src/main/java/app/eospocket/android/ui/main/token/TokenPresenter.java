@@ -14,7 +14,9 @@ import app.eospocket.android.eos.model.action.Action;
 import app.eospocket.android.eos.model.action.ActionList;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.ActionRequest;
+import app.eospocket.android.eos.request.CurrencyRequest;
 import app.eospocket.android.wallet.PocketAppManager;
+import app.eospocket.android.wallet.db.model.EosAccountModel;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -38,7 +40,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
     }
 
     private void getTokens(@NonNull String accountName) {
-    Single.fromCallable(() -> {
+        Single.fromCallable(() -> {
             ActionRequest request = new ActionRequest();
             request.accountName = accountName;
             request.pos = -1;
@@ -141,4 +143,30 @@ public class TokenPresenter extends BasePresenter<TokenView> {
     public void onDestroy() {
 
     }
+
+    public void getEosBalance(@NonNull EosAccountModel eosAccountModel) {
+        getTokenBalance(eosAccountModel.getName(), Constants.EOS_TOKEN_CONTRACT, Constants.EOS_SYMBOL);
+    }
+
+    public void getTokenBalance(@NonNull String account, @NonNull String code, @NonNull String symbol) {
+        Single.fromCallable(() -> {
+            CurrencyRequest request = new CurrencyRequest();
+            request.account = account;
+            request.code = code;
+            request.symbol = symbol;
+
+            return request;
+        })
+        .flatMap((request) -> {
+            return mEosManager.getTokenBalance(request);
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(balance -> {
+            mView.setEosBalance(balance);
+        }, e -> {
+            e.printStackTrace();
+        });
+    }
+
 }
