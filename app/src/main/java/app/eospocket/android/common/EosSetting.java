@@ -21,4 +21,6 @@ public class EosSetting {
     private boolean initWallet;
 
     private int keyStoreVersion;
+
+    private long parseActionSeq;
 }

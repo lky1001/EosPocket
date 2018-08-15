@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import app.eospocket.android.common.Constants;
+import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.model.action.Action;
@@ -28,10 +29,14 @@ public class TokenPresenter extends BasePresenter<TokenView> {
 
     private PocketAppManager mPocketAppManager;
 
-    public TokenPresenter(TokenView view, EosManager eosManager, PocketAppManager pocketAppManager) {
+    private CustomPreference mCustomPreference;
+
+    public TokenPresenter(TokenView view, EosManager eosManager, PocketAppManager pocketAppManager,
+            CustomPreference customPreference) {
         super(view);
         this.mEosManager = eosManager;
         this.mPocketAppManager = pocketAppManager;
+        this.mCustomPreference = customPreference;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
 
     }
 
-    private void getTokens(@NonNull String accountName) {
+    public void getTokens(@NonNull String accountName) {
         Single.fromCallable(() -> {
             ActionRequest request = new ActionRequest();
             request.accountName = accountName;
@@ -60,7 +65,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                     }
 
                     for (int i = 0; i < totalPage; i++) {
-                        long pos = i * Constants.ACTIONS_PER_PAGE;
+                        long pos = i * Constants.ACTIONS_PER_PAGE + mCustomPreference.getParseActionSeq();
                         long offset = Constants.ACTIONS_PER_PAGE - 1;
 
                         ActionRequest request = new ActionRequest();
@@ -89,6 +94,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                             }
                         }
 
+                        mCustomPreference.setParseActionSeq(totalActions);
                         return eosAccountTokenModels;
                     }
                 }
@@ -99,6 +105,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
         .flatMap(eosAccountTokenModels -> {
             return Single.fromCallable(() -> {
                 if (!eosAccountTokenModels.isEmpty()) {
+                    // todo - deplicate check
                     mPocketAppManager.insertAllTokens(eosAccountTokenModels);
                 }
                 return true;

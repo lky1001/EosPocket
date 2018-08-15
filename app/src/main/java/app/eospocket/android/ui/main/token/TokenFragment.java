@@ -80,6 +80,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
                     if (!eosAccountModels.isEmpty()) {
                         mImportAccountButton.setVisibility(View.GONE);
                         mTokenPresenter.getEosBalance(eosAccountModels.get(0));
+                        mTokenPresenter.getTokens(eosAccountModels.get(0).getName());
                     } else {
                         mImportAccountButton.setVisibility(View.VISIBLE);
                     }

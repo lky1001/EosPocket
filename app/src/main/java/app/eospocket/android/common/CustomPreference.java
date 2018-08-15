@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -124,5 +122,14 @@ public class CustomPreference {
 
     public boolean getUsePinCode() {
         return mSettings.isUsePinCode();
+    }
+
+    public void setParseActionSeq(long actionSeq) {
+        mSettings.setParseActionSeq(actionSeq);
+        saveSettings();
+    }
+
+    public long getParseActionSeq() {
+        return mSettings.getParseActionSeq();
     }
 }

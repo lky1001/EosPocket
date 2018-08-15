@@ -1,5 +1,6 @@
 package app.eospocket.android.ui.main.token;
 
+import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.wallet.PocketAppManager;
 import dagger.Binds;
@@ -14,7 +15,7 @@ public abstract class TokenFragmentModule {
 
     @Provides
     static TokenPresenter provideTokenPresenter(TokenView tokenView, EosManager eosManager,
-            PocketAppManager pocketAppManager) {
-        return new TokenPresenter(tokenView, eosManager, pocketAppManager);
+            PocketAppManager pocketAppManager, CustomPreference customPreference) {
+        return new TokenPresenter(tokenView, eosManager, pocketAppManager, customPreference);
     }
 }
