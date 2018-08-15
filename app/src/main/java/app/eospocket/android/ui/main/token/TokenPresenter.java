@@ -58,6 +58,10 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                 if (!actionList.actions.isEmpty()) {
                     long totalActions = actionList.actions.get(0).accountActionSeq;
 
+                    if (totalActions <= mCustomPreference.getParseActionSeq()) {
+                        return new ArrayList<EosAccountTokenModel>();
+                    }
+
                     int totalPage = (int) (totalActions / Constants.ACTIONS_PER_PAGE);
 
                     if (totalActions % Constants.ACTIONS_PER_PAGE != 0) {
@@ -105,7 +109,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
         .flatMap(eosAccountTokenModels -> {
             return Single.fromCallable(() -> {
                 if (!eosAccountTokenModels.isEmpty()) {
-                    // todo - deplicate check
+                    // todo - duplicate check
                     mPocketAppManager.insertAllTokens(eosAccountTokenModels);
                 }
                 return true;
