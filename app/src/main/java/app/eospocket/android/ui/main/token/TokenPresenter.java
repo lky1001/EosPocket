@@ -69,6 +69,9 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                         totalPage++;
                     }
 
+                    List<EosAccountTokenModel> eosAccountTokenModels = new ArrayList<>();
+                    Map<String, Boolean> tokens = new HashMap<>();
+
                     for (int i = 0; i < totalPage; i++) {
                         long pos = i * Constants.ACTIONS_PER_PAGE + mCustomPreference.getParseActionSeq();
                         long offset = Constants.ACTIONS_PER_PAGE - 1;
@@ -80,28 +83,27 @@ public class TokenPresenter extends BasePresenter<TokenView> {
 
                         ActionList actions = mEosManager.getAccountActions(request).blockingGet();
 
-                        List<EosAccountTokenModel> eosAccountTokenModels = new ArrayList<>();
-                        Map<String, Boolean> tokens = new HashMap<>();
-
                         for (Action action : actions.actions) {
                             if ("transfer".equalsIgnoreCase(action.actionTrace.act.name)
                                     && accountName.equalsIgnoreCase(action.actionTrace.act.data.to)) {
-                                if (!tokens.containsKey(action.actionTrace.act.account)) {
+                                if (!tokens.containsKey(action.actionTrace.act.account)
+                                        && !Constants.EOS_TOKEN_CONTRACT.equalsIgnoreCase(action.actionTrace.act.account)) {
                                     tokens.put(action.actionTrace.act.account, true);
 
                                     EosAccountTokenModel eosAccountTokenModel = new EosAccountTokenModel();
-                                    eosAccountTokenModel.setName(action.actionTrace.act.data.quantity.split(" ")[1]);
-                                    eosAccountTokenModel.setSymbol(eosAccountTokenModel.getName());
+                                    eosAccountTokenModel.setAccountName(accountName);
+                                    eosAccountTokenModel.setTokenName(action.actionTrace.act.data.quantity.split(" ")[1]);
+                                    eosAccountTokenModel.setSymbol(eosAccountTokenModel.getTokenName());
                                     eosAccountTokenModel.setContract(action.actionTrace.act.account);
 
                                     eosAccountTokenModels.add(eosAccountTokenModel);
                                 }
                             }
                         }
-
-                        mCustomPreference.setParseActionSeq(totalActions);
-                        return eosAccountTokenModels;
                     }
+
+                    mCustomPreference.setParseActionSeq(totalActions);
+                    return eosAccountTokenModels;
                 }
 
                 return new ArrayList<EosAccountTokenModel>();
@@ -116,9 +118,21 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                 return true;
             });
         })
+        .flatMap(result -> {
+            return mPocketAppManager.getAllTokens(accountName);
+        })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(result -> {
+        .subscribe(tokens -> {
+            mAdapterDataModel.clear();
+
+            for (EosAccountTokenModel token : tokens) {
+                TokenTO tokenTO = TokenTO.builder()
+                        .name(token.getTokenName())
+                        .build();
+                mAdapterDataModel.add(tokenTO);
+            }
+
             mView.showTokens();
         }, e -> {
             e.printStackTrace();

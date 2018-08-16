@@ -37,4 +37,6 @@
     <string name="title_stake">Stake</string>
     <string name="title_setting">Setting</string>
     <string name="eos_text">EOS</string>
+    <string name="tokens_text">Tokens</string>
+    <string name="actions_text">Actions</string>
 </resources>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import app.eospocket.android.wallet.db.AppDatabase;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
+import io.reactivex.Single;
 
 public class EosAccountTokenRepositoryImpl implements EosAccountTokenRepository {
 
@@ -21,5 +22,10 @@ public class EosAccountTokenRepositoryImpl implements EosAccountTokenRepository 
     @Override
     public void insertAll(List<EosAccountTokenModel> eosAccountTokenModels) {
         this.mAppDatabase.eosAccountTokenDao().insertAll(eosAccountTokenModels);
+    }
+
+    @Override
+    public Single<List<EosAccountTokenModel>> getAllTokens(String accountName) {
+        return this.mAppDatabase.eosAccountTokenDao().getAllTokens(accountName);
     }
 }

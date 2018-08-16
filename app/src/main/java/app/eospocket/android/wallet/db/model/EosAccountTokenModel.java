@@ -26,7 +26,7 @@ public class EosAccountTokenModel {
 
     @ColumnInfo(name = "account_name")
     @NonNull
-    private String name;
+    private String accountName;
 
     @ColumnInfo(name = "token_name")
     @NonNull

@@ -13,6 +13,7 @@ import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import app.eospocket.android.wallet.repository.EosAccountTokenRepository;
 import io.reactivex.Single;
+import io.reactivex.SingleSource;
 
 @Singleton
 public class PocketAppManager {
@@ -41,5 +42,9 @@ public class PocketAppManager {
 
     public void insertAllTokens(List<EosAccountTokenModel> eosAccountTokenModels) {
         mEosAccountTokenRepository.insertAll(eosAccountTokenModels);
+    }
+
+    public Single<List<EosAccountTokenModel>> getAllTokens(String accountName) {
+        return mEosAccountTokenRepository.getAllTokens(accountName);
     }
 }

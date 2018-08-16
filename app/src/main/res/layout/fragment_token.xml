@@ -30,71 +30,128 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:padding="15dp"
-        android:background="@drawable/balance_bg"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
-        tools:layout_editor_absoluteX="20dp"
-        tools:ignore="MissingConstraints">
-
-        <ImageView
-            android:id="@+id/eos_logo_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/eos_logo" />
-
-        <TextView
-            android:id="@+id/account_name_text"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_alignTop="@+id/eos_logo_image"
-            android:layout_toRightOf="@+id/eos_logo_image"
-            android:layout_marginLeft="15dp"
-            android:gravity="center"
-            android:text="@string/eos_text"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/eos_balance_text"
-            android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/eos_logo_image"
-            android:layout_below="@+id/eos_logo_image"
-            android:layout_marginTop="5dp"
-            android:textColor="@android:color/white"
-            android:textSize="28sp"
-            tools:text="0.0001 EOS" />
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:padding="15dp"
+                android:background="@drawable/balance_bg"
+                app:layout_constraintTop_toBottomOf="@+id/appbar"
+                tools:layout_editor_absoluteX="20dp"
+                tools:ignore="MissingConstraints">
 
-        <TextView
-            android:id="@+id/usd_balance_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/eos_logo_image"
-            android:layout_below="@+id/eos_balance_text"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/balance_usd_text_color"
-            android:textSize="18sp"
-            tools:text="$123.123 USD" />
+                <ImageView
+                    android:id="@+id/eos_logo_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/eos_logo" />
 
-        <TextView
-            android:id="@+id/percent_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/usd_balance_text"
-            android:paddingTop="3dp"
-            android:paddingBottom="3dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:layout_alignParentRight="true"
-            android:textColor="@android:color/white"
-            android:background="@drawable/down_percent_bg"
-            tools:text="-2.1%" />
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/account_name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_alignTop="@+id/eos_logo_image"
+                    android:layout_toRightOf="@+id/eos_logo_image"
+                    android:layout_marginLeft="15dp"
+                    android:gravity="center"
+                    android:text="@string/eos_text"
+                    android:textColor="@android:color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/eos_balance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/eos_logo_image"
+                    android:layout_below="@+id/eos_logo_image"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="28sp"
+                    tools:text="0.0001 EOS" />
+
+                <TextView
+                    android:id="@+id/usd_balance_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/eos_logo_image"
+                    android:layout_below="@+id/eos_balance_text"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/balance_usd_text_color"
+                    android:textSize="18sp"
+                    tools:text="$123.123 USD" />
+
+                <TextView
+                    android:id="@+id/percent_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/usd_balance_text"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@android:color/white"
+                    android:background="@drawable/down_percent_bg"
+                    tools:text="-2.1%" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/tokens_text" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:layout_margin="20dp">
+
+                    <ProgressBar
+                        android:id="@+id/token_loading_bar"
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/token_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="20dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/actions_text" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <Button
         android:id="@+id/btn_import_account"
@@ -105,6 +162,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/import_account_text"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
