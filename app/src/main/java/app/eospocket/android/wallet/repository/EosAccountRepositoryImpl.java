@@ -1,9 +1,12 @@
 package app.eospocket.android.wallet.repository;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 import app.eospocket.android.wallet.db.AppDatabase;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
+import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
@@ -38,5 +41,15 @@ public class EosAccountRepositoryImpl implements EosAccountRepository {
     @Override
     public Flowable<List<EosAccountModel>> getEosAccounts() {
         return mAppDatabase.eosAccountDao().getEosAccounts();
+    }
+
+    @Override
+    public EosAccountTokenModel getToken(@NonNull String accountName, @NonNull String contract) {
+        return mAppDatabase.eosAccountTokenDao().getToken(accountName, contract);
+    }
+
+    @Override
+    public void insertToken(@NonNull EosAccountTokenModel eosAccountTokenModel) {
+        mAppDatabase.eosAccountTokenDao().insert(eosAccountTokenModel);
     }
 }

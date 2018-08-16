@@ -13,7 +13,6 @@ import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import app.eospocket.android.wallet.repository.EosAccountTokenRepository;
 import io.reactivex.Single;
-import io.reactivex.SingleSource;
 
 @Singleton
 public class PocketAppManager {
@@ -25,8 +24,9 @@ public class PocketAppManager {
     private EncryptUtil mEncryptUtil;
 
     @Inject
-    public PocketAppManager(EosAccountRepository eosAccountRepository,
-            EosAccountTokenRepository eosAccountTokenRepository, EncryptUtil encryptUtil) {
+    public PocketAppManager(@NonNull EosAccountRepository eosAccountRepository,
+            @NonNull EosAccountTokenRepository eosAccountTokenRepository,
+            @NonNull EncryptUtil encryptUtil) {
         this.mEosAccountRepository = eosAccountRepository;
         this.mEosAccountTokenRepository = eosAccountTokenRepository;
         this.mEncryptUtil = encryptUtil;
@@ -40,11 +40,19 @@ public class PocketAppManager {
         mEosAccountRepository.insert(eosAccountModel);
     }
 
-    public void insertAllTokens(List<EosAccountTokenModel> eosAccountTokenModels) {
+    public void insertAllTokens(@NonNull List<EosAccountTokenModel> eosAccountTokenModels) {
         mEosAccountTokenRepository.insertAll(eosAccountTokenModels);
     }
 
-    public Single<List<EosAccountTokenModel>> getAllTokens(String accountName) {
+    public Single<List<EosAccountTokenModel>> getAllTokens(@NonNull String accountName) {
         return mEosAccountTokenRepository.getAllTokens(accountName);
+    }
+
+    public EosAccountTokenModel getToken(@NonNull String accountName, @NonNull String contract) {
+        return mEosAccountRepository.getToken(accountName, contract);
+    }
+
+    public void insertToken(@NonNull EosAccountTokenModel eosAccountTokenModel) {
+        mEosAccountRepository.insertToken(eosAccountTokenModel);
     }
 }

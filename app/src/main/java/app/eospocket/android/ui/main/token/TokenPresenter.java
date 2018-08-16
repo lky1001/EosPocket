@@ -1,7 +1,6 @@
 package app.eospocket.android.ui.main.token;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,27 +111,50 @@ public class TokenPresenter extends BasePresenter<TokenView> {
         .flatMap(eosAccountTokenModels -> {
             return Single.fromCallable(() -> {
                 if (!eosAccountTokenModels.isEmpty()) {
-                    // todo - duplicate check
-                    mPocketAppManager.insertAllTokens(eosAccountTokenModels);
+                    for (EosAccountTokenModel eosAccountTokenModel : eosAccountTokenModels) {
+                        EosAccountTokenModel tokenModel = mPocketAppManager
+                                .getToken(accountName, eosAccountTokenModel.getContract());
+
+                        if (tokenModel != null && tokenModel.getId() > 0) {
+                            continue;
+                        }
+
+                        mPocketAppManager.insertToken(eosAccountTokenModel);
+                    }
                 }
                 return true;
             });
         })
         .flatMap(result -> {
-            return mPocketAppManager.getAllTokens(accountName);
+            return mPocketAppManager.getAllTokens(accountName)
+                    .map(tokens -> {
+                        List<TokenTO> tokenTOList = new ArrayList<>();
+
+                        for (EosAccountTokenModel token : tokens) {
+                            // get token balance
+                            CurrencyRequest request = new CurrencyRequest();
+                            request.account = accountName;
+                            request.code = token.getContract();
+                            request.symbol = token.getSymbol();
+
+                            float balance = mEosManager.getTokenBalance(request).blockingGet();
+
+                            TokenTO tokenTO = TokenTO.builder()
+                                    .name(token.getTokenName())
+                                    .balance(balance)
+                                    .build();
+
+                            tokenTOList.add(tokenTO);
+                        }
+
+                        return tokenTOList;
+                    });
         })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(tokens -> {
             mAdapterDataModel.clear();
-
-            for (EosAccountTokenModel token : tokens) {
-                TokenTO tokenTO = TokenTO.builder()
-                        .name(token.getTokenName())
-                        .build();
-                mAdapterDataModel.add(tokenTO);
-            }
-
+            mAdapterDataModel.addAll(tokens);
             mView.showTokens();
         }, e -> {
             e.printStackTrace();
