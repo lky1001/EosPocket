@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token.adapter;
+package app.eospocket.android.ui.main.token.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -16,13 +16,13 @@ import java.util.List;
 import app.eospocket.android.R;
 import app.eospocket.android.ui.AdapterDataModel;
 import app.eospocket.android.ui.AdapterView;
-import app.eospocket.android.ui.main.token.TransferTO;
+import app.eospocket.android.ui.main.token.items.TransferItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.TransferViewHolder> implements AdapterDataModel<TransferTO>, AdapterView {
+public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.TransferViewHolder> implements AdapterDataModel<TransferItem>, AdapterView {
 
-    private List<TransferTO> mList = new ArrayList<>();
+    private List<TransferItem> mList = new ArrayList<>();
 
     private Context mContext;
 
@@ -45,7 +45,7 @@ public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.Transf
 
     @Override
     public void onBindViewHolder(@NonNull TransferViewHolder transferViewHolder, int position) {
-        TransferTO transfer = mList.get(position);
+        TransferItem transfer = mList.get(position);
 
         // 2018-07-02T02:14:22.500
 
@@ -64,13 +64,13 @@ public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.Transf
     }
 
     @Override
-    public void add(TransferTO model) {
+    public void add(TransferItem model) {
         mList.add(model);
         notifyDataSetChanged();
     }
 
     @Override
-    public void addAll(List<TransferTO> list) {
+    public void addAll(List<TransferItem> list) {
         mList.addAll(list);
         notifyDataSetChanged();
     }
@@ -82,7 +82,7 @@ public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.Transf
     }
 
     @Override
-    public TransferTO getModel(int position) {
+    public TransferItem getModel(int position) {
         return mList.get(position);
     }
 

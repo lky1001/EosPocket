@@ -15,10 +15,12 @@ import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.model.action.Action;
 import app.eospocket.android.eos.model.action.ActionList;
 import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCapItem;
-import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCapItemList;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.ActionRequest;
 import app.eospocket.android.eos.request.CurrencyRequest;
+import app.eospocket.android.ui.AdapterDataModel;
+import app.eospocket.android.ui.main.token.items.TokenItem;
+import app.eospocket.android.ui.main.token.items.TransferItem;
 import app.eospocket.android.wallet.PocketAppManager;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
@@ -36,6 +38,8 @@ public class TokenPresenter extends BasePresenter<TokenView> {
     private CustomPreference mCustomPreference;
     private Scheduler mProcessScheduler;
     private Scheduler mAndroidScheduler;
+    private AdapterDataModel<TokenItem> mTokenAdapterDataModel;
+    private AdapterDataModel<TransferItem> mTransferAdapterDataModel;
 
     public TokenPresenter(TokenView view, EosManager eosManager, PocketAppManager pocketAppManager,
             CustomPreference customPreference, Scheduler processScheduler, Scheduler androidScheduler) {
@@ -157,7 +161,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
         .flatMap(result -> {
             return mPocketAppManager.getAllTokens(accountName)
                     .map(tokens -> {
-                        List<TokenTO> tokenTOList = new ArrayList<>();
+                        List<TokenItem> tokenTOList = new ArrayList<>();
 
                         for (EosAccountTokenModel token : tokens) {
                             // get token balance
@@ -168,7 +172,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
 
                             float balance = mEosManager.getTokenBalance(request).blockingGet();
 
-                            TokenTO tokenTO = TokenTO.builder()
+                            TokenItem tokenTO = TokenItem.builder()
                                     .name(token.getTokenName())
                                     .balance(balance)
                                     .build();
@@ -182,8 +186,8 @@ public class TokenPresenter extends BasePresenter<TokenView> {
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(tokens -> {
-            mAdapterDataModel.clear();
-            mAdapterDataModel.addAll(tokens);
+            mTokenAdapterDataModel.clear();
+            mTokenAdapterDataModel.addAll(tokens);
             mView.showTokens();
         }, e -> {
             e.printStackTrace();
@@ -260,5 +264,13 @@ public class TokenPresenter extends BasePresenter<TokenView> {
             e.printStackTrace();
             mView.noMarketPrice();
         });
+    }
+
+    public void setTokenAdapterDataModel(AdapterDataModel<TokenItem> tokenAdapterDataModel) {
+        this.mTokenAdapterDataModel = tokenAdapterDataModel;
+    }
+
+    public void setTransferAdapterDataModel(AdapterDataModel<TransferItem> transferAdapterDataModel) {
+        this.mTransferAdapterDataModel = transferAdapterDataModel;
     }
 }

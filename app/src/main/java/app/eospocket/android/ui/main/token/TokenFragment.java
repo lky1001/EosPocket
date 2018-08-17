@@ -23,7 +23,8 @@ import app.eospocket.android.eos.model.coinmarketcap.CoinQuotes;
 import app.eospocket.android.ui.AdapterView;
 import app.eospocket.android.ui.importaccount.ImportAccountActivity;
 import app.eospocket.android.ui.main.MainNavigationFragment;
-import app.eospocket.android.ui.main.token.adapter.TokenAdapter;
+import app.eospocket.android.ui.main.token.adapters.TokenAdapter;
+import app.eospocket.android.ui.main.token.adapters.TransferAdapter;
 import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;
@@ -62,11 +63,20 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
     @BindView(R.id.token_listview)
     RecyclerView mTokenListView;
 
-    private LinearLayoutManager mLayoutManager;
+    @BindView(R.id.transfer_listview)
+    RecyclerView mTransferListView;
 
-    private AdapterView mAdapterView;
+    private LinearLayoutManager mTokenLayoutManager;
+
+    private AdapterView mTokenAdapterView;
 
     private TokenAdapter mTokenAdapter;
+
+    private LinearLayoutManager mTransferLayoutManager;
+
+    private AdapterView mTransferAdapterView;
+
+    private TransferAdapter mTransferAdapter;
 
     @Inject
     EosAccountRepository mEosAccountRepository;
@@ -88,13 +98,20 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
         super.onViewCreated(view, savedInstanceState);
         subscribeAccounts();
 
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mTokenLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mTokenAdapter = new TokenAdapter();
         mTokenListView.setAdapter(mTokenAdapter);
-        mTokenListView.setLayoutManager(mLayoutManager);
-        mAdapterView = mTokenAdapter;
+        mTokenListView.setLayoutManager(mTokenLayoutManager);
+        mTokenAdapterView = mTokenAdapter;
 
-        mTokenPresenter.setAdapterDataModel(mTokenAdapter);
+        mTransferLayoutManager = new LinearLayoutManager(getActivity());
+        mTransferAdapter = new TransferAdapter(getContext(), null);
+        mTransferListView.setAdapter(mTransferAdapter);
+        mTransferListView.setLayoutManager(mTransferLayoutManager);
+        mTransferAdapterView = mTransferAdapter;
+
+        mTokenPresenter.setTokenAdapterDataModel(mTokenAdapter);
+        mTokenPresenter.setTransferAdapterDataModel(mTransferAdapter);
         mTokenPresenter.onCreate();
     }
 
@@ -160,7 +177,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
     public void showTokens() {
         mTokenLoadingBar.setVisibility(View.GONE);
         mTokenListView.setVisibility(View.VISIBLE);
-        mAdapterView.refresh();
+        mTokenAdapter.refresh();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token.adapter;
+package app.eospocket.android.ui.main.token.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,14 +13,14 @@ import java.util.List;
 import app.eospocket.android.R;
 import app.eospocket.android.ui.AdapterDataModel;
 import app.eospocket.android.ui.AdapterView;
-import app.eospocket.android.ui.main.token.TokenTO;
+import app.eospocket.android.ui.main.token.items.TokenItem;
 import app.eospocket.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHolder> implements AdapterDataModel<TokenTO>, AdapterView {
+public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHolder> implements AdapterDataModel<TokenItem>, AdapterView {
 
-    private List<TokenTO> mList;
+    private List<TokenItem> mList;
 
     public TokenAdapter() {
         this.mList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
 
     @Override
     public void onBindViewHolder(@NonNull TokenViewHolder tokenViewHolder, int position) {
-        TokenTO item = mList.get(position);
+        TokenItem item = mList.get(position);
 
         tokenViewHolder.tokenNameText.setText(item.getName());
         tokenViewHolder.tokenBalanceText.setText(Utils.formatBalance(item.getBalance()));
@@ -51,13 +51,13 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
     }
 
     @Override
-    public void add(TokenTO model) {
+    public void add(TokenItem model) {
         mList.add(model);
         notifyItemInserted(getItemCount() - 1);
     }
 
     @Override
-    public void addAll(List<TokenTO> list) {
+    public void addAll(List<TokenItem> list) {
         mList.addAll(list);
         notifyItemInserted(getItemCount() - 1);
     }
@@ -69,7 +69,7 @@ public class TokenAdapter extends RecyclerView.Adapter<TokenAdapter.TokenViewHol
     }
 
     @Override
-    public TokenTO getModel(int position) {
+    public TokenItem getModel(int position) {
         return mList.get(position);
     }
 

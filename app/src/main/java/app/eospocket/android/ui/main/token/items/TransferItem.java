@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token;
+package app.eospocket.android.ui.main.token.items;
 
 import java.util.Date;
 
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class TransferTO {
+public class TransferItem {
 
     private long id;
 
