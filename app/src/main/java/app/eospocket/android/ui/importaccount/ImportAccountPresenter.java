@@ -17,6 +17,7 @@ import app.eospocket.android.wallet.PocketAppManager;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
 import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
 import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -31,14 +32,21 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
     private PocketAppManager mPocketAppManager;
 
+    private Scheduler mProcessScheduler;
+
+    private Scheduler mAndroidScheduler;
+
     public ImportAccountPresenter(ImportAccountView view, EosManager eosManager, EncryptUtil encryptUtil,
-            KeyStore keyStore, PocketAppManager pocketAppManager) {
+            KeyStore keyStore, PocketAppManager pocketAppManager,
+            Scheduler processScheduler, Scheduler androidScheduler) {
         super(view);
 
         this.mEosManager = eosManager;
         this.mEncryptUtil = encryptUtil;
         this.mKeyStore = keyStore;
         this.mPocketAppManager = pocketAppManager;
+        this.mProcessScheduler = processScheduler;
+        this.mAndroidScheduler = androidScheduler;
     }
 
     @Override
@@ -72,14 +80,17 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
             request.publicKey = publicKey;
             return mEosManager.findAccountByPublicKey(request);
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mProcessScheduler)
+        .observeOn(mAndroidScheduler)
         .subscribe(result -> {
-            if (result != null && !result.accounts.isEmpty()) {
+            if (result != null && result.accounts != null && !result.accounts.isEmpty()) {
                 mView.getAccount(result.accounts.get(0));
+            } else {
+                mView.noAccount();
             }
         }, e -> {
             e.printStackTrace();
+            mView.noAccount();
         });
     }
 

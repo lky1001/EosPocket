@@ -7,6 +7,8 @@ import app.eospocket.android.wallet.PocketAppManager;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 @Module
 public abstract class ImportAccountModule {
@@ -19,6 +21,6 @@ public abstract class ImportAccountModule {
             EosManager eosManager, EncryptUtil encryptUtil, KeyStore keyStore,
             PocketAppManager pocketAppManager) {
         return new ImportAccountPresenter(importAccountView, eosManager, encryptUtil, keyStore,
-                pocketAppManager);
+                pocketAppManager, Schedulers.io(), AndroidSchedulers.mainThread());
     }
 }
