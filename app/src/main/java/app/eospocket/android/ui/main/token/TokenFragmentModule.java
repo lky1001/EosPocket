@@ -6,6 +6,8 @@ import app.eospocket.android.wallet.PocketAppManager;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 @Module
 public abstract class TokenFragmentModule {
@@ -16,6 +18,7 @@ public abstract class TokenFragmentModule {
     @Provides
     static TokenPresenter provideTokenPresenter(TokenView tokenView, EosManager eosManager,
             PocketAppManager pocketAppManager, CustomPreference customPreference) {
-        return new TokenPresenter(tokenView, eosManager, pocketAppManager, customPreference);
+        return new TokenPresenter(tokenView, eosManager, pocketAppManager, customPreference,
+                Schedulers.io(), AndroidSchedulers.mainThread());
     }
 }

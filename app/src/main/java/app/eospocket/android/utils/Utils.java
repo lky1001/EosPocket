@@ -13,6 +13,10 @@ public class Utils {
     private static final DecimalFormat USD_FORMAT = new DecimalFormat("#,##0.000");
     private static final DecimalFormat PERCENT_FORMAT = new DecimalFormat("#,##0.00");
 
+    public int sum(int a, int b) {
+        return a + b;
+    }
+
     public static String formatBalance(double balance) {
         return BALANCE_FORMAT.format(balance);
     }

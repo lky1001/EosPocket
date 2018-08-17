@@ -22,6 +22,7 @@ import app.eospocket.android.eos.request.CurrencyRequest;
 import app.eospocket.android.wallet.PocketAppManager;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -33,13 +34,17 @@ public class TokenPresenter extends BasePresenter<TokenView> {
     private PocketAppManager mPocketAppManager;
 
     private CustomPreference mCustomPreference;
+    private Scheduler mProcessScheduler;
+    private Scheduler mAndroidScheduler;
 
     public TokenPresenter(TokenView view, EosManager eosManager, PocketAppManager pocketAppManager,
-            CustomPreference customPreference) {
+            CustomPreference customPreference, Scheduler processScheduler, Scheduler androidScheduler) {
         super(view);
         this.mEosManager = eosManager;
         this.mPocketAppManager = pocketAppManager;
         this.mCustomPreference = customPreference;
+        this.mProcessScheduler = processScheduler;
+        this.mAndroidScheduler = androidScheduler;
     }
 
     @Override
@@ -243,12 +248,17 @@ public class TokenPresenter extends BasePresenter<TokenView> {
 
     public void getMarketPrice(@NonNull String id) {
         mEosManager.getMarketPrice(id)
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mProcessScheduler)
+        .observeOn(mAndroidScheduler)
         .subscribe(coinMarketCapData -> {
-            mView.setMarketPrice(coinMarketCapData);
+            if (coinMarketCapData.data == null) {
+                mView.noMarketPrice();
+            } else {
+                mView.setMarketPrice(coinMarketCapData);
+            }
         }, e -> {
             e.printStackTrace();
+            mView.noMarketPrice();
         });
     }
 }

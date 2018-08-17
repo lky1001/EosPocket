@@ -187,4 +187,9 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
             }
         }
     }
+
+    @Override
+    public void noMarketPrice() {
+
+    }
 }
