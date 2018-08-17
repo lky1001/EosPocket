@@ -23,6 +23,7 @@ import app.eospocket.android.eos.model.coinmarketcap.CoinQuotes;
 import app.eospocket.android.ui.AdapterView;
 import app.eospocket.android.ui.importaccount.ImportAccountActivity;
 import app.eospocket.android.ui.main.MainNavigationFragment;
+import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +42,12 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
 
     @BindView(R.id.eos_balance_text)
     TextView mEosBalanceText;
+
+    @BindView(R.id.usd_balance_text)
+    TextView mUsdBalanceText;
+
+    @BindView(R.id.percent_text)
+    TextView mPriceChangeRateText;
 
     @BindView(R.id.account_name_text)
     TextView mAccountNameText;
@@ -64,6 +71,8 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
     EosAccountRepository mEosAccountRepository;
 
     private Disposable mAccountDisposable;
+
+    private Float mAccountEosBalance;
 
     @Nullable
     @Override
@@ -113,7 +122,6 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
                         mNestedScrollView.setVisibility(View.VISIBLE);
                         mTokenPresenter.getEosBalance(eosAccountModels.get(0));
                         mTokenPresenter.getTokens(eosAccountModels.get(0).getName());
-                        mTokenPresenter.getMarketPrice(Constants.EOS_COINMARKETCAP_ID);
                         mAccountNameText.setText(eosAccountModels.get(0).getName());
                     } else {
                         mImportAccountButton.setVisibility(View.VISIBLE);
@@ -157,7 +165,9 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
     @Override
     public void setEosBalance(Float balance) {
         if (isAdded()) {
-            mEosBalanceText.setText(balance + Constants.EOS_SYMBOL);
+            mAccountEosBalance = balance;
+            mEosBalanceText.setText(balance + " " + Constants.EOS_SYMBOL);
+            mTokenPresenter.getMarketPrice(Constants.EOS_COINMARKETCAP_ID);
         }
     }
 
@@ -165,8 +175,15 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
     public void setMarketPrice(CoinMarketCap coinMarketCapData) {
         if (isAdded() && coinMarketCapData != null) {
             CoinQuotes quotes = coinMarketCapData.data.quotes.get("USD");
+            double usd = Double.parseDouble(quotes.price);
+            mUsdBalanceText.setText("$ " + Utils.formatUsd(usd * mAccountEosBalance) + " USD");
+            mPriceChangeRateText.setText(quotes.percentChange24h);
 
-
+            if (quotes.percentChange24h.startsWith("-")) {
+                mPriceChangeRateText.setBackgroundResource(R.drawable.down_percent_bg);
+            } else {
+                mPriceChangeRateText.setBackgroundResource(R.drawable.up_percent_bg);
+            }
         }
     }
 }

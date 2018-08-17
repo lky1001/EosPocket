@@ -43,4 +43,7 @@ public class EosAccountTokenModel {
     @ColumnInfo(name = "token_contract")
     @NonNull
     private String contract;
+
+    @ColumnInfo(name = "coinmarketcap_id")
+    private String coinmarketcapId;
 }

@@ -77,7 +77,7 @@
                     android:layout_marginTop="5dp"
                     android:textColor="@android:color/white"
                     android:textSize="28sp"
-                    tools:text="0.0001 EOS" />
+                    android:text="-" />
 
                 <TextView
                     android:id="@+id/usd_balance_text"
@@ -88,7 +88,7 @@
                     android:layout_marginBottom="10dp"
                     android:textColor="@color/balance_usd_text_color"
                     android:textSize="18sp"
-                    tools:text="$123.123 USD" />
+                    android:text="-" />
 
                 <TextView
                     android:id="@+id/percent_text"
@@ -101,8 +101,7 @@
                     android:paddingRight="10dp"
                     android:layout_alignParentRight="true"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/down_percent_bg"
-                    tools:text="-2.1%" />
+                    android:text="-" />
             </RelativeLayout>
 
             <LinearLayout
@@ -147,7 +146,7 @@
                     android:paddingTop="10dp"
                     android:paddingLeft="20dp"
                     android:paddingBottom="10dp"
-                    android:text="@string/actions_text" />
+                    android:text="@string/transfers_text" />
             </LinearLayout>
 
         </LinearLayout>

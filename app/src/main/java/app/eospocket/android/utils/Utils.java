@@ -9,7 +9,11 @@ public class Utils {
     private static final DecimalFormat USD_FORMAT = new DecimalFormat("#,##0.000");
     private static final DecimalFormat PERCENT_FORMAT = new DecimalFormat("#,##0.00");
 
-    public static String formatBalance(float balance) {
+    public static String formatBalance(double balance) {
         return BALANCE_FORMAT.format(balance);
+    }
+
+    public static String formatUsd(double balance) {
+        return USD_FORMAT.format(balance);
     }
 }
