@@ -20,8 +20,4 @@ public interface EosAccountRepository {
     void deleteAll();
 
     Flowable<List<EosAccountModel>> getEosAccounts();
-
-    EosAccountTokenModel getToken(@NonNull String accountName, @NonNull String contract);
-
-    void insertToken(@NonNull EosAccountTokenModel eosAccountTokenModel);
 }

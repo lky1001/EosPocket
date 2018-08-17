@@ -10,6 +10,7 @@ import app.eospocket.android.eos.model.ChainInfo;
 import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.eos.model.action.ActionList;
 import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCap;
+import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCapItemList;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.ActionRequest;
 import app.eospocket.android.eos.request.CurrencyRequest;
@@ -116,5 +117,9 @@ public class EosManager {
 
     public Single<CoinMarketCap> getMarketPrice(@NonNull String id) {
         return mCoinMarketCapService.getPrice(id);
+    }
+
+    public Single<CoinMarketCapItemList> getCoinMarketCapListing() {
+        return mCoinMarketCapService.getListing();
     }
 }

@@ -1,6 +1,7 @@
 package app.eospocket.android.ui.main.token;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,6 +14,8 @@ import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.model.action.Action;
 import app.eospocket.android.eos.model.action.ActionList;
+import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCapItem;
+import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCapItemList;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.ActionRequest;
 import app.eospocket.android.eos.request.CurrencyRequest;
@@ -111,15 +114,36 @@ public class TokenPresenter extends BasePresenter<TokenView> {
         .flatMap(eosAccountTokenModels -> {
             return Single.fromCallable(() -> {
                 if (!eosAccountTokenModels.isEmpty()) {
+
+                    List<CoinMarketCapItem> coinMarketCapItem = mEosManager
+                            .getCoinMarketCapListing()
+                            .blockingGet()
+                            .data;
+
                     for (EosAccountTokenModel eosAccountTokenModel : eosAccountTokenModels) {
                         EosAccountTokenModel tokenModel = mPocketAppManager
                                 .getToken(accountName, eosAccountTokenModel.getContract());
 
                         if (tokenModel != null && tokenModel.getId() > 0) {
-                            continue;
-                        }
+                            if (TextUtils.isEmpty(tokenModel.getCoinmarketcapId())) {
+                                for (CoinMarketCapItem data : coinMarketCapItem) {
+                                    if (data.symbol.equalsIgnoreCase(tokenModel.getSymbol())) {
+                                        tokenModel.setCoinmarketcapId(String.valueOf(data.id));
+                                        mPocketAppManager.updateToken(tokenModel);
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            for (CoinMarketCapItem data : coinMarketCapItem) {
+                                if (data.symbol.equalsIgnoreCase(eosAccountTokenModel.getSymbol())) {
+                                    eosAccountTokenModel.setCoinmarketcapId(String.valueOf(data.id));
+                                    break;
+                                }
+                            }
 
-                        mPocketAppManager.insertToken(eosAccountTokenModel);
+                            mPocketAppManager.insertToken(eosAccountTokenModel);
+                        }
                     }
                 }
                 return true;

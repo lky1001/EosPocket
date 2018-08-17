@@ -49,10 +49,14 @@ public class PocketAppManager {
     }
 
     public EosAccountTokenModel getToken(@NonNull String accountName, @NonNull String contract) {
-        return mEosAccountRepository.getToken(accountName, contract);
+        return mEosAccountTokenRepository.getToken(accountName, contract);
     }
 
     public void insertToken(@NonNull EosAccountTokenModel eosAccountTokenModel) {
-        mEosAccountRepository.insertToken(eosAccountTokenModel);
+        mEosAccountTokenRepository.insert(eosAccountTokenModel);
+    }
+
+    public void updateToken(@NonNull EosAccountTokenModel tokenModel) {
+        mEosAccountTokenRepository.updateToken(tokenModel);
     }
 }
