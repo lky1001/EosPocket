@@ -39,4 +39,6 @@
     <string name="eos_text">EOS</string>
     <string name="tokens_text">Tokens</string>
     <string name="actions_text">Actions</string>
+    <string name="title_action">Action</string>
+    <string name="transfers_text">Transfers</string>
 </resources>

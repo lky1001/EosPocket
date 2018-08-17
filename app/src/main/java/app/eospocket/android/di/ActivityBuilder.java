@@ -12,6 +12,7 @@ import app.eospocket.android.ui.login.LoginActivity;
 import app.eospocket.android.ui.login.LoginActivityModule;
 import app.eospocket.android.ui.main.MainActivity;
 import app.eospocket.android.ui.main.MainActivityModule;
+import app.eospocket.android.ui.main.action.ActionModule;
 import app.eospocket.android.ui.main.setting.SettingModule;
 import app.eospocket.android.ui.main.stake.StakeModule;
 import app.eospocket.android.ui.main.token.TokenModule;
@@ -31,6 +32,7 @@ public abstract class ActivityBuilder {
             MainActivityModule.class,
             TokenModule.class,
             StakeModule.class,
+            ActionModule.class,
             SettingModule.class
     })
     abstract MainActivity bindMainActivity();

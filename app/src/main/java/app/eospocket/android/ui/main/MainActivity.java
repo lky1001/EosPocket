@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
+import app.eospocket.android.ui.main.action.ActionFragment;
 import app.eospocket.android.ui.main.setting.SettingFragment;
 import app.eospocket.android.ui.main.stake.StakeFragment;
 import app.eospocket.android.ui.main.token.TokenFragment;
@@ -25,6 +26,7 @@ public class MainActivity extends CommonActivity implements MainView {
     TokenFragment mTokenFragment = new TokenFragment();
     StakeFragment mStakeFragment = new StakeFragment();
     SettingFragment mSettingFragment = new SettingFragment();
+    ActionFragment mActionFragment = new ActionFragment();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class MainActivity extends CommonActivity implements MainView {
                 .add(R.id.fragment_container, mTokenFragment)
                 .add(R.id.fragment_container, mStakeFragment)
                 .add(R.id.fragment_container, mSettingFragment)
+                .add(R.id.fragment_container, mActionFragment)
                 .commit();
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -58,6 +61,7 @@ public class MainActivity extends CommonActivity implements MainView {
                         .beginTransaction()
                         .show(mTokenFragment)
                         .hide(mStakeFragment)
+                        .hide(mActionFragment)
                         .hide(mSettingFragment)
                         .commit();
                 return true;
@@ -66,13 +70,23 @@ public class MainActivity extends CommonActivity implements MainView {
                         .beginTransaction()
                         .hide(mTokenFragment)
                         .show(mStakeFragment)
+                        .hide(mActionFragment)
                         .hide(mSettingFragment)
                         .commit();
                 return true;
+            case R.id.navigation_action:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .hide(mTokenFragment)
+                        .hide(mStakeFragment)
+                        .show(mActionFragment)
+                        .hide(mSettingFragment)
+                        .commit();
             case R.id.navigation_setting:
                 getSupportFragmentManager()
                         .beginTransaction()
                         .hide(mTokenFragment)
+                        .hide(mStakeFragment)
                         .hide(mStakeFragment)
                         .show(mSettingFragment)
                         .commit();

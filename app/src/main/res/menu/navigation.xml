@@ -32,6 +32,13 @@
         app:contentDescription="@string/title_stake" />
 
     <item
+        android:id="@+id/navigation_action"
+        android:icon="@drawable/ic_gesture_tab"
+        android:title="@string/title_action"
+        android:iconTint="@android:color/white"
+        app:contentDescription="@string/title_action" />
+
+    <item
         android:id="@+id/navigation_setting"
         android:icon="@drawable/ic_setting"
         android:title="@string/title_setting"
