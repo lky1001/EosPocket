@@ -23,6 +23,7 @@ import app.eospocket.android.eos.model.coinmarketcap.CoinQuotes;
 import app.eospocket.android.ui.AdapterView;
 import app.eospocket.android.ui.importaccount.ImportAccountActivity;
 import app.eospocket.android.ui.main.MainNavigationFragment;
+import app.eospocket.android.ui.main.token.adapter.TokenAdapter;
 import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;

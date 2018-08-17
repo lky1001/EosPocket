@@ -13,4 +13,7 @@
     <color name="password_strength_strong">#30de33</color>
     <color name="password_strength_very_strong">#2684ff</color>
     <color name="balance_usd_text_color">#bdbdbd</color>
+    <color name="transfer_send_icon_color">#8b8b8b</color>
+    <color name="transfer_border_color">#e5e5e5</color>
+    <color name="transfer_copy_button_color">#8b8b8b</color>
 </resources>

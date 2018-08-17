@@ -41,4 +41,8 @@
     <string name="actions_text">Actions</string>
     <string name="title_action">Action</string>
     <string name="transfers_text">Transfers</string>
+    <string name="transfer_send_text">SEND</string>
+    <string name="transfer_from_text">FROM :</string>
+    <string name="transfer_to_text">TO :</string>
+    <string name="transfer_received_text">RECEIVED</string>
 </resources>
