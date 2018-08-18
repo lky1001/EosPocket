@@ -33,7 +33,7 @@
     <string name="reg_later_text">I will register my private key later.</string>
     <string name="account_name_aleady_exist">Account name is already exist.</string>
     <string name="success_import_account">Success.</string>
-    <string name="title_token">Token</string>
+    <string name="title_balance">Balance</string>
     <string name="title_stake">Stake</string>
     <string name="title_setting">Setting</string>
     <string name="eos_text">EOS</string>
@@ -46,5 +46,4 @@
     <string name="transfer_to_text">TO :</string>
     <string name="transfer_received_text">RECEIVED</string>
     <string name="more_text">more</string>
-    <string name="title_balance">Balance</string>
 </resources>

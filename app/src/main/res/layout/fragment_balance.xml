@@ -24,7 +24,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:minHeight="?actionBarSize"
-                android:text="@string/title_token" />
+                android:text="@string/title_balance" />
 
         </FrameLayout>
 

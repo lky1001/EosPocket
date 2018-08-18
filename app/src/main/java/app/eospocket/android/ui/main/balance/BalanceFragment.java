@@ -97,7 +97,7 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_token, container, false);
+        View view = inflater.inflate(R.layout.fragment_balance, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
