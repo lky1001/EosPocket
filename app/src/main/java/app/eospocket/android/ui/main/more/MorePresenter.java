@@ -1,10 +1,10 @@
-package app.eospocket.android.ui.main.setting;
+package app.eospocket.android.ui.main.more;
 
 import app.eospocket.android.common.mvp.BasePresenter;
 
-public class SettingPresenter extends BasePresenter<SettingView> {
+public class MorePresenter extends BasePresenter<MoreView> {
 
-    public SettingPresenter(SettingView view) {
+    public MorePresenter(MoreView view) {
         super(view);
     }
 

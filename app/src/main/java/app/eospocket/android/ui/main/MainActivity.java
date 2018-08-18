@@ -9,9 +9,9 @@ import javax.inject.Inject;
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
 import app.eospocket.android.ui.main.action.ActionFragment;
-import app.eospocket.android.ui.main.setting.SettingFragment;
-import app.eospocket.android.ui.main.stake.StakeFragment;
 import app.eospocket.android.ui.main.balance.BalanceFragment;
+import app.eospocket.android.ui.main.more.MoreFragment;
+import app.eospocket.android.ui.main.stake.StakeFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -25,7 +25,7 @@ public class MainActivity extends CommonActivity implements MainView {
 
     BalanceFragment mBalanceFragment = new BalanceFragment();
     StakeFragment mStakeFragment = new StakeFragment();
-    SettingFragment mSettingFragment = new SettingFragment();
+    MoreFragment mMoreFragment = new MoreFragment();
     ActionFragment mActionFragment = new ActionFragment();
 
     @Override
@@ -45,7 +45,7 @@ public class MainActivity extends CommonActivity implements MainView {
                 .beginTransaction()
                 .add(R.id.fragment_container, mBalanceFragment)
                 .add(R.id.fragment_container, mStakeFragment)
-                .add(R.id.fragment_container, mSettingFragment)
+                .add(R.id.fragment_container, mMoreFragment)
                 .add(R.id.fragment_container, mActionFragment)
                 .commit();
 
@@ -62,7 +62,7 @@ public class MainActivity extends CommonActivity implements MainView {
                         .show(mBalanceFragment)
                         .hide(mStakeFragment)
                         .hide(mActionFragment)
-                        .hide(mSettingFragment)
+                        .hide(mMoreFragment)
                         .commit();
                 return true;
             case R.id.navigation_stake:
@@ -71,7 +71,7 @@ public class MainActivity extends CommonActivity implements MainView {
                         .hide(mBalanceFragment)
                         .show(mStakeFragment)
                         .hide(mActionFragment)
-                        .hide(mSettingFragment)
+                        .hide(mMoreFragment)
                         .commit();
                 return true;
             case R.id.navigation_action:
@@ -80,15 +80,15 @@ public class MainActivity extends CommonActivity implements MainView {
                         .hide(mBalanceFragment)
                         .hide(mStakeFragment)
                         .show(mActionFragment)
-                        .hide(mSettingFragment)
+                        .hide(mMoreFragment)
                         .commit();
-            case R.id.navigation_setting:
+            case R.id.navigation_more:
                 getSupportFragmentManager()
                         .beginTransaction()
                         .hide(mBalanceFragment)
                         .hide(mStakeFragment)
                         .hide(mStakeFragment)
-                        .show(mSettingFragment)
+                        .show(mMoreFragment)
                         .commit();
                 return true;
         }

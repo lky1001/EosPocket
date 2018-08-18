@@ -39,9 +39,9 @@
         app:contentDescription="@string/title_action" />
 
     <item
-        android:id="@+id/navigation_setting"
-        android:icon="@drawable/ic_setting"
-        android:title="@string/title_setting"
+        android:id="@+id/navigation_more"
+        android:icon="@drawable/ic_dots_horizontal_circle"
+        android:title="@string/title_more"
         android:iconTint="@android:color/white"
-        app:contentDescription="@string/title_setting" />
+        app:contentDescription="@string/title_more" />
 </menu>

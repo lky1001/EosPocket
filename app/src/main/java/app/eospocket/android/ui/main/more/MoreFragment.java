@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.setting;
+package app.eospocket.android.ui.main.more;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,18 +14,18 @@ import app.eospocket.android.common.CommonFragment;
 import app.eospocket.android.ui.main.MainNavigationFragment;
 import butterknife.ButterKnife;
 
-public class SettingFragment extends CommonFragment implements MainNavigationFragment, SettingView {
+public class MoreFragment extends CommonFragment implements MainNavigationFragment, MoreView {
 
     @Inject
-    SettingPresenter mSettingPresenter;
+    MorePresenter mMorePresenter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_setting, container, false);
+        View view = inflater.inflate(R.layout.fragment_more, container, false);
         ButterKnife.bind(this, view);
 
-        mSettingPresenter.onCreate();
+        mMorePresenter.onCreate();
 
         return view;
     }
