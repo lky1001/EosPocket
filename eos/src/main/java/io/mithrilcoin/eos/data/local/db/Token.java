@@ -18,7 +18,7 @@ public class Token {
 
     private String symbol;
 
-    private float quantity;
+    private double quantity;
 
     private Date created;
 

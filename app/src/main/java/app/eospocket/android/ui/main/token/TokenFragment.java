@@ -83,7 +83,11 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
 
     private Disposable mAccountDisposable;
 
-    private Float mAccountEosBalance;
+    private Double mAccountEosBalance;
+
+    private long mTotalAction;
+
+    private int mPage;
 
     @Nullable
     @Override
@@ -108,6 +112,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
         mTransferAdapter = new TransferAdapter(getContext(), null);
         mTransferListView.setAdapter(mTransferAdapter);
         mTransferListView.setLayoutManager(mTransferLayoutManager);
+        mTransferListView.setNestedScrollingEnabled(false);
         mTransferAdapterView = mTransferAdapter;
 
         mTokenPresenter.setTokenAdapterDataModel(mTokenAdapter);
@@ -140,6 +145,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
                         mNestedScrollView.setVisibility(View.VISIBLE);
                         mTokenPresenter.getEosBalance(eosAccountModels.get(0));
                         mTokenPresenter.getTokens(eosAccountModels.get(0).getName());
+                        mTokenPresenter.getTransfers(eosAccountModels.get(0).getName(), mPage, Constants.ACTIONS_PER_PAGE);
                         mAccountNameText.setText(eosAccountModels.get(0).getName());
                     } else {
                         mImportAccountButton.setVisibility(View.VISIBLE);
@@ -181,7 +187,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
     }
 
     @Override
-    public void setEosBalance(Float balance) {
+    public void setEosBalance(Double balance) {
         if (isAdded()) {
             mAccountEosBalance = balance;
             mEosBalanceText.setText(balance + " " + Constants.EOS_SYMBOL);
@@ -207,6 +213,21 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
 
     @Override
     public void noMarketPrice() {
+
+    }
+
+    @Override
+    public void noTransferItem() {
+
+    }
+
+    @Override
+    public void showTransferItem() {
+
+    }
+
+    @Override
+    public void getTransferError() {
 
     }
 }

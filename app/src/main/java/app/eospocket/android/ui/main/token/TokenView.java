@@ -7,9 +7,15 @@ public interface TokenView extends IView {
 
     void showTokens();
 
-    void setEosBalance(Float balance);
+    void setEosBalance(Double balance);
 
     void setMarketPrice(CoinMarketCap coinMarketCapData);
 
     void noMarketPrice();
+
+    void noTransferItem();
+
+    void showTransferItem();
+
+    void getTransferError();
 }

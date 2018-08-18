@@ -38,7 +38,7 @@ public class EosAccountTokenModel {
 
     @ColumnInfo(name = "balance")
     @NonNull
-    private float balance;
+    private double balance;
 
     @ColumnInfo(name = "token_contract")
     @NonNull

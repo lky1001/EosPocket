@@ -104,14 +104,14 @@ public class EosManager {
         return mHistoryService.getAccountActions(request);
     }
 
-    public Single<Float> getTokenBalance(@NonNull CurrencyRequest request) {
+    public Single<Double> getTokenBalance(@NonNull CurrencyRequest request) {
         return mChainService.getCurrencyBalance(request)
                 .map(balance -> {
                    if (!balance.isEmpty()) {
-                       return Float.parseFloat(balance.get(0).split(" ")[0]);
+                       return Double.parseDouble(balance.get(0).split(" ")[0]);
                    }
 
-                   return 0.0f;
+                   return 0.0;
                 });
     }
 

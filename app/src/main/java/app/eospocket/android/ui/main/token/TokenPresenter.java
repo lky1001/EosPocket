@@ -19,6 +19,7 @@ import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.ActionRequest;
 import app.eospocket.android.eos.request.CurrencyRequest;
 import app.eospocket.android.ui.AdapterDataModel;
+import app.eospocket.android.ui.main.token.items.EosTransferResponse;
 import app.eospocket.android.ui.main.token.items.TokenItem;
 import app.eospocket.android.ui.main.token.items.TransferItem;
 import app.eospocket.android.wallet.PocketAppManager;
@@ -58,6 +59,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
 
     public void getTokens(@NonNull String accountName) {
         Single.fromCallable(() -> {
+            // get total action count
             ActionRequest request = new ActionRequest();
             request.accountName = accountName;
             request.pos = -1;
@@ -74,6 +76,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                         return new ArrayList<EosAccountTokenModel>();
                     }
 
+                    // paging
                     int totalPage = (int) (totalActions / Constants.ACTIONS_PER_PAGE);
 
                     if (totalActions % Constants.ACTIONS_PER_PAGE != 0) {
@@ -94,6 +97,11 @@ public class TokenPresenter extends BasePresenter<TokenView> {
 
                         ActionList actions = mEosManager.getAccountActions(request).blockingGet();
 
+                        /*
+                            get received token
+                            mayajuni(itam_ma) in itam netrowk
+                            https://eoscanner.io
+                         */
                         for (Action action : actions.actions) {
                             if ("transfer".equalsIgnoreCase(action.actionTrace.act.name)
                                     && accountName.equalsIgnoreCase(action.actionTrace.act.data.to)) {
@@ -170,7 +178,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                             request.code = token.getContract();
                             request.symbol = token.getSymbol();
 
-                            float balance = mEosManager.getTokenBalance(request).blockingGet();
+                            double balance = mEosManager.getTokenBalance(request).blockingGet();
 
                             TokenItem tokenTO = TokenItem.builder()
                                     .name(token.getTokenName())
@@ -266,11 +274,78 @@ public class TokenPresenter extends BasePresenter<TokenView> {
         });
     }
 
-    public void setTokenAdapterDataModel(AdapterDataModel<TokenItem> tokenAdapterDataModel) {
+    public void setTokenAdapterDataModel(@NonNull AdapterDataModel<TokenItem> tokenAdapterDataModel) {
         this.mTokenAdapterDataModel = tokenAdapterDataModel;
     }
 
-    public void setTransferAdapterDataModel(AdapterDataModel<TransferItem> transferAdapterDataModel) {
+    public void setTransferAdapterDataModel(@NonNull AdapterDataModel<TransferItem> transferAdapterDataModel) {
         this.mTransferAdapterDataModel = transferAdapterDataModel;
+    }
+
+    public void getTransfers(@NonNull String accountName, int page, int perPage) {
+        Single.fromCallable(() -> {
+            ActionRequest request = new ActionRequest();
+            request.accountName = accountName;
+            request.pos = -1;
+            request.offset = -1;
+            return request;
+        })
+        .flatMap((request) -> mEosManager.getAccountActions(request))
+        .flatMap(actionList -> {
+            return Single.fromCallable(() -> {
+                EosTransferResponse response = new EosTransferResponse();
+
+                if (!actionList.actions.isEmpty()) {
+                    long totalActions = actionList.actions.get(0).accountActionSeq;
+                    response.setTotalCount(totalActions);
+                    List<TransferItem> items = new ArrayList<>();
+                    response.setTransfers(items);
+
+                    long pos = page * perPage;
+                    long offset = perPage - 1;
+
+                    ActionRequest request = new ActionRequest();
+                    request.accountName = accountName;
+                    request.pos = pos;
+                    request.offset = offset;
+
+                    ActionList actions = mEosManager.getAccountActions(request).blockingGet();
+
+                    for (Action action : actions.actions) {
+                        if ("transfer".equalsIgnoreCase(action.actionTrace.act.name)) {
+                            TransferItem item = TransferItem.builder()
+                                    .id(action.globalActionSeq)
+                                    .blockNum(action.blockNum)
+                                    .trxId(action.actionTrace.trxId)
+                                    .from(action.actionTrace.act.data.from)
+                                    .to(action.actionTrace.act.data.to)
+                                    .symbol(action.actionTrace.act.data.quantity.split(" ")[1])
+                                    .quantity(Double.parseDouble(action.actionTrace.act.data.quantity.split(" ")[0]))
+                                    .memo(action.actionTrace.act.data.memo)
+                                    .created(action.blockTime)
+                                    .send(accountName.equals(action.actionTrace.act.data.from))
+                                    .build();
+
+                            items.add(item);
+                        }
+                    }
+                }
+
+                return response;
+            });
+        })
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(transferResponse -> {
+            if (transferResponse.getTotalCount() == 0) {
+                mView.noTransferItem();
+            } else {
+                mTransferAdapterDataModel.addAll(transferResponse.getTransfers());
+                mView.showTransferItem();
+            }
+        }, e -> {
+            e.printStackTrace();
+            mView.getTransferError();
+        });
     }
 }

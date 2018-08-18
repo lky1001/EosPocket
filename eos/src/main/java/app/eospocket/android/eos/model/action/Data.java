@@ -11,7 +11,11 @@ public class Data {
 
     public String receiver;
 
+    public String from;
+
     public String to;
+
+    public String memo;
 
     public String quantity;
 }

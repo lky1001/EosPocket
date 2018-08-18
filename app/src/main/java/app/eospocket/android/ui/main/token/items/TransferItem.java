@@ -1,7 +1,5 @@
 package app.eospocket.android.ui.main.token.items;
 
-import java.util.Date;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,17 +11,21 @@ public class TransferItem {
 
     private long id;
 
+    private long blockNum;
+
+    private String trxId;
+
     private String from;
 
     private String to;
 
     private String symbol;
 
-    private float quantity;
+    private double quantity;
 
     private String memo;
 
-    private Date created;
+    private String created;
 
     private boolean send;
 }

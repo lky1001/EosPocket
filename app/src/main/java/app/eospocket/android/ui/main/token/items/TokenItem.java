@@ -11,5 +11,5 @@ public class TokenItem {
 
     private String name;
 
-    private float balance;
+    private double balance;
 }
