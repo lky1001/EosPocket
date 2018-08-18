@@ -36,7 +36,7 @@
                     android:text="@string/transfer_send_text" />
 
                 <TextView
-                    android:id="@+id/send_amount_text"
+                    android:id="@+id/send_quantity_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -56,17 +56,17 @@
                     android:text="@string/transfer_to_text" />
 
                 <TextView
-                    android:id="@+id/send_address_text"
+                    android:id="@+id/send_account_name_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginLeft="5dp"
                     android:lines="1"
                     android:ellipsize="end"
-                    tools:text="sadfsafdasdfasfasfasfas" />
+                    tools:text="faceostest12" />
 
                 <ImageView
-                    android:id="@+id/copy_to_address"
+                    android:id="@+id/copy_to_account_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -75,6 +75,15 @@
                     app:srcCompat="@drawable/ic_copy" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/send_memo_text"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            tools:text="memo sadkfjldsafjkdasfjaslf" />
 
         <TextView
             android:id="@+id/send_date_text"
@@ -115,7 +124,7 @@
                     android:text="@string/transfer_received_text" />
 
                 <TextView
-                    android:id="@+id/receive_amount_text"
+                    android:id="@+id/receive_quantity_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -134,17 +143,17 @@
                     android:text="@string/transfer_from_text" />
 
                 <TextView
-                    android:id="@+id/receive_address_text"
+                    android:id="@+id/receive_account_name_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginLeft="5dp"
                     android:lines="1"
                     android:ellipsize="end"
-                    tools:text="sadfsafdasdfasfasfasfas" />
+                    tools:text="dkdkdkdkdkdk" />
 
                 <ImageView
-                    android:id="@+id/copy_from_address"
+                    android:id="@+id/copy_from_account_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -153,6 +162,16 @@
                     app:srcCompat="@drawable/ic_copy" />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/receive_memo_text"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:ellipsize="end"
+            android:textSize="12sp"
+            tools:text="memo sadkfjldsafjkdasfjaslf" />
+
         <TextView
             android:id="@+id/receive_date_text"
             android:layout_width="match_parent"

@@ -87,7 +87,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
 
     private long mTotalAction;
 
-    private int mPage;
+    private int mPage = 1;
 
     @Nullable
     @Override
@@ -145,7 +145,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
                         mNestedScrollView.setVisibility(View.VISIBLE);
                         mTokenPresenter.getEosBalance(eosAccountModels.get(0));
                         mTokenPresenter.getTokens(eosAccountModels.get(0).getName());
-                        mTokenPresenter.getTransfers(eosAccountModels.get(0).getName(), mPage, Constants.ACTIONS_PER_PAGE);
+                        mTokenPresenter.getTransfers(eosAccountModels.get(0).getName(), mPage, Constants.TRANSFER_PER_PAGE);
                         mAccountNameText.setText(eosAccountModels.get(0).getName());
                     } else {
                         mImportAccountButton.setVisibility(View.VISIBLE);

@@ -17,6 +17,7 @@ import app.eospocket.android.R;
 import app.eospocket.android.ui.AdapterDataModel;
 import app.eospocket.android.ui.AdapterView;
 import app.eospocket.android.ui.main.token.items.TransferItem;
+import app.eospocket.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,9 +53,17 @@ public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.Transf
         if (transfer.isSend()) {
             transferViewHolder.sendLayout.setVisibility(View.VISIBLE);
             transferViewHolder.receiveLayout.setVisibility(View.GONE);
+            transferViewHolder.sendAccountNameText.setText(transfer.getTo());
+            transferViewHolder.sendQuantityText.setText(Utils.formatBalance(transfer.getQuantity()) + " " + transfer.getSymbol());
+            transferViewHolder.sendMemoText.setText(transfer.getMemo());
+            transferViewHolder.sendDateText.setText(transfer.getCreated());
         } else {
             transferViewHolder.sendLayout.setVisibility(View.GONE);
             transferViewHolder.receiveLayout.setVisibility(View.VISIBLE);
+            transferViewHolder.receiveAccountNameText.setText(transfer.getFrom());
+            transferViewHolder.receiveQuantityText.setText(Utils.formatBalance(transfer.getQuantity()) + " " + transfer.getSymbol());
+            transferViewHolder.receiveMemoTest.setText(transfer.getMemo());
+            transferViewHolder.receiveDateText.setText(transfer.getCreated());
         }
     }
 
@@ -110,11 +119,11 @@ public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.Transf
         @BindView(R.id.receive_layout)
         LinearLayout receiveLayout;
 
-        @BindView(R.id.send_address_text)
-        TextView sendAddressText;
+        @BindView(R.id.send_account_name_text)
+        TextView sendAccountNameText;
 
-        @BindView(R.id.receive_address_text)
-        TextView receiveAddressText;
+        @BindView(R.id.receive_account_name_text)
+        TextView receiveAccountNameText;
 
         @BindView(R.id.send_date_text)
         TextView sendDateText;
@@ -122,17 +131,23 @@ public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.Transf
         @BindView(R.id.receive_date_text)
         TextView receiveDateText;
 
-        @BindView(R.id.send_amount_text)
-        TextView sendAmountText;
+        @BindView(R.id.send_quantity_text)
+        TextView sendQuantityText;
 
-        @BindView(R.id.receive_amount_text)
-        TextView receiveAmountText;
+        @BindView(R.id.receive_quantity_text)
+        TextView receiveQuantityText;
 
-        @BindView(R.id.copy_from_address)
-        ImageView copyFromAddressView;
+        @BindView(R.id.copy_from_account_name)
+        ImageView copyFromAccountNameView;
 
-        @BindView(R.id.copy_to_address)
-        ImageView copyToAddressView;
+        @BindView(R.id.copy_to_account_name)
+        ImageView copyToAccountNameView;
+
+        @BindView(R.id.send_memo_text)
+        TextView sendMemoText;
+
+        @BindView(R.id.receive_memo_text)
+        TextView receiveMemoTest;
 
         public TransferViewHolder(View itemView) {
             super(itemView);

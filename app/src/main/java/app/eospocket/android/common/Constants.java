@@ -10,6 +10,7 @@ public class Constants {
     public static final int PIN_CODE_LENGTH = 6;
 
     public static final int ACTIONS_PER_PAGE = 1000;
+    public static final int TRANSFER_PER_PAGE = 10;
 
     public static final String EOS_TOKEN_CONTRACT = "eosio.token";
     public static final String EOS_SYMBOL = "EOS";

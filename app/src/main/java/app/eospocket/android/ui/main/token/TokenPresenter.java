@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                     }
 
                     List<EosAccountTokenModel> eosAccountTokenModels = new ArrayList<>();
-                    Map<String, Boolean> tokens = new HashMap<>();
+                    Map<String, Boolean> tokenMap = new HashMap<>();
 
                     for (int i = 0; i < totalPage; i++) {
                         long pos = i * Constants.ACTIONS_PER_PAGE + mCustomPreference.getParseActionSeq();
@@ -105,10 +106,8 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                         for (Action action : actions.actions) {
                             if ("transfer".equalsIgnoreCase(action.actionTrace.act.name)
                                     && accountName.equalsIgnoreCase(action.actionTrace.act.data.to)) {
-                                if (!tokens.containsKey(action.actionTrace.act.account)
+                                if (!tokenMap.containsKey(action.actionTrace.act.account)
                                         && !Constants.EOS_TOKEN_CONTRACT.equalsIgnoreCase(action.actionTrace.act.account)) {
-                                    tokens.put(action.actionTrace.act.account, true);
-
                                     EosAccountTokenModel eosAccountTokenModel = new EosAccountTokenModel();
                                     eosAccountTokenModel.setAccountName(accountName);
                                     eosAccountTokenModel.setTokenName(action.actionTrace.act.data.quantity.split(" ")[1]);
@@ -116,6 +115,8 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                                     eosAccountTokenModel.setContract(action.actionTrace.act.account);
 
                                     eosAccountTokenModels.add(eosAccountTokenModel);
+
+                                    tokenMap.put(action.actionTrace.act.account, true);
                                 }
                             }
                         }
@@ -301,8 +302,10 @@ public class TokenPresenter extends BasePresenter<TokenView> {
                     List<TransferItem> items = new ArrayList<>();
                     response.setTransfers(items);
 
-                    long pos = page * perPage;
+                    // size = offset + 1
                     long offset = perPage - 1;
+                    // start account_action_seq (include)
+                    long pos = totalActions - ((page * perPage) - 1);
 
                     ActionRequest request = new ActionRequest();
                     request.accountName = accountName;
@@ -311,24 +314,31 @@ public class TokenPresenter extends BasePresenter<TokenView> {
 
                     ActionList actions = mEosManager.getAccountActions(request).blockingGet();
 
+                    Map<String, Boolean> trxIdMap = new HashMap<>();
+
                     for (Action action : actions.actions) {
                         if ("transfer".equalsIgnoreCase(action.actionTrace.act.name)) {
-                            TransferItem item = TransferItem.builder()
-                                    .id(action.globalActionSeq)
-                                    .blockNum(action.blockNum)
-                                    .trxId(action.actionTrace.trxId)
-                                    .from(action.actionTrace.act.data.from)
-                                    .to(action.actionTrace.act.data.to)
-                                    .symbol(action.actionTrace.act.data.quantity.split(" ")[1])
-                                    .quantity(Double.parseDouble(action.actionTrace.act.data.quantity.split(" ")[0]))
-                                    .memo(action.actionTrace.act.data.memo)
-                                    .created(action.blockTime)
-                                    .send(accountName.equals(action.actionTrace.act.data.from))
-                                    .build();
+                            if (!trxIdMap.containsKey(action.actionTrace.trxId)) {
+                                TransferItem item = TransferItem.builder()
+                                        .id(action.globalActionSeq)
+                                        .blockNum(action.blockNum)
+                                        .trxId(action.actionTrace.trxId)
+                                        .from(action.actionTrace.act.data.from)
+                                        .to(action.actionTrace.act.data.to)
+                                        .symbol(action.actionTrace.act.data.quantity.split(" ")[1])
+                                        .quantity(Double.parseDouble(action.actionTrace.act.data.quantity.split(" ")[0]))
+                                        .memo(action.actionTrace.act.data.memo)
+                                        .created(action.blockTime)
+                                        .send(accountName.equals(action.actionTrace.act.data.from))
+                                        .build();
 
-                            items.add(item);
+                                items.add(item);
+                                trxIdMap.put(action.actionTrace.trxId, true);
+                            }
                         }
                     }
+
+                    Collections.reverse(items);
                 }
 
                 return response;
