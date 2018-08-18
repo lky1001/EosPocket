@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token.adapters;
+package app.eospocket.android.ui.main.balance.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +13,7 @@ import java.util.List;
 import app.eospocket.android.R;
 import app.eospocket.android.ui.AdapterDataModel;
 import app.eospocket.android.ui.AdapterView;
-import app.eospocket.android.ui.main.token.items.TokenItem;
+import app.eospocket.android.ui.main.balance.items.TokenItem;
 import app.eospocket.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;

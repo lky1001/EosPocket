@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token;
+package app.eospocket.android.ui.main.balance;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +16,6 @@ import app.eospocket.android.wallet.PocketAppManager;
 import io.reactivex.Single;
 import io.reactivex.schedulers.TestScheduler;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -24,10 +23,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class TokenPresenterTest {
+public class BalancePresenterTest {
 
     @Mock
-    private TokenView view;
+    private BalanceView view;
 
     @Mock
     private EosManager eosManager;
@@ -40,7 +39,7 @@ public class TokenPresenterTest {
 
     private TestScheduler testScheduler;
 
-    private TokenPresenter presenter;
+    private BalancePresenter presenter;
 
     @Before
     public void setUp() throws Exception {
@@ -48,7 +47,7 @@ public class TokenPresenterTest {
 
         testScheduler = new TestScheduler();
 
-        presenter = new TokenPresenter(view, eosManager, pocketAppManager, customPreference,
+        presenter = new BalancePresenter(view, eosManager, pocketAppManager, customPreference,
                 testScheduler, testScheduler);
     }
 

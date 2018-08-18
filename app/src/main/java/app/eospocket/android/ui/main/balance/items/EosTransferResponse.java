@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token.items;
+package app.eospocket.android.ui.main.balance.items;
 
 import java.util.List;
 

@@ -18,11 +18,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/navigation_token"
+        android:id="@+id/navigation_balance"
         android:icon="@drawable/ic_coin"
-        android:title="@string/title_token"
+        android:title="@string/title_balance"
         android:iconTint="@android:color/white"
-        app:contentDescription="@string/title_token" />
+        app:contentDescription="@string/title_balance" />
 
     <item
         android:id="@+id/navigation_stake"

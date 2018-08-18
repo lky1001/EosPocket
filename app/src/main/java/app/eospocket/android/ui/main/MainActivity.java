@@ -11,7 +11,7 @@ import app.eospocket.android.common.CommonActivity;
 import app.eospocket.android.ui.main.action.ActionFragment;
 import app.eospocket.android.ui.main.setting.SettingFragment;
 import app.eospocket.android.ui.main.stake.StakeFragment;
-import app.eospocket.android.ui.main.token.TokenFragment;
+import app.eospocket.android.ui.main.balance.BalanceFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,7 +23,7 @@ public class MainActivity extends CommonActivity implements MainView {
     @BindView(R.id.navigation)
     BottomNavigationView mBottomNavigationView;
 
-    TokenFragment mTokenFragment = new TokenFragment();
+    BalanceFragment mBalanceFragment = new BalanceFragment();
     StakeFragment mStakeFragment = new StakeFragment();
     SettingFragment mSettingFragment = new SettingFragment();
     ActionFragment mActionFragment = new ActionFragment();
@@ -43,7 +43,7 @@ public class MainActivity extends CommonActivity implements MainView {
     private void initUi() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.fragment_container, mTokenFragment)
+                .add(R.id.fragment_container, mBalanceFragment)
                 .add(R.id.fragment_container, mStakeFragment)
                 .add(R.id.fragment_container, mSettingFragment)
                 .add(R.id.fragment_container, mActionFragment)
@@ -51,15 +51,15 @@ public class MainActivity extends CommonActivity implements MainView {
 
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mBottomNavigationView.setSelectedItemId(0);
-        changeFragment(R.id.navigation_token);
+        changeFragment(R.id.navigation_balance);
     }
 
     private boolean changeFragment(int itemId) {
         switch (itemId) {
-            case R.id.navigation_token:
+            case R.id.navigation_balance:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .show(mTokenFragment)
+                        .show(mBalanceFragment)
                         .hide(mStakeFragment)
                         .hide(mActionFragment)
                         .hide(mSettingFragment)
@@ -68,7 +68,7 @@ public class MainActivity extends CommonActivity implements MainView {
             case R.id.navigation_stake:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .hide(mTokenFragment)
+                        .hide(mBalanceFragment)
                         .show(mStakeFragment)
                         .hide(mActionFragment)
                         .hide(mSettingFragment)
@@ -77,7 +77,7 @@ public class MainActivity extends CommonActivity implements MainView {
             case R.id.navigation_action:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .hide(mTokenFragment)
+                        .hide(mBalanceFragment)
                         .hide(mStakeFragment)
                         .show(mActionFragment)
                         .hide(mSettingFragment)
@@ -85,7 +85,7 @@ public class MainActivity extends CommonActivity implements MainView {
             case R.id.navigation_setting:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .hide(mTokenFragment)
+                        .hide(mBalanceFragment)
                         .hide(mStakeFragment)
                         .hide(mStakeFragment)
                         .show(mSettingFragment)

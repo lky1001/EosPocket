@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token;
+package app.eospocket.android.ui.main.balance;
 
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -20,9 +20,9 @@ import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.ActionRequest;
 import app.eospocket.android.eos.request.CurrencyRequest;
 import app.eospocket.android.ui.AdapterDataModel;
-import app.eospocket.android.ui.main.token.items.EosTransferResponse;
-import app.eospocket.android.ui.main.token.items.TokenItem;
-import app.eospocket.android.ui.main.token.items.TransferItem;
+import app.eospocket.android.ui.main.balance.items.EosTransferResponse;
+import app.eospocket.android.ui.main.balance.items.TokenItem;
+import app.eospocket.android.ui.main.balance.items.TransferItem;
 import app.eospocket.android.wallet.PocketAppManager;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
@@ -31,7 +31,7 @@ import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-public class TokenPresenter extends BasePresenter<TokenView> {
+public class BalancePresenter extends BasePresenter<BalanceView> {
 
     private EosManager mEosManager;
 
@@ -43,7 +43,7 @@ public class TokenPresenter extends BasePresenter<TokenView> {
     private AdapterDataModel<TokenItem> mTokenAdapterDataModel;
     private AdapterDataModel<TransferItem> mTransferAdapterDataModel;
 
-    public TokenPresenter(TokenView view, EosManager eosManager, PocketAppManager pocketAppManager,
+    public BalancePresenter(BalanceView view, EosManager eosManager, PocketAppManager pocketAppManager,
             CustomPreference customPreference, Scheduler processScheduler, Scheduler androidScheduler) {
         super(view);
         this.mEosManager = eosManager;

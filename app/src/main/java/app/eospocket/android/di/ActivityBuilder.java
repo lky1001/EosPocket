@@ -15,7 +15,7 @@ import app.eospocket.android.ui.main.MainActivityModule;
 import app.eospocket.android.ui.main.action.ActionModule;
 import app.eospocket.android.ui.main.setting.SettingModule;
 import app.eospocket.android.ui.main.stake.StakeModule;
-import app.eospocket.android.ui.main.token.TokenModule;
+import app.eospocket.android.ui.main.balance.BalanceModule;
 import dagger.Module;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.ContributesAndroidInjector;
@@ -30,7 +30,7 @@ public abstract class ActivityBuilder {
     @ActivityScoped
     @ContributesAndroidInjector(modules = {
             MainActivityModule.class,
-            TokenModule.class,
+            BalanceModule.class,
             StakeModule.class,
             ActionModule.class,
             SettingModule.class

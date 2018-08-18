@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token;
+package app.eospocket.android.ui.main.balance;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,10 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,8 +25,8 @@ import app.eospocket.android.eos.model.coinmarketcap.CoinQuotes;
 import app.eospocket.android.ui.AdapterView;
 import app.eospocket.android.ui.importaccount.ImportAccountActivity;
 import app.eospocket.android.ui.main.MainNavigationFragment;
-import app.eospocket.android.ui.main.token.adapters.TokenAdapter;
-import app.eospocket.android.ui.main.token.adapters.TransferAdapter;
+import app.eospocket.android.ui.main.balance.adapters.TokenAdapter;
+import app.eospocket.android.ui.main.balance.adapters.TransferAdapter;
 import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;
@@ -34,10 +36,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class TokenFragment extends CommonFragment implements MainNavigationFragment, TokenView {
+public class BalanceFragment extends CommonFragment implements MainNavigationFragment, BalanceView {
 
     @Inject
-    TokenPresenter mTokenPresenter;
+    BalancePresenter mBalancePresenter;
 
     @BindView(R.id.btn_import_account)
     Button mImportAccountButton;
@@ -53,6 +55,9 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
 
     @BindView(R.id.account_name_text)
     TextView mAccountNameText;
+
+    @BindView(R.id.reg_private_key_button)
+    ImageButton mRegPrivateKeyButton;
 
     @BindView(R.id.nested_scroll_view)
     NestedScrollView mNestedScrollView;
@@ -115,9 +120,9 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
         mTransferListView.setNestedScrollingEnabled(false);
         mTransferAdapterView = mTransferAdapter;
 
-        mTokenPresenter.setTokenAdapterDataModel(mTokenAdapter);
-        mTokenPresenter.setTransferAdapterDataModel(mTransferAdapter);
-        mTokenPresenter.onCreate();
+        mBalancePresenter.setTokenAdapterDataModel(mTokenAdapter);
+        mBalancePresenter.setTransferAdapterDataModel(mTransferAdapter);
+        mBalancePresenter.onCreate();
     }
 
     @Override
@@ -143,10 +148,16 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
                     if (!eosAccountModels.isEmpty()) {
                         mImportAccountButton.setVisibility(View.GONE);
                         mNestedScrollView.setVisibility(View.VISIBLE);
-                        mTokenPresenter.getEosBalance(eosAccountModels.get(0));
-                        mTokenPresenter.getTokens(eosAccountModels.get(0).getName());
-                        mTokenPresenter.getTransfers(eosAccountModels.get(0).getName(), mPage, Constants.TRANSFER_PER_PAGE);
+                        mBalancePresenter.getEosBalance(eosAccountModels.get(0));
+                        mBalancePresenter.getTokens(eosAccountModels.get(0).getName());
+                        mBalancePresenter.getTransfers(eosAccountModels.get(0).getName(), mPage, Constants.TRANSFER_PER_PAGE);
                         mAccountNameText.setText(eosAccountModels.get(0).getName());
+
+                        if (TextUtils.isEmpty(eosAccountModels.get(0).getPrivateKey())) {
+                            mRegPrivateKeyButton.setVisibility(View.VISIBLE);
+                        } else {
+                            mRegPrivateKeyButton.setVisibility(View.GONE);
+                        }
                     } else {
                         mImportAccountButton.setVisibility(View.VISIBLE);
                         mNestedScrollView.setVisibility(View.GONE);
@@ -161,7 +172,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
     private void getAccount() {
         String accountName = "";
 
-        mTokenPresenter.getAccount(accountName);
+        mBalancePresenter.getAccount(accountName);
     }
 
     @OnClick(R.id.btn_import_account)
@@ -191,7 +202,7 @@ public class TokenFragment extends CommonFragment implements MainNavigationFragm
         if (isAdded()) {
             mAccountEosBalance = balance;
             mEosBalanceText.setText(balance + " " + Constants.EOS_SYMBOL);
-            mTokenPresenter.getMarketPrice(Constants.EOS_COINMARKETCAP_ID);
+            mBalancePresenter.getMarketPrice(Constants.EOS_COINMARKETCAP_ID);
         }
     }
 

@@ -1,4 +1,4 @@
-package app.eospocket.android.ui.main.token;
+package app.eospocket.android.ui.main.balance;
 
 import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.eos.EosManager;
@@ -10,15 +10,15 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 @Module
-public abstract class TokenFragmentModule {
+public abstract class BalanceFragmentModule {
 
     @Binds
-    public abstract TokenView view(TokenFragment tokenFragment);
+    public abstract BalanceView view(BalanceFragment balanceFragment);
 
     @Provides
-    static TokenPresenter provideTokenPresenter(TokenView tokenView, EosManager eosManager,
+    static BalancePresenter provideTokenPresenter(BalanceView balanceView, EosManager eosManager,
             PocketAppManager pocketAppManager, CustomPreference customPreference) {
-        return new TokenPresenter(tokenView, eosManager, pocketAppManager, customPreference,
+        return new BalancePresenter(balanceView, eosManager, pocketAppManager, customPreference,
                 Schedulers.io(), AndroidSchedulers.mainThread());
     }
 }

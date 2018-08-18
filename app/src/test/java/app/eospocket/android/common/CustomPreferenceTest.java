@@ -44,23 +44,15 @@ public class CustomPreferenceTest {
 
         mockStatic(TextUtils.class);
 
-        when(TextUtils.equals(any(CharSequence.class), any(CharSequence.class))).thenAnswer(new Answer<Object>() {
+        when(TextUtils.isEmpty(any(CharSequence.class))).thenAnswer(new Answer<Boolean>() {
             @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
+            public Boolean answer(InvocationOnMock invocation) throws Throwable {
                 CharSequence a = (CharSequence) invocation.getArguments()[0];
-                CharSequence b = (CharSequence) invocation.getArguments()[1];
-                if (a == b) return true;
-                int length;
-                if (a != null && b != null && (length = a.length()) == b.length()) {
-                    if (a instanceof String && b instanceof String) {
-                        return a.equals(b);
-                    } else {
-                        for (int i = 0; i < length; i++) {
-                            if (a.charAt(i) != b.charAt(i)) return false;
-                        }
-                        return true;
-                    }
+
+                if (a == null || a.length() == 0) {
+                    return true;
                 }
+
                 return false;
             }
         });
