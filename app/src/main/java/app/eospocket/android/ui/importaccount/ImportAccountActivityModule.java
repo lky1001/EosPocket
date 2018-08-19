@@ -11,7 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 @Module
-public abstract class ImportAccountModule {
+public abstract class ImportAccountActivityModule {
 
     @Binds
     public abstract ImportAccountView view(ImportAccountActivity importAccountActivity);

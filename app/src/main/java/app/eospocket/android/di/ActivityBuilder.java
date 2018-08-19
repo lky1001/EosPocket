@@ -5,7 +5,7 @@ import app.eospocket.android.ui.backupmnemoniccode.BackupMnemonicCodeActivityMod
 import app.eospocket.android.ui.createwallet.CreateWalletActivity;
 import app.eospocket.android.ui.createwallet.CreateWalletActivityModule;
 import app.eospocket.android.ui.importaccount.ImportAccountActivity;
-import app.eospocket.android.ui.importaccount.ImportAccountModule;
+import app.eospocket.android.ui.importaccount.ImportAccountActivityModule;
 import app.eospocket.android.ui.intro.IntroActivity;
 import app.eospocket.android.ui.intro.IntroActivityModule;
 import app.eospocket.android.ui.login.LoginActivity;
@@ -16,6 +16,8 @@ import app.eospocket.android.ui.main.action.ActionModule;
 import app.eospocket.android.ui.main.more.MoreModule;
 import app.eospocket.android.ui.main.stake.StakeModule;
 import app.eospocket.android.ui.main.balance.BalanceModule;
+import app.eospocket.android.ui.action.ActionActivity;
+import app.eospocket.android.ui.action.ActionActivityModule;
 import dagger.Module;
 import dagger.android.AndroidInjectionModule;
 import dagger.android.ContributesAndroidInjector;
@@ -50,6 +52,10 @@ public abstract class ActivityBuilder {
     abstract LoginActivity bindLoginActivity();
 
     @ActivityScoped
-    @ContributesAndroidInjector(modules = ImportAccountModule.class)
+    @ContributesAndroidInjector(modules = ImportAccountActivityModule.class)
     abstract ImportAccountActivity bindImportAccountActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = ActionActivityModule.class)
+    abstract ActionActivity bindTransactionActivity();
 }

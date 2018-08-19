@@ -160,12 +160,12 @@
                     android:paddingBottom="10dp"
                     android:text="@string/transfers_text" />
 
-                <TextView
+                <Button
+                    android:id="@+id/action_more_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="10dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="10dp"
+                    android:layout_marginRight="20dp"
                     android:text="@string/more_text" />
             </LinearLayout>
 

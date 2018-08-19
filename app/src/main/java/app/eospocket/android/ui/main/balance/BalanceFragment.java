@@ -27,6 +27,7 @@ import app.eospocket.android.ui.importaccount.ImportAccountActivity;
 import app.eospocket.android.ui.main.MainNavigationFragment;
 import app.eospocket.android.ui.main.balance.adapters.TokenAdapter;
 import app.eospocket.android.ui.main.balance.adapters.TransferAdapter;
+import app.eospocket.android.ui.action.ActionActivity;
 import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;
@@ -220,6 +221,11 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
                 mPriceChangeRateText.setBackgroundResource(R.drawable.up_percent_bg);
             }
         }
+    }
+
+    @OnClick(R.id.action_more_button)
+    public void onActionMoreClick() {
+        startActivity(ActionActivity.class);
     }
 
     @Override
