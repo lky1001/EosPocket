@@ -28,8 +28,6 @@ import app.eospocket.android.wallet.db.model.EosAccountModel;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class BalancePresenter extends BasePresenter<BalanceView> {
 
@@ -39,18 +37,18 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
 
     private CustomPreference mCustomPreference;
     private Scheduler mProcessScheduler;
-    private Scheduler mAndroidScheduler;
+    private Scheduler mOberverScheduler;
     private AdapterDataModel<TokenItem> mTokenAdapterDataModel;
     private AdapterDataModel<TransferItem> mTransferAdapterDataModel;
 
     public BalancePresenter(BalanceView view, EosManager eosManager, PocketAppManager pocketAppManager,
-            CustomPreference customPreference, Scheduler processScheduler, Scheduler androidScheduler) {
+            CustomPreference customPreference, Scheduler processScheduler, Scheduler observerScheduler) {
         super(view);
         this.mEosManager = eosManager;
         this.mPocketAppManager = pocketAppManager;
         this.mCustomPreference = customPreference;
         this.mProcessScheduler = processScheduler;
-        this.mAndroidScheduler = androidScheduler;
+        this.mOberverScheduler = observerScheduler;
     }
 
     @Override
@@ -192,8 +190,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
                         return tokenTOList;
                     });
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mProcessScheduler)
+        .observeOn(mOberverScheduler)
         .subscribe(tokens -> {
             mTokenAdapterDataModel.clear();
             mTokenAdapterDataModel.addAll(tokens);
@@ -210,8 +208,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
             return request;
         })
         .flatMap((request) -> mEosManager.findAccountByName(request))
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mProcessScheduler)
+        .observeOn(mOberverScheduler)
         .subscribe(account -> {
 
         }, e -> {
@@ -250,8 +248,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
         .flatMap((request) -> {
             return mEosManager.getTokenBalance(request);
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mProcessScheduler)
+        .observeOn(mOberverScheduler)
         .subscribe(balance -> {
             mView.setEosBalance(balance);
         }, e -> {
@@ -262,7 +260,7 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
     public void getMarketPrice(@NonNull String id) {
         mEosManager.getMarketPrice(id)
         .subscribeOn(mProcessScheduler)
-        .observeOn(mAndroidScheduler)
+        .observeOn(mOberverScheduler)
         .subscribe(coinMarketCapData -> {
             if (coinMarketCapData.data == null) {
                 mView.noMarketPrice();
@@ -344,8 +342,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
                 return response;
             });
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mProcessScheduler)
+        .observeOn(mOberverScheduler)
         .subscribe(transferResponse -> {
             if (transferResponse.getTotalCount() == 0) {
                 mView.noTransferItem();

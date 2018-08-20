@@ -19,8 +19,6 @@ import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
 import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
 import io.reactivex.Scheduler;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
@@ -34,11 +32,11 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
     private Scheduler mProcessScheduler;
 
-    private Scheduler mAndroidScheduler;
+    private Scheduler mOberverScheduler;
 
     public ImportAccountPresenter(ImportAccountView view, EosManager eosManager, EncryptUtil encryptUtil,
             KeyStore keyStore, PocketAppManager pocketAppManager,
-            Scheduler processScheduler, Scheduler androidScheduler) {
+            Scheduler processScheduler, Scheduler oberverScheduler) {
         super(view);
 
         this.mEosManager = eosManager;
@@ -46,7 +44,7 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
         this.mKeyStore = keyStore;
         this.mPocketAppManager = pocketAppManager;
         this.mProcessScheduler = processScheduler;
-        this.mAndroidScheduler = androidScheduler;
+        this.mOberverScheduler = oberverScheduler;
     }
 
     @Override
@@ -81,7 +79,7 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
             return mEosManager.findAccountByPublicKey(request);
         })
         .subscribeOn(mProcessScheduler)
-        .observeOn(mAndroidScheduler)
+        .observeOn(mOberverScheduler)
         .subscribe(result -> {
             if (result != null && result.accounts != null && !result.accounts.isEmpty()) {
                 mView.getAccount(result.accounts.get(0));
@@ -102,8 +100,8 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
             return request;
         })
         .flatMap(request -> mEosManager.findAccountByName(request))
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mProcessScheduler)
+        .observeOn(mOberverScheduler)
         .subscribe(result -> {
             mView.foundAccount(result);
         }, e -> {
@@ -146,8 +144,8 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
             return false;
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mProcessScheduler)
+        .observeOn(mOberverScheduler)
         .subscribe(result -> {
             if (result) {
                 mView.successImport();
