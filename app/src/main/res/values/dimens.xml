@@ -2,4 +2,7 @@
 <resources>
     <dimen name="margin_normal">16dp</dimen>
     <dimen name="bottom_navigation_height">56dp</dimen>
+
+    <dimen name="stake_view_holder_left_padding">10dp</dimen>
+    <dimen name="stake_view_holder_right_padding">10dp</dimen>
 </resources>
