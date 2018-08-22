@@ -3,7 +3,7 @@ package app.eospocket.android.ui.main.stake.items;
 import app.eospocket.android.R;
 
 public enum Title {
-    BALANCE_STAKE(null, null, R.layout.list_item_stake),
+    BALANCE(null, null, R.layout.list_item_balance),
     CPU("CPU", "ms", R.layout.list_item_stake_resource),
     NETWORK("Network", "bytes", R.layout.list_item_stake_resource),
     REFUNDING("Refunding", "EOS", R.layout.list_item_stake_resource),

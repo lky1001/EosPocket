@@ -13,22 +13,22 @@ import app.eospocket.android.R;
 import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.ui.main.stake.items.StakeItem;
 import app.eospocket.android.ui.main.stake.items.Title;
-import app.eospocket.android.ui.main.stake.viewholder.BaseViewHolder;
-import app.eospocket.android.ui.main.stake.viewholder.StakeResourceViewHolder;
 import app.eospocket.android.ui.main.stake.viewholder.StakeViewHolder;
+import app.eospocket.android.ui.main.stake.viewholder.StakeResourceViewHolder;
+import app.eospocket.android.ui.main.stake.viewholder.StakeBalanceViewHolder;
 
-public class StakeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
+public class StakeAdapter extends RecyclerView.Adapter<StakeViewHolder> {
 
     private List<StakeItem> mItems = new ArrayList<>();
     private EosAccount mEosAccount;
 
     @NonNull
     @Override
-    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int layoutResId) {
+    public StakeViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int layoutResId) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(layoutResId, viewGroup, false);
 
-        if (layoutResId == R.layout.list_item_stake) {
-            return new StakeViewHolder(view);
+        if (layoutResId == R.layout.list_item_balance) {
+            return new StakeBalanceViewHolder(view);
         } else if (layoutResId == R.layout.list_item_stake_resource) {
             return new StakeResourceViewHolder(view);
         }
@@ -45,8 +45,8 @@ public class StakeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseViewHolder baseViewHolder, int i) {
-        baseViewHolder.bind(mEosAccount);
+    public void onBindViewHolder(@NonNull StakeViewHolder stakeViewHolder, int i) {
+        stakeViewHolder.bind(mEosAccount);
     }
 
     @Override
