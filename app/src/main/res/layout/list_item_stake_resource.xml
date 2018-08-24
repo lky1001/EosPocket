@@ -15,16 +15,23 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:text="CPU"/>
+        android:textColor="#ffffff"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        tools:text="CPU"
+        tools:textColor="#000000"/>
 
     <TextView
         android:id="@+id/txt_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:textSize="16dp"
+        android:textColor="#ffffff"
         app:layout_constraintTop_toBottomOf="@+id/txt_title"
         app:layout_constraintLeft_toLeftOf="parent"
-        tools:text="1.12ms / 0.54ms (0.1000 EOS)"/>
+        tools:text="1.12ms / 0.54ms (0.1000 EOS)"
+        tools:textColor="#000000"/>
 
     <View
         android:id="@+id/progress"

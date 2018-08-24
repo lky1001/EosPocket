@@ -7,29 +7,35 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/stake_view_holder_left_padding"
-    android:paddingRight="@dimen/stake_view_holder_right_padding"
-    android:paddingBottom="20dp">
+    android:paddingRight="@dimen/stake_view_holder_right_padding">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@color/balance_background"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <TextView
             android:id="@+id/txt_balance_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:textColor="#7dffffff"
+            android:text="Balance"
             tools:text="Balance"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
         <TextView
-            android:id="@+id/txt_balance_eos"
+            android:id="@+id/txt_stake_balance_eos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold"
             tools:text="0.1454"
             app:layout_constraintTop_toBottomOf="@+id/txt_balance_title"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -40,8 +46,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:textColor="#7dffffff"
             android:text="EOS"
-            app:layout_constraintTop_toBottomOf="@+id/txt_balance_eos"
+            app:layout_constraintTop_toBottomOf="@+id/txt_stake_balance_eos"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
@@ -50,6 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
+            android:textColor="#ffffff"
             android:text="STAKE"
             app:layout_constraintTop_toBottomOf="@+id/temp1"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -60,23 +68,29 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:background="@color/stake_background"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp">
 
         <TextView
             android:id="@+id/txt_stake_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:textColor="#7dffffff"
             tools:text="Stake"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
         <TextView
-            android:id="@+id/txt_stake_eos"
+            android:id="@+id/txt_unstake_eos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold"
             tools:text="0.2000"
             app:layout_constraintTop_toBottomOf="@+id/txt_stake_title"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -87,8 +101,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:textColor="#7dffffff"
             android:text="EOS"
-            app:layout_constraintTop_toBottomOf="@+id/txt_stake_eos"
+            app:layout_constraintTop_toBottomOf="@+id/txt_unstake_eos"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
@@ -97,7 +112,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="STAKE"
+            android:textColor="#ffffff"
+            android:text="UNSTAKE"
             app:layout_constraintTop_toBottomOf="@+id/temp2"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>

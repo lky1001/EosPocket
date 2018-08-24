@@ -16,4 +16,15 @@
     <color name="transfer_send_icon_color">#8b8b8b</color>
     <color name="transfer_border_color">#e5e5e5</color>
     <color name="transfer_copy_button_color">#8b8b8b</color>
+
+    <!-- Stake Fragment -->
+    <color name="stake_fragment_background">#20212F</color>
+    <color name="stake_resource_cpu_color">#C06AFE</color>
+    <color name="stake_resource_network_color">#59B984</color>
+    <color name="stake_resource_refunding_color">#ECA868</color>
+    <color name="stake_resource_ram_color">#ff6363</color>
+    <color name="stake_background">#B148DF</color>
+    <color name="balance_background">#5353F2</color>
+
+
 </resources>

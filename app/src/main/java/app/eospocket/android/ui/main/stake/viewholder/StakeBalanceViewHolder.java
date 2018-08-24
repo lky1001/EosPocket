@@ -6,22 +6,19 @@ import android.widget.TextView;
 
 import app.eospocket.android.R;
 import app.eospocket.android.eos.model.account.EosAccount;
+import app.eospocket.android.ui.main.stake.items.BalanceItem;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StakeBalanceViewHolder extends StakeViewHolder {
+public class StakeBalanceViewHolder extends StakeViewHolder<BalanceItem> {
 
-    @BindView(R.id.txt_balance_title)
-    TextView txtBalanceTitle;
-    @BindView(R.id.txt_balance_eos)
-    TextView txtBalanceEos;
+    @BindView(R.id.txt_stake_balance_eos)
+    TextView txtStakeBalanceEos;
     @BindView(R.id.btn_stake)
     TextView btnStake;
 
-    @BindView(R.id.txt_stake_title)
-    TextView txtStakeTitle;
-    @BindView(R.id.txt_stake_eos)
-    TextView txtStakeEos;
+    @BindView(R.id.txt_unstake_eos)
+    TextView txtUnStakeEos;
     @BindView(R.id.btn_unstake)
     TextView btnUnStake;
 
@@ -31,7 +28,11 @@ public class StakeBalanceViewHolder extends StakeViewHolder {
     }
 
     @Override
-    public void bind(EosAccount eosAccount) {
+    public void bind(BalanceItem item) {
+        EosAccount eosAccount = item.getEosAccount();
 
+        long totalEos = eosAccount.cpuWeight + eosAccount.netWeight;
+        txtStakeBalanceEos.setText(String.valueOf(totalEos));
+        txtUnStakeEos.setText(eosAccount.coreLiquidBalance);
     }
 }
