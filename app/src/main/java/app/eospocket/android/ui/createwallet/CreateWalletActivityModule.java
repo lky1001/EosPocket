@@ -1,5 +1,6 @@
 package app.eospocket.android.ui.createwallet;
 
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.security.AuthManager;
 import dagger.Binds;
@@ -14,7 +15,7 @@ public abstract class CreateWalletActivityModule {
 
     @Provides
     static CreateWalletPresenter provideCreateWalletPresenter(CreateWalletView createWalletView,
-            EosManager eosManager, AuthManager authManager) {
-        return new CreateWalletPresenter(createWalletView, eosManager, authManager);
+            EosManager eosManager, AuthManager authManager, RxJavaSchedulers rxJavaSchedulers) {
+        return new CreateWalletPresenter(createWalletView, eosManager, authManager, rxJavaSchedulers);
     }
 }

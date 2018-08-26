@@ -9,16 +9,17 @@ import java.io.IOException;
 
 import app.eospocket.android.common.Constants;
 import app.eospocket.android.common.CustomPreference;
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.model.coinmarketcap.CoinData;
 import app.eospocket.android.eos.model.coinmarketcap.CoinMarketCap;
 import app.eospocket.android.wallet.PocketAppManager;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.schedulers.TestScheduler;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -48,7 +49,27 @@ public class BalancePresenterTest {
         testScheduler = new TestScheduler();
 
         presenter = new BalancePresenter(view, eosManager, pocketAppManager, customPreference,
-                testScheduler, testScheduler);
+                new RxJavaSchedulers() {
+                    @Override
+                    public Scheduler getNewThread() {
+                        return testScheduler;
+                    }
+
+                    @Override
+                    public Scheduler getComputation() {
+                        return testScheduler;
+                    }
+
+                    @Override
+                    public Scheduler getIo() {
+                        return testScheduler;
+                    }
+
+                    @Override
+                    public Scheduler getMainThread() {
+                        return testScheduler;
+                    }
+                });
     }
 
     @Test

@@ -5,22 +5,24 @@ import android.security.keystore.UserNotAuthenticatedException;
 import android.util.Log;
 
 import app.eospocket.android.common.mvp.BasePresenter;
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.security.AuthManager;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class CreateWalletPresenter extends BasePresenter<CreateWalletView> {
 
     private EosManager mEosManager;
 
     private AuthManager mAuthManager;
+    private RxJavaSchedulers mRxJavaSchedulers;
 
-    public CreateWalletPresenter(CreateWalletView view, EosManager eosManager, AuthManager authManager) {
+    public CreateWalletPresenter(CreateWalletView view, EosManager eosManager, AuthManager authManager,
+            RxJavaSchedulers rxJavaSchedulers) {
         super(view);
         this.mEosManager = eosManager;
         this.mAuthManager = authManager;
+        this.mRxJavaSchedulers = rxJavaSchedulers;
     }
 
     @Override
@@ -51,8 +53,8 @@ public class CreateWalletPresenter extends BasePresenter<CreateWalletView> {
 
             return true;
         })
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(result -> {
             if (result) {
                 mView.successCreateWallet();

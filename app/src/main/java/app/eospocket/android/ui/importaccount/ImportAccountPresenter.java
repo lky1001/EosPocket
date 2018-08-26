@@ -8,6 +8,7 @@ import java.util.Calendar;
 
 import app.eospocket.android.common.Constants;
 import app.eospocket.android.common.mvp.BasePresenter;
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
@@ -17,7 +18,6 @@ import app.eospocket.android.wallet.PocketAppManager;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
 import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
 import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
 
 public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
@@ -29,22 +29,17 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
     private KeyStore mKeyStore;
 
     private PocketAppManager mPocketAppManager;
-
-    private Scheduler mProcessScheduler;
-
-    private Scheduler mOberverScheduler;
+    private RxJavaSchedulers mRxJavaSchedulers;
 
     public ImportAccountPresenter(ImportAccountView view, EosManager eosManager, EncryptUtil encryptUtil,
-            KeyStore keyStore, PocketAppManager pocketAppManager,
-            Scheduler processScheduler, Scheduler oberverScheduler) {
+            KeyStore keyStore, PocketAppManager pocketAppManager, RxJavaSchedulers rxJavaSchedulers) {
         super(view);
 
         this.mEosManager = eosManager;
         this.mEncryptUtil = encryptUtil;
         this.mKeyStore = keyStore;
         this.mPocketAppManager = pocketAppManager;
-        this.mProcessScheduler = processScheduler;
-        this.mOberverScheduler = oberverScheduler;
+        this.mRxJavaSchedulers = rxJavaSchedulers;
     }
 
     @Override
@@ -78,8 +73,8 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
             request.publicKey = publicKey;
             return mEosManager.findAccountByPublicKey(request);
         })
-        .subscribeOn(mProcessScheduler)
-        .observeOn(mOberverScheduler)
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(result -> {
             if (result != null && result.accounts != null && !result.accounts.isEmpty()) {
                 mView.getAccount(result.accounts.get(0));
@@ -100,8 +95,8 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
             return request;
         })
         .flatMap(request -> mEosManager.findAccountByName(request))
-        .subscribeOn(mProcessScheduler)
-        .observeOn(mOberverScheduler)
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(result -> {
             mView.foundAccount(result);
         }, e -> {
@@ -144,8 +139,8 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
             return false;
         })
-        .subscribeOn(mProcessScheduler)
-        .observeOn(mOberverScheduler)
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(result -> {
             if (result) {
                 mView.successImport();

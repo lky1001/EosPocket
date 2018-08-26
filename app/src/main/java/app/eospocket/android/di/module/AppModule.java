@@ -12,6 +12,8 @@ import javax.inject.Singleton;
 
 import app.eospocket.android.common.Constants;
 import app.eospocket.android.common.CustomPreference;
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
+import app.eospocket.android.common.rxjava.RxJavaSchedulersImpl;
 import app.eospocket.android.di.ApplicationContext;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.ServiceBuilder;
@@ -41,6 +43,12 @@ public abstract class AppModule {
     @Binds
     @ApplicationContext
     abstract Context bindContext(Application application);
+
+    @Provides
+    @Singleton
+    static RxJavaSchedulers provideRxJavaSchedulers() {
+        return new RxJavaSchedulersImpl();
+    }
 
     @Provides
     @Singleton

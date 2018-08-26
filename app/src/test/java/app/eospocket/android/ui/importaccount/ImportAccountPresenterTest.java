@@ -7,11 +7,13 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.security.keystore.KeyStore;
 import app.eospocket.android.utils.EncryptUtil;
 import app.eospocket.android.wallet.PocketAppManager;
+import io.reactivex.Scheduler;
 import io.reactivex.Single;
 import io.reactivex.schedulers.TestScheduler;
 
@@ -49,7 +51,27 @@ public class ImportAccountPresenterTest {
         testScheduler = new TestScheduler();
 
         presenter = new ImportAccountPresenter(view, eosManager, encryptUtil, keyStore,
-                pocketAppManager, testScheduler, testScheduler);
+                pocketAppManager, new RxJavaSchedulers() {
+            @Override
+            public Scheduler getNewThread() {
+                return testScheduler;
+            }
+
+            @Override
+            public Scheduler getComputation() {
+                return testScheduler;
+            }
+
+            @Override
+            public Scheduler getIo() {
+                return testScheduler;
+            }
+
+            @Override
+            public Scheduler getMainThread() {
+                return testScheduler;
+            }
+        });
     }
 
     @Test

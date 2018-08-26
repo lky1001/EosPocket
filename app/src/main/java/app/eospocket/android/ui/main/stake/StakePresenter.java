@@ -1,23 +1,20 @@
 package app.eospocket.android.ui.main.stake;
 
 import app.eospocket.android.common.mvp.BasePresenter;
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.request.AccountRequest;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
-import io.reactivex.schedulers.Schedulers;
 
 public class StakePresenter extends BasePresenter<StakeView> {
 
     private EosManager eosManager;
-    private Scheduler processScheduler;
-    private Scheduler observerScheduler;
+    private RxJavaSchedulers mRxJavaSchedulers;
 
-    public StakePresenter(StakeView view, EosManager eosManager, Scheduler processSchedulers, Scheduler observerScheduler) {
+    public StakePresenter(StakeView view, EosManager eosManager, RxJavaSchedulers rxJavaSchedulers) {
         super(view);
         this.eosManager = eosManager;
-        this.processScheduler = processSchedulers;
-        this.observerScheduler = observerScheduler;
+        this.mRxJavaSchedulers = rxJavaSchedulers;
     }
 
     @Override
@@ -32,8 +29,8 @@ public class StakePresenter extends BasePresenter<StakeView> {
             return request;
         })
                 .flatMap((request) -> eosManager.findAccountByName(request))
-                .subscribeOn(processScheduler)
-                .observeOn(observerScheduler)
+                .subscribeOn(mRxJavaSchedulers.getIo())
+                .observeOn(mRxJavaSchedulers.getMainThread())
                 .subscribe(mView::loadEosAccountSuccess, mView::loadEosAccountFail);
     }
 

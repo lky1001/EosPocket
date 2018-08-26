@@ -12,6 +12,7 @@ import java.util.Map;
 import app.eospocket.android.common.Constants;
 import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.common.mvp.BasePresenter;
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.model.action.Action;
 import app.eospocket.android.eos.model.action.ActionList;
@@ -26,7 +27,6 @@ import app.eospocket.android.ui.main.balance.items.TransferItem;
 import app.eospocket.android.wallet.PocketAppManager;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
-import io.reactivex.Scheduler;
 import io.reactivex.Single;
 
 public class BalancePresenter extends BasePresenter<BalanceView> {
@@ -36,19 +36,17 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
     private PocketAppManager mPocketAppManager;
 
     private CustomPreference mCustomPreference;
-    private Scheduler mProcessScheduler;
-    private Scheduler mOberverScheduler;
+    private RxJavaSchedulers mRxJavaSchedulers;
     private AdapterDataModel<TokenItem> mTokenAdapterDataModel;
     private AdapterDataModel<TransferItem> mTransferAdapterDataModel;
 
     public BalancePresenter(BalanceView view, EosManager eosManager, PocketAppManager pocketAppManager,
-            CustomPreference customPreference, Scheduler processScheduler, Scheduler observerScheduler) {
+            CustomPreference customPreference, RxJavaSchedulers rxJavaSchedulers) {
         super(view);
         this.mEosManager = eosManager;
         this.mPocketAppManager = pocketAppManager;
         this.mCustomPreference = customPreference;
-        this.mProcessScheduler = processScheduler;
-        this.mOberverScheduler = observerScheduler;
+        this.mRxJavaSchedulers = rxJavaSchedulers;
     }
 
     @Override
@@ -190,8 +188,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
                         return tokenTOList;
                     });
         })
-        .subscribeOn(mProcessScheduler)
-        .observeOn(mOberverScheduler)
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(tokens -> {
             mTokenAdapterDataModel.clear();
             mTokenAdapterDataModel.addAll(tokens);
@@ -208,8 +206,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
             return request;
         })
         .flatMap((request) -> mEosManager.findAccountByName(request))
-        .subscribeOn(mProcessScheduler)
-        .observeOn(mOberverScheduler)
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(account -> {
 
         }, e -> {
@@ -248,8 +246,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
         .flatMap((request) -> {
             return mEosManager.getTokenBalance(request);
         })
-        .subscribeOn(mProcessScheduler)
-        .observeOn(mOberverScheduler)
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(balance -> {
             mView.setEosBalance(balance);
         }, e -> {
@@ -259,8 +257,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
 
     public void getMarketPrice(@NonNull String id) {
         mEosManager.getMarketPrice(id)
-        .subscribeOn(mProcessScheduler)
-        .observeOn(mOberverScheduler)
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(coinMarketCapData -> {
             if (coinMarketCapData.data == null) {
                 mView.noMarketPrice();
@@ -342,8 +340,8 @@ public class BalancePresenter extends BasePresenter<BalanceView> {
                 return response;
             });
         })
-        .subscribeOn(mProcessScheduler)
-        .observeOn(mOberverScheduler)
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(transferResponse -> {
             if (transferResponse.getTotalCount() == 0) {
                 mView.noTransferItem();

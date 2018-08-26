@@ -5,10 +5,9 @@ import android.text.TextUtils;
 import java.util.concurrent.TimeUnit;
 
 import app.eospocket.android.common.mvp.BasePresenter;
+import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.security.AuthManager;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 public class IntroPresenter extends BasePresenter<IntroView> {
 
@@ -18,11 +17,13 @@ public class IntroPresenter extends BasePresenter<IntroView> {
     public static final int MAIN = 3;
 
     private AuthManager mAuthManager;
+    private RxJavaSchedulers mRxJavaSchedulers;
     private boolean usePinCode;
 
-    public IntroPresenter(IntroView view, AuthManager authManager) {
+    public IntroPresenter(IntroView view, AuthManager authManager, RxJavaSchedulers rxJavaSchedulers) {
         super(view);
         this.mAuthManager = authManager;
+        this.mRxJavaSchedulers = rxJavaSchedulers;
     }
 
     public void initWallet() {
@@ -37,9 +38,9 @@ public class IntroPresenter extends BasePresenter<IntroView> {
                 return MAIN;
             }
         })
-        .subscribeOn(Schedulers.io())
-                .delay(3, TimeUnit.SECONDS)
-        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(mRxJavaSchedulers.getIo())
+        .delay(3, TimeUnit.SECONDS)
+        .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(result -> {
             if (result == PINCODE_SETTING) {
                 mView.initPinCode();
@@ -57,8 +58,8 @@ public class IntroPresenter extends BasePresenter<IntroView> {
 
     public void checkWalletExist() {
         Single.fromCallable(() -> mAuthManager.isWalletInitialized())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(mRxJavaSchedulers.getIo())
+            .observeOn(mRxJavaSchedulers.getMainThread())
             .subscribe(result -> {
                 if (result) {
                     mView.startLoginActivity();
