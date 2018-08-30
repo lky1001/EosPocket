@@ -113,6 +113,7 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
         mPocketAppManager.findAccount(accountName)
         .map(accounts -> {
             if (accounts.isEmpty()) {
+                // todo - update if exist account name
                 EosAccountModel eosAccountModel = EosAccountModel
                         .builder()
                         .name(accountName)

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ImportAccountActivity extends CommonActivity implements ImportAccountView {
+
+    public static final String EXTRA_IMPORT_KEY = "import_key";
+    public static final String EXTRA_EXIST_ACCOUNT_NAME = "exist_account_name";
 
     @Inject
     ImportAccountPresenter mImportAccountPresenter;
@@ -62,6 +66,8 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
     Button mImportAccountButton;
 
     private EosAccount mEosAccount;
+    private String mName;
+    private boolean mImportKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +75,23 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
         setContentView(R.layout.activity_import_account);
 
         ButterKnife.bind(this);
+
+        mImportKey = getIntent().getBooleanExtra(EXTRA_IMPORT_KEY, false);
+
+        if (mImportKey) {
+            mName = getIntent().getStringExtra(EXTRA_EXIST_ACCOUNT_NAME);
+
+            if (TextUtils.isEmpty(mName)) {
+                finishActivity();
+            }
+        }
+
+        if (mImportKey && !TextUtils.isEmpty(mName)) {
+            showProgressDialog(R.string.loading_msg);
+            mInputAccountName.setEnabled(false);
+            mInputAccountName.setText(mName);
+            mImportAccountPresenter.findAccountName(mName);
+        }
 
         mImportAccountPresenter.onCreate();
 
@@ -179,7 +202,7 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
 
     @OnClick(R.id.btn_import_account)
     public void onImportAccountClick() {
-        if (mRegLaterCheckBox.isChecked()) {
+        if (mRegLaterCheckBox.isChecked() && !mImportKey) {
             mImportAccountPresenter.importAccount(mEosAccount.accountName);
         } else {
             mInputPassword.setEnabled(false);
@@ -208,12 +231,14 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
 
     @Override
     public void noAccount() {
+        hideDialog();
         mNextButton.setEnabled(false);
         mEosAccount = null;
     }
 
     @Override
     public void foundAccount(EosAccount result) {
+        hideDialog();
         mNextButton.setEnabled(true);
         mEosAccount = result;
     }

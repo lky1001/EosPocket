@@ -66,8 +66,16 @@ public class CommonActivity extends DaggerAppCompatActivity {
         }
     }
 
+    public void showProgressDialog(@NonNull int msgResId) {
+        showProgressDialog(null, getString(msgResId));
+    }
+
     public void showProgressDialog(@NonNull String msg) {
         showProgressDialog(null, msg);
+    }
+
+    public void showProgressDialog(@NonNull int titleResId, @NonNull int msgResId) {
+        showProgressDialog(getString(titleResId), getString(msgResId));
     }
 
     public void showProgressDialog(@Nullable String title, @NonNull String msg) {
