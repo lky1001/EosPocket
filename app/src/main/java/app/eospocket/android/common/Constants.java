@@ -2,7 +2,7 @@ package app.eospocket.android.common;
 
 public class Constants {
 
-    public static final String DEFAULT_URL = "https://eos.greymass.com/";
+    public static final String DEFAULT_URL = "https://user-api.eoseoul.io/";
     public static final String DEFAULT_WALLET_DIR = "/eos_pocket";
     public static final String DB_NAME = "eos_pocket.db";
     public static final String KEYSTORE_ALIAS = "eos_pocket";
