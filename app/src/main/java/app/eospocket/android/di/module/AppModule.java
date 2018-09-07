@@ -26,6 +26,7 @@ import app.eospocket.android.security.keystore.KeyStore;
 import app.eospocket.android.security.keystore.KeyStoreApi18Impl;
 import app.eospocket.android.security.keystore.KeyStoreApi23Impl;
 import app.eospocket.android.utils.EncryptUtil;
+import app.eospocket.android.wallet.LoginAccountManager;
 import app.eospocket.android.wallet.PocketAppManager;
 import app.eospocket.android.wallet.db.AppDatabase;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
@@ -168,5 +169,13 @@ public abstract class AppModule {
     static PocketAppManager providePocketAppManager(EosAccountRepository eosAccountRepository,
             EosAccountTokenRepository eosAccountTokenRepository, EncryptUtil encryptUtil) {
         return new PocketAppManager(eosAccountRepository, eosAccountTokenRepository, encryptUtil);
+    }
+
+    @Provides
+    @Singleton
+    static LoginAccountManager provideLoginAccountManager(CustomPreference customPreference) {
+        LoginAccountManager accountManager = new LoginAccountManager(customPreference);
+
+        return accountManager;
     }
 }

@@ -23,4 +23,6 @@ public class EosSetting {
     private int keyStoreVersion;
 
     private long parseActionSeq;
+
+    private int selectedEosAccountId = 1;
 }

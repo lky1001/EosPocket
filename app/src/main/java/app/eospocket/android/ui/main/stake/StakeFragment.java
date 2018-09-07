@@ -17,6 +17,7 @@ import app.eospocket.android.R;
 import app.eospocket.android.common.CommonFragment;
 import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.ui.main.MainNavigationFragment;
+import app.eospocket.android.wallet.LoginAccountManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -26,6 +27,9 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
 
     @Inject
     StakePresenter mStakePresenter;
+
+    @Inject
+    LoginAccountManager loginAccountManager;
 
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -47,6 +51,12 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
 
         mStakePresenter.onCreate();
         mStakePresenter.loadEosAccount(TEST_ACCOUNT_NAME);
+
+        loginAccountManager.getChangeAccountId()
+                .subscribe(changeId -> {
+
+                });
+
         return view;
     }
 

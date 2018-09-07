@@ -132,4 +132,13 @@ public class CustomPreference {
     public long getParseActionSeq() {
         return mSettings.getParseActionSeq();
     }
+
+    public void changeSelectedEosAccountId(int id) {
+        mSettings.setSelectedEosAccountId(id);
+        saveSettings();
+    }
+
+    public int getSelectedEosAccountId() {
+        return mSettings.getSelectedEosAccountId();
+    }
 }
