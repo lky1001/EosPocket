@@ -20,6 +20,7 @@ import app.eospocket.android.ui.main.stake.items.BalanceItem;
 import app.eospocket.android.ui.main.stake.items.ResourceItem;
 import app.eospocket.android.ui.main.stake.items.StakeItem;
 import app.eospocket.android.ui.main.stake.items.StakeUiInfo;
+import app.eospocket.android.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -179,8 +180,10 @@ public class StakeAdapter extends RecyclerView.Adapter<ViewHolder> {
         public void bind(BalanceItem item) {
             EosAccount eosAccount = item.getEosAccount();
 
-            long totalEos = eosAccount.cpuWeight + eosAccount.netWeight;
-            txtStakeBalanceEos.setText(String.valueOf(totalEos));
+            double cpuWeight = Double.parseDouble(eosAccount.totalResources.cpuWeight.split(" ")[0]);
+            double netWeight = Double.parseDouble(eosAccount.totalResources.netWeight.split(" ")[0]);
+
+            txtStakeBalanceEos.setText(Utils.formatBalance(cpuWeight + netWeight) + " EOS");
             txtUnStakeEos.setText(eosAccount.coreLiquidBalance);
         }
     }
