@@ -1,6 +1,7 @@
 package app.eospocket.android.wallet;
 
 import app.eospocket.android.common.CustomPreference;
+import app.eospocket.android.wallet.db.model.EosAccountModel;
 import io.reactivex.Observable;
 import io.reactivex.subjects.BehaviorSubject;
 import lombok.Getter;
@@ -11,22 +12,30 @@ import lombok.Setter;
 public class LoginAccountManager {
     private CustomPreference mCustomPreference;
 
-    private final BehaviorSubject<Integer> mChangeAccountId;
-    private int mSelectedAccountId;
+    private final EosAccountModel NULL_MODEL;
+    private final BehaviorSubject<EosAccountModel> mChangeAccount;
+
 
     public LoginAccountManager(CustomPreference customPreference) {
         mCustomPreference = customPreference;
-        mSelectedAccountId = customPreference.getSelectedEosAccountId();
-        mChangeAccountId = BehaviorSubject.createDefault(mSelectedAccountId);
+
+        NULL_MODEL = new EosAccountModel();
+        NULL_MODEL.setId(-1);
+
+        mChangeAccount = BehaviorSubject.createDefault(NULL_MODEL);
     }
 
-    public void changeSelectedAccountId(int selectedAccountId) {
-        mSelectedAccountId = selectedAccountId;
-        mCustomPreference.changeSelectedEosAccountId(mSelectedAccountId);
-        mChangeAccountId.onNext(mSelectedAccountId);
+    public int getSelectedId() {
+        return mCustomPreference.getSelectedEosAccountId();
     }
 
-    public Observable<Integer> getChangeAccountId() {
-        return mChangeAccountId;
+    public void changeSelectedAccountId(EosAccountModel eosAccountModel) {
+        mCustomPreference.changeSelectedEosAccountId(eosAccountModel.getId());
+        mChangeAccount.onNext(eosAccountModel);
+    }
+
+    public Observable<EosAccountModel> getChangeAccount() {
+        return mChangeAccount
+                .filter(account -> account.getId() != NULL_MODEL.getId());
     }
 }

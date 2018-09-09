@@ -169,10 +169,18 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
         mAccountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mAccountSpinner.setAdapter(mAccountAdapter);
+        int selectedId = loginAccountManager.getSelectedId();
+        for (int i=0; i<eosAccountModelList.size(); i++) {
+            EosAccountModel model = eosAccountModelList.get(i);
+            if (model.getId() == selectedId) {
+                mAccountSpinner.setSelection(i);
+                break;
+            }
+        }
         mAccountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                loginAccountManager.changeSelectedAccountId(mAccountAdapter.getItem(i).getId());
+                loginAccountManager.changeSelectedAccountId(mAccountAdapter.getItem(i));
             }
 
             @Override

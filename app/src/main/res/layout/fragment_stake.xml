@@ -6,26 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/stake_fragment_background">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appbar"
-        style="@style/Widget.AppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Spinner
-            android:id="@+id/account_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?actionBarSize"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="center"
-            android:spinnerMode="dropdown" />
-
-    </android.support.design.widget.AppBarLayout>
-
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"

@@ -4,29 +4,28 @@ import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.request.AccountRequest;
-import app.eospocket.android.wallet.repository.EosAccountRepository;
+import app.eospocket.android.wallet.LoginAccountManager;
 import io.reactivex.Single;
 
 public class StakePresenter extends BasePresenter<StakeView> {
 
     private EosManager eosManager;
-    private RxJavaSchedulers mRxJavaSchedulers;
-    private EosAccountRepository mEosAccountRepository;
+    private RxJavaSchedulers rxJavaSchedulers;
+    private LoginAccountManager loginAccountManager;
 
     public StakePresenter(StakeView view, EosManager eosManager, RxJavaSchedulers rxJavaSchedulers,
-                          EosAccountRepository eosAccountRepository) {
+                          LoginAccountManager loginAccountManager) {
         super(view);
         this.eosManager = eosManager;
-        this.mRxJavaSchedulers = rxJavaSchedulers;
-        this.mEosAccountRepository = eosAccountRepository;
+        this.rxJavaSchedulers = rxJavaSchedulers;
+        this.loginAccountManager = loginAccountManager;
     }
 
     @Override
     public void onCreate() {
-        mEosAccountRepository.getEosAccounts()
-                .subscribeOn(mRxJavaSchedulers.getIo())
-                .observeOn(mRxJavaSchedulers.getMainThread())
-                .subscribe(mView::loadEosAccountListSuccess, mView::loadEosAccountFail);
+        loginAccountManager
+                .getChangeAccount()
+                .subscribe(account -> loadEosAccount(account.getName()));
     }
 
     public void loadEosAccount(String accountName) {
@@ -36,8 +35,8 @@ public class StakePresenter extends BasePresenter<StakeView> {
             return request;
         })
                 .flatMap((request) -> eosManager.findAccountByName(request))
-                .subscribeOn(mRxJavaSchedulers.getIo())
-                .observeOn(mRxJavaSchedulers.getMainThread())
+                .subscribeOn(rxJavaSchedulers.getIo())
+                .observeOn(rxJavaSchedulers.getMainThread())
                 .subscribe(mView::loadEosAccountSuccess, mView::loadEosAccountFail);
     }
 
