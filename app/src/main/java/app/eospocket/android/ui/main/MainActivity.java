@@ -11,7 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -21,6 +25,8 @@ import app.eospocket.android.ui.main.action.ActionFragment;
 import app.eospocket.android.ui.main.balance.BalanceFragment;
 import app.eospocket.android.ui.main.more.MoreFragment;
 import app.eospocket.android.ui.main.stake.StakeFragment;
+import app.eospocket.android.wallet.LoginAccountManager;
+import app.eospocket.android.wallet.db.model.EosAccountModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -28,6 +34,9 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
 
     @Inject
     MainPresenter mMainPresenter;
+
+    @Inject
+    LoginAccountManager loginAccountManager;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -42,6 +51,7 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
     NavigationView mSideMenu;
 
     Spinner mAccountSpinner;
+    private ArrayAdapter<EosAccountModel> mAccountAdapter;
 
     BalanceFragment mBalanceFragment = new BalanceFragment();
     StakeFragment mStakeFragment = new StakeFragment();
@@ -76,8 +86,8 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
 
 
         //init Side Menu(NavigationView)
+
         View header = LayoutInflater.from(this).inflate(R.layout.layout_navigation_header, mSideMenu);
-        mAccountSpinner = header.findViewById(R.id.account_spinner);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public void onDrawerClosed(View view) {
@@ -91,6 +101,9 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
         mDrawer.addDrawerListener(toggle);
         toggle.syncState();
         mSideMenu.setNavigationItemSelectedListener(this);
+
+        mAccountSpinner = header.findViewById(R.id.account_spinner);
+
         //TODo add side menu
     }
 
@@ -149,4 +162,28 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
             mOnNavigationItemSelectedListener = (item) -> {
         return changeFragment(item.getItemId());
     };
+
+    @Override
+    public void loadEosAccountListSuccess(List<EosAccountModel> eosAccountModelList) {
+        mAccountAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, eosAccountModelList);
+        mAccountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mAccountSpinner.setAdapter(mAccountAdapter);
+        mAccountSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                loginAccountManager.changeSelectedAccountId(mAccountAdapter.getItem(i).getId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    @Override
+    public void loadEosAccountListFail(Throwable t) {
+
+    }
 }
