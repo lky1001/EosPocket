@@ -4,6 +4,9 @@
     <string name="confirm_password_text">Confirm Password</string>
     <string name="create_wallet_text">Create New Wallet</string>
 
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+
     <string name="create_wallet_title">Create Wallet</string>
 
     <string name="password_strength_weak">Weak</string>

@@ -1,8 +1,17 @@
 package app.eospocket.android.ui.main;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Spinner;
 
 import javax.inject.Inject;
 
@@ -15,13 +24,24 @@ import app.eospocket.android.ui.main.stake.StakeFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends CommonActivity implements MainView {
+public class MainActivity extends CommonActivity implements MainView, NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
     MainPresenter mMainPresenter;
 
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+
+    @BindView(R.id.drawer_layout)
+    DrawerLayout mDrawer;
+
     @BindView(R.id.navigation)
     BottomNavigationView mBottomNavigationView;
+
+    @BindView(R.id.nav_view)
+    NavigationView mSideMenu;
+
+    Spinner mAccountSpinner;
 
     BalanceFragment mBalanceFragment = new BalanceFragment();
     StakeFragment mStakeFragment = new StakeFragment();
@@ -52,6 +72,26 @@ public class MainActivity extends CommonActivity implements MainView {
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mBottomNavigationView.setSelectedItemId(0);
         changeFragment(R.id.navigation_balance);
+
+
+
+        //init Side Menu(NavigationView)
+        View header = LayoutInflater.from(this).inflate(R.layout.layout_navigation_header, mSideMenu);
+        mAccountSpinner = header.findViewById(R.id.account_spinner);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        mDrawer.addDrawerListener(toggle);
+        toggle.syncState();
+        mSideMenu.setNavigationItemSelectedListener(this);
+        //TODo add side menu
     }
 
     private boolean changeFragment(int itemId) {
@@ -64,6 +104,7 @@ public class MainActivity extends CommonActivity implements MainView {
                         .hide(mActionFragment)
                         .hide(mMoreFragment)
                         .commit();
+                mToolbar.setTitle(R.string.title_balance);
                 return true;
             case R.id.navigation_stake:
                 getSupportFragmentManager()
@@ -73,6 +114,7 @@ public class MainActivity extends CommonActivity implements MainView {
                         .hide(mActionFragment)
                         .hide(mMoreFragment)
                         .commit();
+                mToolbar.setTitle(R.string.title_stake);
                 return true;
             case R.id.navigation_action:
                 getSupportFragmentManager()
@@ -82,6 +124,7 @@ public class MainActivity extends CommonActivity implements MainView {
                         .show(mActionFragment)
                         .hide(mMoreFragment)
                         .commit();
+                mToolbar.setTitle(R.string.title_action);
             case R.id.navigation_more:
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -90,9 +133,15 @@ public class MainActivity extends CommonActivity implements MainView {
                         .hide(mStakeFragment)
                         .show(mMoreFragment)
                         .commit();
+                mToolbar.setTitle(R.string.title_more);
                 return true;
         }
 
+        return false;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         return false;
     }
 
