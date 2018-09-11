@@ -38,4 +38,8 @@ public class LoginAccountManager {
         return mChangeAccount
                 .filter(account -> account.getId() != NULL_MODEL.getId());
     }
+
+    public void release() {
+        mChangeAccount.onNext(NULL_MODEL);
+    }
 }

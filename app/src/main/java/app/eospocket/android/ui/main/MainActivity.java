@@ -194,4 +194,10 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
     public void loadEosAccountListFail(Throwable t) {
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        loginAccountManager.release();
+    }
 }

@@ -71,4 +71,10 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
     public void loadEosAccountFail(Throwable t) {
         Toast.makeText(getContext(), "loadEosAccountFail", Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mStakePresenter.onDestroy();
+    }
 }

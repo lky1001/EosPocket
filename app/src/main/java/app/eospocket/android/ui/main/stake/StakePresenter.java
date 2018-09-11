@@ -6,12 +6,16 @@ import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.wallet.LoginAccountManager;
 import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class StakePresenter extends BasePresenter<StakeView> {
 
     private EosManager eosManager;
     private RxJavaSchedulers rxJavaSchedulers;
     private LoginAccountManager loginAccountManager;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public StakePresenter(StakeView view, EosManager eosManager, RxJavaSchedulers rxJavaSchedulers,
                           LoginAccountManager loginAccountManager) {
@@ -23,9 +27,11 @@ public class StakePresenter extends BasePresenter<StakeView> {
 
     @Override
     public void onCreate() {
-        loginAccountManager
+        Disposable d = loginAccountManager
                 .getChangeAccount()
                 .subscribe(account -> loadEosAccount(account.getName()));
+
+        compositeDisposable.add(d);
     }
 
     public void loadEosAccount(String accountName) {
@@ -52,6 +58,6 @@ public class StakePresenter extends BasePresenter<StakeView> {
 
     @Override
     public void onDestroy() {
-
+        compositeDisposable.dispose();
     }
 }
