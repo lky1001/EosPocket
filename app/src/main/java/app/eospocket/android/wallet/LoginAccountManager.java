@@ -7,8 +7,6 @@ import io.reactivex.subjects.BehaviorSubject;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
-@Setter
 public class LoginAccountManager {
     private CustomPreference mCustomPreference;
 

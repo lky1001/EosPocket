@@ -29,13 +29,12 @@ import app.eospocket.android.ui.main.balance.adapters.TokenAdapter;
 import app.eospocket.android.ui.main.balance.adapters.TransferAdapter;
 import app.eospocket.android.ui.action.ActionActivity;
 import app.eospocket.android.utils.Utils;
-import app.eospocket.android.wallet.repository.EosAccountRepository;
+import app.eospocket.android.wallet.LoginAccountManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class BalanceFragment extends CommonFragment implements MainNavigationFragment, BalanceView {
 
@@ -85,7 +84,7 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
     private TransferAdapter mTransferAdapter;
 
     @Inject
-    EosAccountRepository mEosAccountRepository;
+    LoginAccountManager mLoginAccountManager;
 
     private Disposable mAccountDisposable;
 
@@ -142,32 +141,26 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
     private void subscribeAccounts() {
         disposableAccounts();
 
-        mAccountDisposable = mEosAccountRepository.getEosAccounts()
-                .subscribeOn(Schedulers.io())
+        mAccountDisposable = mLoginAccountManager.getChangeAccount()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe((eosAccountModels) -> {
-                    if (!eosAccountModels.isEmpty()) {
-                        mImportAccountButton.setVisibility(View.GONE);
-                        mNestedScrollView.setVisibility(View.VISIBLE);
-                        mBalancePresenter.getEosBalance(eosAccountModels.get(0));
-                        mBalancePresenter.getTokens(eosAccountModels.get(0).getName());
-                        mBalancePresenter.getTransfers(eosAccountModels.get(0).getName(), mPage, Constants.TRANSFER_PER_PAGE);
-                        mAccountNameText.setText(eosAccountModels.get(0).getName());
+                .subscribe(
+                        account -> {
+                            mImportAccountButton.setVisibility(View.GONE);
+                            mNestedScrollView.setVisibility(View.VISIBLE);
+                            mBalancePresenter.getEosBalance(account);
+                            mBalancePresenter.getTokens(account.getName());
+                            mBalancePresenter.getTransfers(account.getName(), mPage, Constants.TRANSFER_PER_PAGE);
+                            mAccountNameText.setText(account.getName());
 
-                        if (TextUtils.isEmpty(eosAccountModels.get(0).getPrivateKey())) {
-                            mRegPrivateKeyButton.setVisibility(View.VISIBLE);
-                        } else {
-                            mRegPrivateKeyButton.setVisibility(View.GONE);
-                        }
-                    } else {
-                        mImportAccountButton.setVisibility(View.VISIBLE);
-                        mNestedScrollView.setVisibility(View.GONE);
-                    }
-                }, e -> {
-
-                }, () -> {
-
-                });
+                            if (TextUtils.isEmpty(account.getPrivateKey())) {
+                                mRegPrivateKeyButton.setVisibility(View.VISIBLE);
+                            } else {
+                                mRegPrivateKeyButton.setVisibility(View.GONE);
+                            }
+                        }, t -> {
+                            mImportAccountButton.setVisibility(View.VISIBLE);
+                            mNestedScrollView.setVisibility(View.GONE);
+                        });
     }
 
     private void getAccount() {
