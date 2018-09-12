@@ -169,9 +169,7 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener
-            mOnNavigationItemSelectedListener = (item) -> {
-        return changeFragment(item.getItemId());
-    };
+            mOnNavigationItemSelectedListener = (item) -> changeFragment(item.getItemId());
 
     @Override
     public void loadEosAccountListSuccess(List<EosAccountModel> eosAccountModelList) {
@@ -208,6 +206,5 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        loginAccountManager.release();
     }
 }

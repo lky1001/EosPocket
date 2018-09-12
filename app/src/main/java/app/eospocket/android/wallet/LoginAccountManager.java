@@ -28,16 +28,14 @@ public class LoginAccountManager {
     }
 
     public void changeSelectedAccountId(EosAccountModel eosAccountModel) {
-        mCustomPreference.changeSelectedEosAccountId(eosAccountModel.getId());
-        mChangeAccount.onNext(eosAccountModel);
+        if (mCustomPreference.getSelectedEosAccountId() != eosAccountModel.getId()) {
+            mCustomPreference.changeSelectedEosAccountId(eosAccountModel.getId());
+            mChangeAccount.onNext(eosAccountModel);
+        }
     }
 
     public Observable<EosAccountModel> getChangeAccount() {
         return mChangeAccount
                 .filter(account -> account.getId() != NULL_MODEL.getId());
-    }
-
-    public void release() {
-        mChangeAccount.onNext(NULL_MODEL);
     }
 }
