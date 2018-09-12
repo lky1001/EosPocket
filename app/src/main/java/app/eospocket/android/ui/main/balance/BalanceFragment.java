@@ -163,6 +163,11 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
                         });
     }
 
+    public void visibleImportAccountButton() {
+        mImportAccountButton.setVisibility(View.VISIBLE);
+        mNestedScrollView.setVisibility(View.GONE);
+    }
+
     private void getAccount() {
         String accountName = "";
 

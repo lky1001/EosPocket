@@ -173,6 +173,10 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
 
     @Override
     public void loadEosAccountListSuccess(List<EosAccountModel> eosAccountModelList) {
+        if (eosAccountModelList.isEmpty()) {
+            mBalanceFragment.visibleImportAccountButton();
+            return;
+        }
         mAccountAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, eosAccountModelList);
         mAccountAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -200,7 +204,6 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
 
     @Override
     public void loadEosAccountListFail(Throwable t) {
-
     }
 
     @Override

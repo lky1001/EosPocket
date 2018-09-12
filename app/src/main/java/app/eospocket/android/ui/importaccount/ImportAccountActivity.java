@@ -197,6 +197,7 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
             mPrivateKeyLayout.setVisibility(View.VISIBLE);
             mNextButton.setVisibility(View.GONE);
             mImportAccountButton.setVisibility(View.VISIBLE);
+            mInputPrivateKey.setEnabled(true);
         }
     }
 

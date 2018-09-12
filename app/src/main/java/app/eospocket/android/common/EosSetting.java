@@ -24,5 +24,5 @@ public class EosSetting {
 
     private long parseActionSeq;
 
-    private int selectedEosAccountId = 1;
+    private int selectedEosAccountId = -1;
 }
