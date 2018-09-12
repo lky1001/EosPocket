@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -123,8 +124,10 @@ public class StakeAdapter extends RecyclerView.Adapter<ViewHolder> {
         TextView txtDesc;
         @BindView(R.id.progress)
         View progress;
-        @BindView(R.id.txt_percentage)
-        TextView txtPercentage;
+//        @BindView(R.id.txt_percentage)
+//        TextView txtPercentage;
+        @BindView(R.id.btn_stake)
+        Button btnStake;
 
         public StakeResourceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -133,12 +136,28 @@ public class StakeAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         @Override
         public void bind(ResourceItem item) {
+            StakeUiInfo stakeUiInfo = item.getStakeUiInfo();
             try {
                 txtTitle.setText(item.getStakeUiInfo().getTitle());
                 txtDesc.setText(getDescription(item));
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            switch (stakeUiInfo) {
+                case REFUNDING:
+                    btnStake.setText(R.string.btn_title_refund);
+                    break;
+                case RAM:
+                    btnStake.setText(R.string.btn_title_buy);
+                    break;
+                case CPU:
+                case NETWORK:
+                default:
+                    btnStake.setText(R.string.btn_title_stake);
+                    break;
+            }
+
         }
 
         private Spannable getDescription(ResourceItem item) throws Exception {

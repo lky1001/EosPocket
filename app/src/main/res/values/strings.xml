@@ -50,4 +50,8 @@
     <string name="transfer_received_text">RECEIVED</string>
     <string name="more_text">more</string>
     <string name="title_more">More</string>
+
+    <string name="btn_title_stake">Stake</string>
+    <string name="btn_title_buy">Buy</string>
+    <string name="btn_title_refund">Refund</string>
 </resources>
