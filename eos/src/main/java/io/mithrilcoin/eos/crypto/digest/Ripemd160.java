@@ -17,10 +17,10 @@ public class Ripemd160 {
     }
 
     public static Ripemd160 from(byte[] data, int startOffset, int length ) {
-        Ripemd160.Digest digest = new Ripemd160.Digest();
+        Digest digest = new Digest();
         digest.update( data, startOffset, length );
 
-        byte[] result = new byte[ Ripemd160.Digest.DIGEST_LENGTH ];
+        byte[] result = new byte[ Digest.DIGEST_LENGTH ];
         digest.doFinal( result, 0);
 
         return new Ripemd160( result );
@@ -112,9 +112,9 @@ public class Ripemd160 {
             return (x << n) | (x >>> (32 - n));
         }
 
-        /*
-         * f1,f2,f3,f4,f5 are the basic Digest functions.
-         */
+   /*
+    * f1,f2,f3,f4,f5 are the basic Digest functions.
+    */
 
         /*
          * rounds 0-15

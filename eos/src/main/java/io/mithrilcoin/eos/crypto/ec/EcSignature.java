@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -24,8 +24,10 @@
 package io.mithrilcoin.eos.crypto.ec;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
 import io.mithrilcoin.eos.crypto.util.HexUtils;
+import io.mithrilcoin.eos.util.StringUtils;
 
 
 /**
@@ -33,20 +35,51 @@ import io.mithrilcoin.eos.crypto.util.HexUtils;
  */
 
 public class EcSignature {
+    private static final String PREFIX = "SIG";
+
     public int recId = -1;
 
     public final BigInteger r;
     public final BigInteger s;
+    public final CurveParam curveParam;
 
-    public EcSignature(BigInteger r, BigInteger s) {
+    public EcSignature(BigInteger r, BigInteger s, CurveParam curveParam) {
         this.r = r;
         this.s = s;
+        this.curveParam = curveParam;
     }
 
-    public EcSignature(BigInteger r, BigInteger s, int recId) {
-        this(r, s);
+    public EcSignature(BigInteger r, BigInteger s, CurveParam curveParam, int recId) {
+        this(r, s,curveParam);
 
         setRecid( recId );
+    }
+
+    public EcSignature( String base58Str ){
+        String[] parts = EosEcUtil.safeSplitEosCryptoString( base58Str );
+        if ( parts.length < 3 ) {
+            throw new IllegalArgumentException("Invalid private key format: " + base58Str);
+        }
+
+        if ( PREFIX.equals( parts[0]) == false ) {
+            throw new IllegalArgumentException("Signature Key has invalid prefix: " + base58Str);
+        }
+
+        if (StringUtils.isEmpty( parts[2])) {
+            throw new IllegalArgumentException("Signature has no data: " + base58Str);
+        }
+
+        this.curveParam = EosEcUtil.getCurveParamFrom( parts[1]);
+        byte[] rawBytes = EosEcUtil.getBytesIfMatchedRipemd160( parts[2], parts[1], null);
+
+        if ( null == rawBytes ) {
+            // TODO handle error!
+        }
+
+        setRecid( rawBytes[0] - 27 - 4 ); // recId encoding 이 recId + 27 + (compressed ? 4 : 0) 이므로
+
+        this.r = new BigInteger(Arrays.copyOfRange(rawBytes, 1, 33) );
+        this.s = new BigInteger(Arrays.copyOfRange(rawBytes, 33, 65) );
     }
 
     public void setRecid(int recid ) {
@@ -60,7 +93,7 @@ public class EcSignature {
      */
 
     public boolean isCanonical(){
-        return s.compareTo(Secp256k1Param.HALF_CURVE_ORDER) <= 0;
+        return s.compareTo( curveParam.halfCurveOrder()) <= 0 ; // Secp256k1Param.HALF_CURVE_ORDER) <= 0;
     }
 
     /**
@@ -77,7 +110,7 @@ public class EcSignature {
             //    N = 10
             //    s = 8, so (-8 % 10 == 2) thus both (r, 8) and (r, 2) are valid solutions.
             //    10 - 8 == 2, giving us always the latter solution, which is canonical.
-            return new EcSignature(r, Secp256k1Param.n.subtract(s));
+            return new EcSignature(r, curveParam.n().subtract(s), curveParam); //Secp256k1Param.n.subtract(s));
         } else {
             return this;
         }
@@ -100,7 +133,6 @@ public class EcSignature {
     }
 
 
-
     public String eosEncodingHex( boolean compressed ) {
         if ( recId < 0 || recId > 3) {
             throw new IllegalStateException("signature has invalid recid.");
@@ -112,7 +144,7 @@ public class EcSignature {
         System.arraycopy(EcTools.integerToBytes( this.r, 32), 0, sigData, 1, 32);
         System.arraycopy(EcTools.integerToBytes( this.s, 32), 0, sigData, 33, 32);
 
-        return HexUtils.toHex( sigData );
+        return EosEcUtil.encodeEosCrypto( PREFIX, curveParam , sigData);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -24,12 +24,11 @@
 
 package io.mithrilcoin.eos.crypto.ec;
 
+import com.everyeos.batch.services.nodeos.crypto.digest.Sha256;
+import com.everyeos.batch.services.nodeos.crypto.util.Base58;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
-import java.util.Arrays;
-
-import io.mithrilcoin.eos.crypto.digest.Sha256;
-import io.mithrilcoin.eos.crypto.util.Base58;
 
 
 /**
@@ -42,9 +41,12 @@ import io.mithrilcoin.eos.crypto.util.Base58;
 
 public class EosPrivateKey {
 
+    private static final String PREFIX = "PVT";
+
     private final BigInteger mPrivateKey;
     private final EosPublicKey mPublicKey;
 
+    private final CurveParam mCurveParam;
 
     private static final SecureRandom mSecRandom;
 
@@ -57,63 +59,53 @@ public class EosPrivateKey {
     }
 
     public EosPrivateKey(){
-        int nBitLength = Secp256k1Param.n.bitLength();
-        BigInteger d;
-        do {
-            // Make a BigInteger from bytes to ensure that Android and 'classic'
-            // java make the same BigIntegers from the same random source with the
-            // same seed. Using BigInteger(nBitLength, random)
-            // produces different results on Android compared to 'classic' java.
-            byte[] bytes = new byte[nBitLength / 8];
-            mSecRandom.nextBytes(bytes);
-            bytes[0] = (byte) (bytes[0] & 0x7F); // ensure positive number
-            d = new BigInteger(bytes);
-        } while (d.equals(BigInteger.ZERO) || (d.compareTo(Secp256k1Param.n) >= 0));
-
-        mPrivateKey = d;
-
-        mPublicKey = new EosPublicKey( findPubKey( d ));
+        this( CurveParam.SECP256_K1);
     }
 
-    public EosPrivateKey(byte[] privBytes){
-        mPrivateKey = toUnsignedBigInteger( privBytes);
+    public EosPrivateKey( int curveParamType){
+        mCurveParam = EcTools.getCurveParam(curveParamType);
 
-        mPublicKey = new EosPublicKey( findPubKey( mPrivateKey ));
+        mPrivateKey = getOrCreatePrivKeyBigInteger( null );
+        mPublicKey = new EosPublicKey(findPubKey( mPrivateKey ), mCurveParam);
     }
 
-    public EosPrivateKey( String wif ) {
-        // 1. Base58 --> raw 로..
-        byte[] wifAsRaw = Base58.decode( wif );
-        if ( ( null == wifAsRaw) || (wifAsRaw.length < 5 )) {
-            throw new IllegalArgumentException("Invalid wif length");
-        }
+    public EosPrivateKey( String base58Str ) {
 
-        // offset 0은 제외, 뒤의 4바이트 제외하고, private key 를 뽑자
-        Sha256 checkOne = Sha256.from( wifAsRaw, 0, wifAsRaw.length - 4 );
-        Sha256 checkTwo = Sha256.from( checkOne.getBytes() );
+        String[] split = EosEcUtil.safeSplitEosCryptoString( base58Str );
+        byte[] keyBytes;
 
-        // check 값이 맞는지 보자.  원본 eos 소스 코드에서 sha256 1번한 hash 도 체크하게 되어 있다..
-        if ( checkTwo.equalsFromOffset( wifAsRaw, wifAsRaw.length - 4, 4)
-                || checkOne.equalsFromOffset( wifAsRaw, wifAsRaw.length - 4, 4) ) {
-
-            // ECKey 로 만들어 주자.
-            mPrivateKey = toUnsignedBigInteger( Arrays.copyOfRange(wifAsRaw, 1, wifAsRaw.length - 4));
+        if ( split.length == 1 ){
+            mCurveParam = EcTools.getCurveParam( CurveParam.SECP256_K1);
+            keyBytes = EosEcUtil.getBytesIfMatchedSha256( base58Str, null);
         }
         else {
-            throw new IllegalArgumentException("Invalid wif format");
+            if ( split.length < 3 ) {
+                throw new IllegalArgumentException("Invalid private key format: " + base58Str);
+            }
+
+            mCurveParam = EosEcUtil.getCurveParamFrom( split[1]);
+            keyBytes = EosEcUtil.getBytesIfMatchedRipemd160( split[2], split[1], null);
         }
 
-        mPublicKey = new EosPublicKey( findPubKey( toUnsignedBigInteger( mPrivateKey) ));
+
+        if ( ( null == keyBytes) || (keyBytes.length < 5 )) {
+            throw new IllegalArgumentException("Invalid private key length");
+        }
+
+        mPrivateKey = getOrCreatePrivKeyBigInteger( keyBytes );
+        mPublicKey = new EosPublicKey(findPubKey( mPrivateKey ), mCurveParam);
     }
+
 
     public void clear(){
         mPrivateKey.multiply( BigInteger.ZERO );
     }
 
     private byte[] findPubKey(BigInteger bnum) {
-        EcPoint Q = EcTools.multiply(Secp256k1Param.G, bnum);
+        EcPoint Q = EcTools.multiply( mCurveParam.G(), bnum );// Secp256k1Param.G, bnum);
 
         // Q를 curve 상에서, compressed point 로 변환하자. ( 압축을 위해 )
+
         Q = new EcPoint(Q.getCurve(), Q.getX(), Q.getY(), true);
 
         return Q.getEncoded();
@@ -137,9 +129,21 @@ public class EosPrivateKey {
         return Base58.encode( resultWIFBytes );
     }
 
+    public CurveParam getCurveParam(){
+        return mCurveParam;
+    }
+
+    public EcSignature sign( Sha256 digest ) {
+        return EcDsa.sign( digest, this);
+    }
+
     @Override
     public String toString() {
-        return toWif();
+        if ( mCurveParam.isType( CurveParam.SECP256_K1 ) ){
+            return toWif();
+        }
+
+        return EosEcUtil.encodeEosCrypto( PREFIX, mCurveParam , getBytes());
     }
 
     public BigInteger getAsBigInteger() {
@@ -187,5 +191,32 @@ public class EosPrivateKey {
         }
 
         return new BigInteger(value);
+    }
+
+    private BigInteger getOrCreatePrivKeyBigInteger(byte[] value ) {
+        if ( null != value ) {
+            if (((value[0]) & 0x80) != 0) {
+                return new BigInteger(1, value);
+            }
+
+            return new BigInteger(value);
+        }
+
+
+        int nBitLength = mCurveParam.n().bitLength();// Secp256k1Param.n.bitLength();
+        BigInteger d;
+        do {
+            // Make a BigInteger from bytes to ensure that Android and 'classic'
+            // java make the same BigIntegers from the same random source with the
+            // same seed. Using BigInteger(nBitLength, random)
+            // produces different results on Android compared to 'classic' java.
+            byte[] bytes = new byte[nBitLength / 8];
+            mSecRandom.nextBytes(bytes);
+            bytes[0] = (byte) (bytes[0] & 0x7F); // ensure positive number
+            d = new BigInteger(bytes);
+        }
+        while (d.equals(BigInteger.ZERO) || (d.compareTo(mCurveParam.n()) >= 0));// Secp256k1Param.n) >= 0));
+
+        return d;
     }
 }

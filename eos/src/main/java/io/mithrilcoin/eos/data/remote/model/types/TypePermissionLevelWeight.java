@@ -23,28 +23,32 @@
  */
 package io.mithrilcoin.eos.data.remote.model.types;
 
-import io.mithrilcoin.eos.util.StringUtils;
-
 /**
  * Created by swapnibble on 2017-09-12.
  */
 
-public class TypeAccountName extends TypeName {
-    private static final int MAX_ACCOUNT_NAME_LEN = 12;
+public class TypePermissionLevelWeight implements EosType.Packer {
+    private TypePermissionLevel mPermission;
+    private short mWeight;
 
-    private static final char CHAR_NOT_ALLOWED = '.';
+    /**
+     * single active permissin 용 생성자
+     * @param nameForActive
+     */
+    TypePermissionLevelWeight(String nameForActive ) {
+        this( nameForActive, (short)1);
+    }
 
-    public TypeAccountName(String name) {
-        super(name);
+    TypePermissionLevelWeight(String nameForActive, short weight ) {
+        mPermission = new TypePermissionLevel( nameForActive, "active");
+        mWeight = weight;
+    }
 
-        if (! StringUtils.isEmpty( name )) {
-            if (name.length() > MAX_ACCOUNT_NAME_LEN ) {
-                throw new IllegalArgumentException("account name can only be 12 chars long: " + name) ; // changed from dawn3
-            }
+    @Override
+    public void pack(EosType.Writer writer) {
 
-            if ( (name.indexOf( CHAR_NOT_ALLOWED) >= 0) && ! name.startsWith("eosio.") ){
-                throw new IllegalArgumentException("account name must not contain '.': " + name);
-            }
-        }
+        mPermission.pack(writer);
+
+        writer.putShortLE( mWeight);
     }
 }

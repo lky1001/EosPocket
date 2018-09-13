@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -33,8 +33,8 @@ import java.util.regex.Pattern;
 
 public class TypeAsset implements EosType.Packer {
 
-    // 
-    private static final long EOS_SYMBOL = 0x00000000534F4504L; // (int64_t(4) | (uint64_t('E') << 8) | (uint64_t('O') << 16) | (uint64_t('S') << 24))
+    private static final String CORE_SYMBOL_NAME = "SYS";
+    private static final long CORE_SYMBOL = 0x0000000053595304L; // (int64_t(4) | (uint64_t('S') << 8) | (uint64_t('Y') << 16) | (uint64_t('S') << 24))
 
     // 아래 table 은, eos/libraries/types/Asset.cpp 에서 가져옴.
     private static final long[] PRECISION_TABLE = {
@@ -45,14 +45,11 @@ public class TypeAsset implements EosType.Packer {
             10000000000000L, 100000000000000L
     };
 
-    long mAmount;
-    final long mAssetSymbol;
-    final String mSymbolName;
+    private long mAmount;
+    private final long mAssetSymbol;
+    private final String mSymbolName;
 
-    public static TypeAsset fromString(String value) {
-        if ( null == value ) {
-            return null;
-        }
+    public TypeAsset(String value) {
 
         value = value.trim();
 
@@ -62,18 +59,22 @@ public class TypeAsset implements EosType.Packer {
         if ( matcher.find()) {
             String beforeDotVal = matcher.group(1), afterDotVal = matcher.group(2) ;
 
-            long amount = Long.valueOf( beforeDotVal + afterDotVal);
-            int decimals = afterDotVal.length();
+            mAmount = Long.valueOf( beforeDotVal + afterDotVal);
 
-            return new TypeAsset( amount, decimals, matcher.group(3));
+            int decimals = afterDotVal.length();
+            this.mSymbolName = matcher.group(3);
+
+            this.mAssetSymbol = makeAssetSymbol( mSymbolName, decimals);
         }
         else {
-            return null;
+            this.mAmount = 0;
+            this.mSymbolName = CORE_SYMBOL_NAME;
+            this.mAssetSymbol = CORE_SYMBOL;
         }
     }
 
     public TypeAsset(long amount) {
-        this( amount, EOS_SYMBOL );
+        this( amount, CORE_SYMBOL );
     }
 
 
@@ -98,19 +99,17 @@ public class TypeAsset implements EosType.Packer {
         mSymbolName = new String( sym, 1, symbolLen);
     }
 
-    public TypeAsset(long amount, int decimals, String symbolName) {
-        mAmount = amount;
-        this.mSymbolName = symbolName;
 
-        long temp = 0;
+    private long makeAssetSymbol(String symbolName, int decimals ) {
+        long symbol = 0;
         int nameLen = symbolName.length();
         for (int i = 0; (i < nameLen) && ( i < 7); i++ ) {
-            temp |= (symbolName.charAt( i) <<  ( (i+1) * 8));
+            symbol |= (symbolName.charAt( i) <<  ( (i+1) * 8));
         }
 
-        temp |= decimals;
+        symbol |= decimals;
 
-        mAssetSymbol = temp;
+        return symbol;
     }
 
     public byte decimals(){
@@ -135,6 +134,8 @@ public class TypeAsset implements EosType.Packer {
     }
 
     public long assetSymbol(){ return mAssetSymbol;}
+
+    public long getAmount(){ return mAmount;}
 
     @Override
     public String toString() {

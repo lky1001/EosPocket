@@ -6,6 +6,9 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.File;
 
 import javax.inject.Singleton;
@@ -36,6 +39,7 @@ import app.eospocket.android.wallet.repository.EosAccountTokenRepositoryImpl;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import io.mithrilcoin.eos.data.GsonEosTypeAdapterFactory;
 import io.mithrilcoin.eos.data.wallet.EosWalletManager;
 
 @Module
@@ -81,25 +85,34 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
-    static ChainService provideChainService() {
+    Gson providesGson() {
+        return new GsonBuilder()
+                .registerTypeAdapterFactory(new GsonEosTypeAdapterFactory())
+                .serializeNulls()
+                .excludeFieldsWithoutExposeAnnotation().create();
+    }
+
+    @Provides
+    @Singleton
+    static ChainService provideChainService(Gson gson) {
         return ServiceBuilder.createService(ChainService.class, Constants.DEFAULT_URL);
     }
 
     @Provides
     @Singleton
-    static HistoryService provideHistoryService() {
+    static HistoryService provideHistoryService(Gson gson) {
         return ServiceBuilder.createService(HistoryService.class, Constants.DEFAULT_URL);
     }
 
     @Provides
     @Singleton
-    static WalletService provideWalletService() {
+    static WalletService provideWalletService(Gson gson) {
         return ServiceBuilder.createService(WalletService.class, Constants.DEFAULT_URL);
     }
 
     @Provides
     @Singleton
-    static CoinMarketCapService provideCoinMarketCapService() {
+    static CoinMarketCapService provideCoinMarketCapService(Gson gson) {
         return ServiceBuilder.createService(CoinMarketCapService.class, Constants.COINMARKETCAP_HOST);
     }
 

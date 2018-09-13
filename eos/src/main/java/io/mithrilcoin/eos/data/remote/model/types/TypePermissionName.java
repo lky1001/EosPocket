@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -28,7 +28,7 @@ package io.mithrilcoin.eos.data.remote.model.types;
  */
 
 public class TypePermissionName extends TypeName {
-    TypePermissionName(String name) {
+    public TypePermissionName(String name) {
         super(name);
     }
 }

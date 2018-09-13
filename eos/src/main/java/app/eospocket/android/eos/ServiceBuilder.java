@@ -46,8 +46,8 @@ public class ServiceBuilder {
     }
 
     public static <T> T createService(Class<T> serviceClass, String baseUrl,
-                                      HttpLoggingInterceptor httpLoggingInterceptor, boolean userBadSslSocketFactory,
-                                      int connectTimeoutInSec, int readTimeoutInSec, int writeTimeoutInSec) {
+            HttpLoggingInterceptor httpLoggingInterceptor, boolean userBadSslSocketFactory,
+            int connectTimeoutInSec, int readTimeoutInSec, int writeTimeoutInSec) {
         OkHttpClient okHttpClient = getClient(userBadSslSocketFactory, httpLoggingInterceptor,
                 connectTimeoutInSec, readTimeoutInSec, writeTimeoutInSec);
 
@@ -59,7 +59,6 @@ public class ServiceBuilder {
         Retrofit retrofit = RETROFIT_BUILDER.build();
         return retrofit.create(serviceClass);
     }
-
 
     private static OkHttpClient getClient(boolean userBadSslSocketFactory, HttpLoggingInterceptor httpLoggingInterceptor,
                                           int connectTimeoutInSec, int readTimeoutInSec, int writeTimeoutInSec) {

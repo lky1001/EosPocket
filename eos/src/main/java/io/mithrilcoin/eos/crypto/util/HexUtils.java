@@ -116,7 +116,7 @@ public class HexUtils {
     }
 
     public static byte[] toBytesReversed( String hexString) {
-        byte[] rawBytes = toBytes( hexString );
+         byte[] rawBytes = toBytes( hexString );
 
         for ( int i = 0; i < rawBytes.length / 2;i++ ) {
             byte temp = rawBytes[ rawBytes.length - i - 1];
@@ -135,3 +135,4 @@ public class HexUtils {
         sb.append(Integer.toHexString(unsignedByte));
     }
 }
+

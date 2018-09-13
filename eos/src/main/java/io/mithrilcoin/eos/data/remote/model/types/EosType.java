@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -36,22 +36,22 @@ public interface EosType {
     }
 
     interface Packer {
-        void pack(EosType.Writer writer);
+        void pack(Writer writer);
     }
 
     interface Unpacker {
-        void unpack(EosType.Reader reader) throws EosType.InsufficientBytesException;
+        void unpack(Reader reader) throws InsufficientBytesException;
     }
 
     interface Reader {
-        byte get() throws EosType.InsufficientBytesException;
-        int getShortLE() throws EosType.InsufficientBytesException;
-        int getIntLE() throws EosType.InsufficientBytesException;
-        long getLongLE() throws EosType.InsufficientBytesException;
-        byte[] getBytes(int size) throws EosType.InsufficientBytesException;
-        String getString() throws EosType.InsufficientBytesException;
+        byte get() throws InsufficientBytesException;
+        int getShortLE() throws InsufficientBytesException;
+        int getIntLE() throws InsufficientBytesException;
+        long getLongLE() throws InsufficientBytesException;
+        byte[] getBytes(int size) throws InsufficientBytesException;
+        String getString() throws InsufficientBytesException;
 
-        long getVariableUint() throws EosType.InsufficientBytesException;
+        long getVariableUint() throws InsufficientBytesException;
     }
 
     interface Writer {

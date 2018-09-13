@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -24,14 +24,13 @@
 
 package io.mithrilcoin.eos.crypto.ec;
 
+import com.everyeos.batch.services.nodeos.crypto.Hmac;
+import com.everyeos.batch.services.nodeos.crypto.digest.Sha256;
+import com.everyeos.batch.services.nodeos.remote.model.types.EosByteWriter;
 import com.google.common.base.Preconditions;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-
-import io.mithrilcoin.eos.data.remote.model.types.EosByteWriter;
-import io.mithrilcoin.eos.crypto.Hmac;
-import io.mithrilcoin.eos.crypto.digest.Sha256;
 
 /**
  * Created by swapnibble on 2017-09-29.
@@ -51,16 +50,19 @@ public class EcDsa {
             this.privKey = privKey;
         }
 
-        boolean checkSignature(BigInteger k) {
+        boolean checkSignature(CurveParam curveParam, BigInteger k) {
 
-            EcPoint Q = EcTools.multiply(Secp256k1Param.G, k);
+            EcPoint Q = EcTools.multiply( curveParam.G(), k);// Secp256k1Param.G, k);
             if ( Q.isInfinity() ) return false;
 
-            r = Q.getX().toBigInteger().mod( Secp256k1Param.n );
+            r = Q.getX().toBigInteger().mod( curveParam.n());// Secp256k1Param.n );
             if ( r.signum() == 0 ) return false;
 
 
-            s = k.modInverse(Secp256k1Param.n).multiply(e.add( privKey.multiply(r))).mod(Secp256k1Param.n);
+            s = k.modInverse( curveParam.n())// Secp256k1Param.n)
+                    .multiply(e.add( privKey.multiply(r)))
+                    .mod( curveParam.n());// Secp256k1Param.n);
+
             if (s.signum() == 0) return false;
 
             return true;
@@ -72,7 +74,7 @@ public class EcDsa {
     }
 
 
-    private static BigInteger deterministicGenerateK(byte[] hash, BigInteger d, SigChecker checker, int nonce ){
+    private static BigInteger deterministicGenerateK(CurveParam curveParam, byte[] hash, BigInteger d, SigChecker checker, int nonce ){
         if ( nonce > 0 ){
             hash = Sha256.from(hash, EosPrivateKey.getSecuRandom().generateSeed(nonce)).getBytes();
         }
@@ -115,7 +117,7 @@ public class EcDsa {
         BigInteger t = new BigInteger(1, v);
 
         // Step H3, repeat until T is within the interval [1, Secp256k1Param.n - 1]
-        while ((t.signum() <= 0) || (t.compareTo(Secp256k1Param.n) >= 0) || !checker.checkSignature(t)) {
+        while ((t.signum() <= 0) || (t.compareTo( curveParam.n()) >= 0) || !checker.checkSignature(curveParam, t)) {
             EosByteWriter bwH = new EosByteWriter(32 + 1);
             bwH.putBytes(v);
             bwH.put((byte) 0x00);
@@ -135,12 +137,14 @@ public class EcDsa {
         BigInteger privAsBI = key.getAsBigInteger();
         SigChecker checker = new SigChecker(hash.getBytes(), privAsBI);
 
+        CurveParam curveParam = key.getCurveParam();
+
         int nonce = 0;
         while ( true ) {
-            deterministicGenerateK(hash.getBytes(), privAsBI, checker, nonce++);
+            deterministicGenerateK(curveParam, hash.getBytes(), privAsBI, checker, nonce++);
 
-            if (checker.s.compareTo(Secp256k1Param.HALF_CURVE_ORDER) > 0) {
-                checker.s = Secp256k1Param.n.subtract(checker.s);
+            if (checker.s.compareTo( curveParam.halfCurveOrder() ) > 0) {//  Secp256k1Param.HALF_CURVE_ORDER) > 0) {
+                checker.s = curveParam.n().subtract(checker.s);//   Secp256k1Param.n.subtract(checker.s);
             }
 
             if ( checker.isRSEachLength(32)) {
@@ -148,14 +152,14 @@ public class EcDsa {
             }
         }
 
-        EcSignature signature = new EcSignature( checker.r, checker.s );
+        EcSignature signature = new EcSignature( checker.r, checker.s, curveParam );
 
         byte[] data = hash.getBytes();
 
         EosPublicKey pubKey = key.getPublicKey();
 
         for (int i = 0; i < 4; i++) {
-            EosPublicKey recovered = recoverPubKey(data, signature, i);
+            EosPublicKey recovered = recoverPubKey(curveParam, data, signature, i);
             if ( pubKey.equals( recovered)) {
                 signature.setRecid( i );
                 break;
@@ -169,7 +173,11 @@ public class EcDsa {
         return signature;
     }
 
-    public static EosPublicKey recoverPubKey(byte[] messageSigned, EcSignature signature, int recId ) {
+    public static EosPublicKey recoverPubKey(byte[] messageSigned, EcSignature signature ) {
+        return recoverPubKey( signature.curveParam, messageSigned, signature, signature.recId);
+    }
+
+    public static EosPublicKey recoverPubKey(CurveParam curveParam, byte[] messageSigned, EcSignature signature, int recId ) {
 
         Preconditions.checkArgument(recId >= 0, "recId must be positive");
         Preconditions.checkArgument(signature.r.compareTo(BigInteger.ZERO) >= 0, "r must be positive");
@@ -179,7 +187,7 @@ public class EcDsa {
         // function)
         // 1.1 Let x = r + jn
 
-        BigInteger n = Secp256k1Param.n; // EcCurve order.
+        BigInteger n = curveParam.n();// Secp256k1Param.n; // EcCurve order.
         BigInteger i = BigInteger.valueOf((long) recId / 2);
         BigInteger x = signature.r.add(i.multiply(n));
         // 1.2. Convert the integer x to an octet string X of length mlen using
@@ -195,7 +203,7 @@ public class EcDsa {
         // More concisely, what these points mean is to use X as a compressed
         // public key.
 
-        EcCurve curve = Secp256k1Param.curve;
+        EcCurve curve = curveParam.getCurve();// Secp256k1Param.curve;
         BigInteger prime = curve.getQ(); // Bouncy Castle is not consistent about
         // the letter it uses for the prime.
         if (x.compareTo(prime) >= 0) {
@@ -206,7 +214,7 @@ public class EcDsa {
         // Compressed keys require you to know an extra bit of data about the
         // y-coord as there are two possibilities.
         // So it's encoded in the recId.
-        EcPoint R = EcTools.decompressKey(x, (recId & 1) == 1);
+        EcPoint R = EcTools.decompressKey(curveParam, x, (recId & 1) == 1);
         // 1.4. If nR != point at infinity, then do another iteration of Step 1
         // (callers responsibility).
         if (!R.multiply(n).isInfinity())
@@ -235,7 +243,7 @@ public class EcDsa {
         BigInteger rInv = signature.r.modInverse(n);
         BigInteger srInv = rInv.multiply(signature.s).mod(n);
         BigInteger eInvrInv = rInv.multiply(eInv).mod(n);
-        EcPoint q = EcTools.sumOfTwoMultiplies(Secp256k1Param.G, eInvrInv, R, srInv);
+        EcPoint q = EcTools.sumOfTwoMultiplies( curveParam.G(), eInvrInv, R, srInv); //  Secp256k1Param.G, eInvrInv, R, srInv);
 
 
         // We have to manually recompress the point as the compressed-ness gets
@@ -246,7 +254,7 @@ public class EcDsa {
     }
 
 
-    private static boolean isSignerOf(byte[] messageSigned, int recId, EcSignature sig, byte[] pubKeyBytes ) {
+    private static boolean isSignerOf(CurveParam curveParam, byte[] messageSigned, int recId, EcSignature sig, byte[] pubKeyBytes ) {
         Preconditions.checkArgument(recId >= 0, "recId must be positive");
         Preconditions.checkArgument(sig.r.compareTo(BigInteger.ZERO) >= 0, "r must be positive");
         Preconditions.checkArgument(sig.s.compareTo(BigInteger.ZERO) >= 0, "s must be positive");
@@ -255,7 +263,7 @@ public class EcDsa {
         // function)
         // 1.1 Let x = r + jn
 
-        BigInteger n = Secp256k1Param.n; // EcCurve order.
+        BigInteger n = curveParam.n();//Secp256k1Param.n; // EcCurve order.
         BigInteger i = BigInteger.valueOf((long) recId / 2);
         BigInteger x = sig.r.add(i.multiply(n));
         // 1.2. Convert the integer x to an octet string X of length mlen using
@@ -271,7 +279,7 @@ public class EcDsa {
         // More concisely, what these points mean is to use X as a compressed
         // public key.
 
-        EcCurve curve = Secp256k1Param.curve;
+        EcCurve curve = curveParam.getCurve();// Secp256k1Param.curve;
         BigInteger prime = curve.getQ(); // Bouncy Castle is not consistent about
         // the letter it uses for the prime.
         if (x.compareTo(prime) >= 0) {
@@ -282,7 +290,7 @@ public class EcDsa {
         // Compressed keys require you to know an extra bit of data about the
         // y-coord as there are two possibilities.
         // So it's encoded in the recId.
-        EcPoint R = EcTools.decompressKey(x, (recId & 1) == 1);
+        EcPoint R = EcTools.decompressKey(curveParam, x, (recId & 1) == 1);
         // 1.4. If nR != point at infinity, then do another iteration of Step 1
         // (callers responsibility).
         if (!R.multiply(n).isInfinity())
@@ -311,7 +319,7 @@ public class EcDsa {
         BigInteger rInv = sig.r.modInverse(n);
         BigInteger srInv = rInv.multiply(sig.s).mod(n);
         BigInteger eInvrInv = rInv.multiply(eInv).mod(n);
-        EcPoint q = EcTools.sumOfTwoMultiplies(Secp256k1Param.G, eInvrInv, R, srInv);
+        EcPoint q = EcTools.sumOfTwoMultiplies( curveParam.G(), eInvrInv, R, srInv); //Secp256k1Param.G, eInvrInv, R, srInv);
 
 
         // We have to manually recompress the point as the compressed-ness gets
