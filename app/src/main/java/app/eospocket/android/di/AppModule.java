@@ -95,25 +95,25 @@ public abstract class AppModule {
     @Provides
     @Singleton
     static ChainService provideChainService(Gson gson) {
-        return ServiceBuilder.createService(ChainService.class, Constants.DEFAULT_URL);
+        return ServiceBuilder.createService(ChainService.class, Constants.DEFAULT_URL, gson);
     }
 
     @Provides
     @Singleton
     static HistoryService provideHistoryService(Gson gson) {
-        return ServiceBuilder.createService(HistoryService.class, Constants.DEFAULT_URL);
+        return ServiceBuilder.createService(HistoryService.class, Constants.DEFAULT_URL, gson);
     }
 
     @Provides
     @Singleton
     static WalletService provideWalletService(Gson gson) {
-        return ServiceBuilder.createService(WalletService.class, Constants.DEFAULT_URL);
+        return ServiceBuilder.createService(WalletService.class, Constants.DEFAULT_URL, gson);
     }
 
     @Provides
     @Singleton
     static CoinMarketCapService provideCoinMarketCapService(Gson gson) {
-        return ServiceBuilder.createService(CoinMarketCapService.class, Constants.COINMARKETCAP_HOST);
+        return ServiceBuilder.createService(CoinMarketCapService.class, Constants.COINMARKETCAP_HOST, gson);
     }
 
     @Provides

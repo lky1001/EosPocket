@@ -1,5 +1,8 @@
 package app.eospocket.android.eos;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.google.gson.Gson;
+
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
@@ -27,34 +30,47 @@ public class ServiceBuilder {
 
     private static Retrofit.Builder RETROFIT_BUILDER = new Retrofit.Builder();
 
+    // todo - builder pattern
+    // private Gson gson;
+    // private boolean useGson;
+
     // No need to instantiate this class.
     private ServiceBuilder() {}
 
     public static <T> T createService(Class<T> serviceClass, String baseUrl) {
-        return createService(serviceClass, baseUrl, null);
+        return createService(serviceClass, baseUrl, null, null);
+    }
+
+    public static <T> T createService(Class<T> serviceClass, String baseUrl, Gson gson) {
+        return createService(serviceClass, baseUrl, null, gson);
     }
 
     public static <T> T createService(Class<T> serviceClass, String baseUrl,
-                                      HttpLoggingInterceptor httpLoggingInterceptor) {
-        return createService(serviceClass, baseUrl, httpLoggingInterceptor, false);
+            HttpLoggingInterceptor httpLoggingInterceptor, Gson gson) {
+        return createService(serviceClass, baseUrl, httpLoggingInterceptor, false, gson);
     }
 
     public static <T> T createService(Class<T> serviceClass, String baseUrl,
-                                      HttpLoggingInterceptor httpLoggingInterceptor, boolean userBadSslSocketFactory) {
+            HttpLoggingInterceptor httpLoggingInterceptor, boolean userBadSslSocketFactory, Gson gson) {
         return createService(serviceClass, baseUrl, httpLoggingInterceptor, userBadSslSocketFactory,
-                CONNECTION_TIMEOUT_IN_SEC, READ_TIMEOUT_IN_SEC, WRITE_TIMEOUT_IN_SEC);
+                CONNECTION_TIMEOUT_IN_SEC, READ_TIMEOUT_IN_SEC, WRITE_TIMEOUT_IN_SEC, gson);
     }
 
     public static <T> T createService(Class<T> serviceClass, String baseUrl,
             HttpLoggingInterceptor httpLoggingInterceptor, boolean userBadSslSocketFactory,
-            int connectTimeoutInSec, int readTimeoutInSec, int writeTimeoutInSec) {
+            int connectTimeoutInSec, int readTimeoutInSec, int writeTimeoutInSec, Gson gson) {
         OkHttpClient okHttpClient = getClient(userBadSslSocketFactory, httpLoggingInterceptor,
                 connectTimeoutInSec, readTimeoutInSec, writeTimeoutInSec);
 
-        RETROFIT_BUILDER.client(okHttpClient);
-        RETROFIT_BUILDER.baseUrl(baseUrl);
-        RETROFIT_BUILDER.addConverterFactory(JacksonConverterFactory.create());
-        RETROFIT_BUILDER.addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()));
+        RETROFIT_BUILDER.client(okHttpClient)
+                .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()));
+
+        if (gson != null) {
+            RETROFIT_BUILDER.addConverterFactory(GsonConverterFactory.create(gson));
+        } else {
+            RETROFIT_BUILDER.addConverterFactory(JacksonConverterFactory.create());
+        }
 
         Retrofit retrofit = RETROFIT_BUILDER.build();
         return retrofit.create(serviceClass);
