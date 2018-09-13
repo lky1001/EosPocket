@@ -5,7 +5,7 @@ import android.support.multidex.MultiDex;
 
 import javax.inject.Inject;
 
-import app.eospocket.android.di.component.DaggerAppComponent;
+import app.eospocket.android.di.DaggerAppComponent;
 import app.eospocket.android.eos.EosManager;
 import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;

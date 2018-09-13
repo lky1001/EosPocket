@@ -1,11 +1,9 @@
-package app.eospocket.android.di.component;
+package app.eospocket.android.di;
 
 import android.app.Application;
 
 import javax.inject.Singleton;
 
-import app.eospocket.android.di.ActivityBuilder;
-import app.eospocket.android.di.module.AppModule;
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.AndroidInjector;

@@ -1,4 +1,4 @@
-package app.eospocket.android.di.module;
+package app.eospocket.android.di;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
