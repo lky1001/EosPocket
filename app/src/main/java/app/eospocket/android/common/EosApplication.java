@@ -9,6 +9,7 @@ import app.eospocket.android.di.component.DaggerAppComponent;
 import app.eospocket.android.eos.EosManager;
 import dagger.android.AndroidInjector;
 import dagger.android.support.DaggerApplication;
+import io.mithrilcoin.eos.app.PRNGFixes;
 
 public class EosApplication extends DaggerApplication {
 
@@ -18,6 +19,10 @@ public class EosApplication extends DaggerApplication {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+
+        // https://android-developers.googleblog.com/2013/08/some-securerandom-thoughts.html
+        // https://github.com/playerone-id/EosCommander/blob/master/app/src/main/java/io/plactal/eoscommander/app/EosCommanderApp.java
+        PRNGFixes.apply();
 
         MultiDex.install(this);
     }
