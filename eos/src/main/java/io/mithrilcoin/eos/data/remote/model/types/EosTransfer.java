@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2018 PLACTAL.
+ * Copyright (c) 2017 Mithril coin.
  *
  * The MIT License
  *
@@ -24,8 +24,6 @@
 package io.mithrilcoin.eos.data.remote.model.types;
 
 
-import com.google.gson.annotations.Expose;
-
 import io.mithrilcoin.eos.crypto.util.HexUtils;
 
 /**
@@ -33,27 +31,20 @@ import io.mithrilcoin.eos.crypto.util.HexUtils;
  */
 
 public class EosTransfer implements EosType.Packer {
-    @Expose
-    private TypeAccountName from;
+    private TypeAccountName mFrom;
+    private TypeAccountName mTo;
+    private String mAmount;
+    private String mMemo;
 
-    @Expose
-    private TypeAccountName to;
-
-    @Expose
-    private String quantity;
-
-    @Expose
-    private String memo;
-
-    public EosTransfer(String from, String to, String quantity, String memo ) {
-        this( new TypeAccountName(from), new TypeAccountName(to), quantity, memo );
+    public EosTransfer(String from, String to, String amount, String memo ) {
+        this( new TypeAccountName(from), new TypeAccountName(to), amount, memo );
     }
 
-    public EosTransfer(TypeAccountName from, TypeAccountName to, String quantity, String memo ) {
-        this.from = from;
-        this.to = to;
-        this.quantity = quantity;
-        this.memo = memo != null ? memo : "";
+    public EosTransfer(TypeAccountName from, TypeAccountName to, String amount, String memo ) {
+        mFrom = from;
+        mTo = to;
+        mAmount = amount;
+        mMemo = memo;
     }
 
     public String getActionName() {
@@ -64,12 +55,12 @@ public class EosTransfer implements EosType.Packer {
     @Override
     public void pack(EosType.Writer writer) {
 
-        from.pack(writer);
-        to.pack(writer);
+        mFrom.pack(writer);
+        mTo.pack(writer);
 
-        writer.putString(quantity);
+        writer.putString( mAmount);
 
-        writer.putString(memo);
+        writer.putString( mMemo );
     }
 
     public String getAsHex() {

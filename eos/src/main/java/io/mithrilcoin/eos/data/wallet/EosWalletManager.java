@@ -326,7 +326,7 @@ public class EosWalletManager {
     }
 
     public SignedTransaction signTransaction(final SignedTransaction txn,
-               final List<EosPublicKey> keys, final TypeChainId id) throws IllegalStateException{
+                                             final List<EosPublicKey> keys, final TypeChainId id) throws IllegalStateException{
 
         SignedTransaction stxn = new SignedTransaction( txn );
 
