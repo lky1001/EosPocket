@@ -30,6 +30,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 public class StakeAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private List<StakeItem> mItems = new ArrayList<>();
+    private StakeFragment.StakeClickListener mStakeClickListener;
+
+    public StakeAdapter(StakeFragment.StakeClickListener stakeClickListener) {
+        this.mStakeClickListener = stakeClickListener;
+    }
 
     @NonNull
     @Override
@@ -147,17 +152,21 @@ public class StakeAdapter extends RecyclerView.Adapter<ViewHolder> {
             switch (stakeUiInfo) {
                 case REFUNDING:
                     btnStake.setText(R.string.btn_title_refund);
+                    btnStake.setOnClickListener(view -> mStakeClickListener.onClickRefund());
                     break;
                 case RAM:
                     btnStake.setText(R.string.btn_title_buy);
+                    btnStake.setOnClickListener(view -> mStakeClickListener.onClickBuyRam());
                     break;
                 case CPU:
-                case NETWORK:
-                default:
                     btnStake.setText(R.string.btn_title_stake);
+                    btnStake.setOnClickListener(view -> mStakeClickListener.onClickStakeCpu());
+                    break;
+                case NETWORK:
+                    btnStake.setText(R.string.btn_title_stake);
+                    btnStake.setOnClickListener(view -> mStakeClickListener.onClickStakeNetwork());
                     break;
             }
-
         }
 
         private Spannable getDescription(ResourceItem item) throws Exception {

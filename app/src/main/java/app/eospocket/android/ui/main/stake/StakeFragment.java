@@ -37,6 +37,27 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
 
 
     private StakeAdapter mStakeAdapter;
+    private StakeClickListener mStakeClickListener = new StakeClickListener() {
+        @Override
+        public void onClickStakeCpu() {
+
+        }
+
+        @Override
+        public void onClickStakeNetwork() {
+
+        }
+
+        @Override
+        public void onClickRefund() {
+
+        }
+
+        @Override
+        public void onClickBuyRam() {
+
+        }
+    };
 
     @Nullable
     @Override
@@ -44,7 +65,7 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
         View view = inflater.inflate(R.layout.fragment_stake, container, false);
         ButterKnife.bind(this, view);
 
-        mStakeAdapter = new StakeAdapter();
+        mStakeAdapter = new StakeAdapter(mStakeClickListener);
         mStakeListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mStakeListView.setAdapter(mStakeAdapter);
 
@@ -76,5 +97,12 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
     public void onDestroy() {
         super.onDestroy();
         mStakePresenter.onDestroy();
+    }
+
+    interface StakeClickListener {
+        void onClickStakeCpu();
+        void onClickStakeNetwork();
+        void onClickRefund();
+        void onClickBuyRam();
     }
 }
