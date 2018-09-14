@@ -2,6 +2,7 @@ package app.eospocket.android.eos.model.action;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class Act {
     public Data data;
 
     @JsonProperty("hex_data")
+    @SerializedName("hex_data")
     public String hexData;
 
     public String name;

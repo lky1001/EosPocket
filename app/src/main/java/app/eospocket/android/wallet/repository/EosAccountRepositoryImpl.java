@@ -39,4 +39,9 @@ public class EosAccountRepositoryImpl implements EosAccountRepository {
     public Flowable<List<EosAccountModel>> getEosAccounts() {
         return mAppDatabase.eosAccountDao().getEosAccounts();
     }
+
+    @Override
+    public Single<EosAccountModel> findOneById(int id) {
+        return mAppDatabase.eosAccountDao().findOneById(id);
+    }
 }

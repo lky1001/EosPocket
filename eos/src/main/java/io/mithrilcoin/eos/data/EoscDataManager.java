@@ -179,28 +179,28 @@ public class EoscDataManager {
         return mEosdApi.getAccountInfo(new AccountInfoRequest(accountName));
     }
 
-    public Observable<JsonObject> transferEos( String from, String to, long amount, String memo ) {
-
-        return getChainInfo()
-                .map( info -> {
-                    EosTransfer transfer = new EosTransfer(from, to, amount, memo);
-
-                    return createTransaction( Consts.EOS_CONTRACT_NAME, transfer.getTypeName(), transfer.getAsHex(),
-                            new String[]{ from, to }, getActivePermission(from), info);
-                })
-                .flatMap( txn -> signTransaction( txn ) )
-                .flatMap( signedTxn -> mEosdApi.pushTransactionRetJson( signedTxn )) ;
-    }
-
-    public Observable<PushTxnResponse> createAccount(EosNewAccount newAccountData) {
-
-        return getChainInfo()
-                .map( info -> createTransaction( Consts.EOS_CONTRACT_NAME, newAccountData.getTypeName(), newAccountData.getAsHex()
-                                    , new String[]{ newAccountData.getCreatorName(),Consts.EOS_CONTRACT_NAME }
-                                    , getActivePermission( newAccountData.getCreatorName() ), info ))
-                .flatMap( txn -> signTransaction( txn))
-                .flatMap( signedTxn -> mEosdApi.pushTransaction( signedTxn ));
-    }
+//    public Observable<JsonObject> transferEos( String from, String to, long amount, String memo ) {
+//
+//        return getChainInfo()
+//                .map( info -> {
+//                    EosTransfer transfer = new EosTransfer(from, to, amount, memo);
+//
+//                    return createTransaction( Consts.EOS_CONTRACT_NAME, transfer.getTypeName(), transfer.getAsHex(),
+//                            new String[]{ from, to }, getActivePermission(from), info);
+//                })
+//                .flatMap( txn -> signTransaction( txn ) )
+//                .flatMap( signedTxn -> mEosdApi.pushTransactionRetJson( signedTxn )) ;
+//    }
+//
+//    public Observable<PushTxnResponse> createAccount(EosNewAccount newAccountData) {
+//
+//        return getChainInfo()
+//                .map( info -> createTransaction( Consts.EOS_CONTRACT_NAME, newAccountData.getTypeName(), newAccountData.getAsHex()
+//                                    , new String[]{ newAccountData.getCreatorName(),Consts.EOS_CONTRACT_NAME }
+//                                    , getActivePermission( newAccountData.getCreatorName() ), info ))
+//                .flatMap( txn -> signTransaction( txn))
+//                .flatMap( signedTxn -> mEosdApi.pushTransaction( signedTxn ));
+//    }
 
     public Observable<JsonObject> getTransactions(String accountName ) {
 

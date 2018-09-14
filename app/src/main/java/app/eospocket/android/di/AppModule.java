@@ -17,7 +17,6 @@ import app.eospocket.android.common.Constants;
 import app.eospocket.android.common.CustomPreference;
 import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.common.rxjava.RxJavaSchedulersImpl;
-import app.eospocket.android.di.ApplicationContext;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.ServiceBuilder;
 import app.eospocket.android.eos.services.ChainService;
@@ -85,11 +84,11 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
-    Gson providesGson() {
+    static Gson providesGson() {
         return new GsonBuilder()
                 .registerTypeAdapterFactory(new GsonEosTypeAdapterFactory())
                 .serializeNulls()
-                .excludeFieldsWithoutExposeAnnotation().create();
+                .create();
     }
 
     @Provides
@@ -186,8 +185,9 @@ public abstract class AppModule {
 
     @Provides
     @Singleton
-    static LoginAccountManager provideLoginAccountManager(CustomPreference customPreference) {
-        LoginAccountManager accountManager = new LoginAccountManager(customPreference);
+    static LoginAccountManager provideLoginAccountManager(CustomPreference customPreference,
+            EosAccountRepository eosAccountRepository, RxJavaSchedulers rxJavaSchedulers) {
+        LoginAccountManager accountManager = new LoginAccountManager(customPreference, eosAccountRepository, rxJavaSchedulers);
 
         return accountManager;
     }

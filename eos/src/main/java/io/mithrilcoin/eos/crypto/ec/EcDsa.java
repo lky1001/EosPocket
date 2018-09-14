@@ -24,13 +24,14 @@
 
 package io.mithrilcoin.eos.crypto.ec;
 
-import com.everyeos.batch.services.nodeos.crypto.Hmac;
-import com.everyeos.batch.services.nodeos.crypto.digest.Sha256;
-import com.everyeos.batch.services.nodeos.remote.model.types.EosByteWriter;
 import com.google.common.base.Preconditions;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+
+import io.mithrilcoin.eos.crypto.Hmac;
+import io.mithrilcoin.eos.crypto.digest.Sha256;
+import io.mithrilcoin.eos.data.remote.model.types.EosByteWriter;
 
 /**
  * Created by swapnibble on 2017-09-29.

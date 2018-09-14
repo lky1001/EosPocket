@@ -28,4 +28,7 @@ public interface EosAccountDao {
 
     @Query("SELECT * FROM eos_account")
     Flowable<List<EosAccountModel>> getEosAccounts();
+
+    @Query("SELECT * FROM eos_account WHERE _id = :id LIMIT 1")
+    Single<EosAccountModel> findOneById(int id);
 }

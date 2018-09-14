@@ -20,4 +20,6 @@ public interface EosAccountRepository {
     void deleteAll();
 
     Flowable<List<EosAccountModel>> getEosAccounts();
+
+    Single<EosAccountModel> findOneById(int id);
 }

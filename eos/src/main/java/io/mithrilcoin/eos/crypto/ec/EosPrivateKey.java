@@ -24,11 +24,11 @@
 
 package io.mithrilcoin.eos.crypto.ec;
 
-import com.everyeos.batch.services.nodeos.crypto.digest.Sha256;
-import com.everyeos.batch.services.nodeos.crypto.util.Base58;
-
 import java.math.BigInteger;
 import java.security.SecureRandom;
+
+import io.mithrilcoin.eos.crypto.digest.Sha256;
+import io.mithrilcoin.eos.crypto.util.Base58;
 
 
 /**
