@@ -32,8 +32,6 @@ import com.google.gson.annotations.Expose;
 
 import java.util.List;
 
-import app.eospocket.android.eos.model.action.ActionTrace;
-
 public class TransactionTrace {
 
     @Expose

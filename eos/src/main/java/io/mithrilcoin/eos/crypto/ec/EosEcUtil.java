@@ -26,11 +26,11 @@ package io.mithrilcoin.eos.crypto.ec;
 import java.util.Arrays;
 import java.util.regex.PatternSyntaxException;
 
+import io.mithrilcoin.eos.crypto.RefValue;
 import io.mithrilcoin.eos.crypto.digest.Ripemd160;
 import io.mithrilcoin.eos.crypto.digest.Sha256;
 import io.mithrilcoin.eos.crypto.util.Base58;
 import io.mithrilcoin.eos.crypto.util.BitUtils;
-import io.mithrilcoin.eos.util.RefValue;
 import io.mithrilcoin.eos.util.StringUtils;
 
 /**

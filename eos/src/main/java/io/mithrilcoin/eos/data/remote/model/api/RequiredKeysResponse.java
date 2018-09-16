@@ -23,34 +23,32 @@
  */
 package io.mithrilcoin.eos.data.remote.model.api;
 
-/**
- * Created by swapnibble on 2017-09-14.
- */
-
 import com.google.gson.annotations.Expose;
 
-public class Key {
+import java.util.ArrayList;
+import java.util.List;
+
+import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
+
+/**
+ * Created by swapnibble on 2017-11-15.
+ */
+
+public class RequiredKeysResponse {
 
     @Expose
-    private String key;
+    private List<String> required_keys ;
 
-    @Expose
-    private Integer weight;
+    public List<EosPublicKey> getKeys() {
+        if ( null == required_keys ){
+            return new ArrayList<>();
+        }
 
-    public String getKey() {
-        return key;
+        ArrayList<EosPublicKey> retKeys = new ArrayList<>(required_keys.size());
+        for ( String pubKey: required_keys ){
+            retKeys.add( new EosPublicKey( pubKey));
+        }
+
+        return retKeys;
     }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
 }

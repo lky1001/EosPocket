@@ -67,7 +67,6 @@ public class AppModule {
         return new GsonBuilder()
                 .registerTypeAdapterFactory( new Message.GsonTypeAdapterFactory() )
                 .registerTypeAdapterFactory( new TypeAccountPermission.GsonTypeAdapterFactory() )
-                .registerTypeAdapterFactory( new SignedTransaction.GsonTypeAdapterFactory() )
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -24,26 +24,25 @@
 package io.mithrilcoin.eos.data.remote.model.api;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by swapnibble on 2017-09-14.
  */
 
 public class AccountInfoRequest {
-    @SerializedName("account_name")
+
     @Expose
-    private String name;
+    private String account_name;
 
     public AccountInfoRequest(String name) {
         setName(name);
     }
 
     public String getName() {
-        return name;
+        return account_name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.account_name = name;
     }
 }

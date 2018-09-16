@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -26,22 +26,18 @@ package io.mithrilcoin.eos.data.remote.model.api;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by swapnibble on 2017-11-17.
  */
 
 public class JsonToBinRequest {
-    @SerializedName("code")
     @Expose
     private String code;
 
-    @SerializedName("action")
     @Expose
     private String action;
 
-    @SerializedName("args")
     @Expose
     private JsonElement args;
 
@@ -51,7 +47,9 @@ public class JsonToBinRequest {
         this.args   = new JsonParser().parse( args );
     }
 
-    public String getArgsString() {return args.getAsString();}
+    public String getArgsString() {
+        return args.getAsString();
+    }
 
     public void putArgs(String args) {
         this.args = new JsonParser().parse(args);

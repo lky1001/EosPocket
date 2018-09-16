@@ -24,6 +24,7 @@
 
 package io.mithrilcoin.eos.crypto.ec;
 
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
 

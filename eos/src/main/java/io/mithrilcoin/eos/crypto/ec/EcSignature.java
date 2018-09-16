@@ -23,12 +23,12 @@
  */
 package io.mithrilcoin.eos.crypto.ec;
 
+
 import java.math.BigInteger;
 import java.util.Arrays;
 
 import io.mithrilcoin.eos.crypto.util.HexUtils;
 import io.mithrilcoin.eos.util.StringUtils;
-
 
 /**
  * Created by swapnibble on 2017-09-20.

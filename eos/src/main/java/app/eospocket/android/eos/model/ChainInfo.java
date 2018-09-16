@@ -4,6 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ChainInfo {
 
@@ -54,4 +60,23 @@ public class ChainInfo {
     @JsonProperty("virtual_block_net_limit")
     @SerializedName("virtual_block_net_limit")
     public long virtualBlockNetLimit;
+
+    public String getTimeAfterHeadBlockTime(int diffInMilSec) {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date date = sdf.parse( this.headBlockTime);
+
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            c.add( Calendar.MILLISECOND, diffInMilSec);
+            date = c.getTime();
+
+            return sdf.format(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return this.headBlockTime;
+        }
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -28,7 +28,6 @@ package io.mithrilcoin.eos.data.remote.model.api;
  */
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -38,64 +37,76 @@ import java.util.Date;
 
 public class EosChainInfo {
 
-    @SerializedName("head_block_num")
     @Expose
-    private Integer headBlockNum;
-    @SerializedName("last_irreversible_block_num")
-    @Expose
-    private Integer lastIrreversibleBlockNum;
-    @SerializedName("head_block_id")
-    @Expose
-    private String headBlockId;
-    @SerializedName("head_block_time")
-    @Expose
-    private String headBlockTime;
-    @SerializedName("head_block_producer")
-    @Expose
-    private String headBlockProducer;
-    @SerializedName("recent_slots")
-    @Expose
-    private String recentSlots;
-    @SerializedName("participation_rate")
-    @Expose
-    private String participationRate;
+    private String server_version;
 
-    public Integer getHeadBlockNum() {
-        return headBlockNum;
+    @Expose
+    private Long head_block_num;
+
+    @Expose
+    private Long last_irreversible_block_num;
+
+    @Expose
+    private String head_block_id;
+
+    @Expose
+    private String head_block_time;
+
+    @Expose
+    private String head_block_producer;
+
+    @Expose
+    private String chain_id;
+
+    @Expose
+    private long virtual_block_cpu_limit;
+
+    @Expose
+    private long virtual_block_net_limit;
+
+    @Expose
+    private long block_cpu_limit;
+
+    @Expose
+    private long block_net_limit;
+
+
+    public Long getHeadBlockNum() {
+        return head_block_num;
     }
 
-    public void setHeadBlockNum(Integer headBlockNum) {
-        this.headBlockNum = headBlockNum;
+    public void setHeadBlockNum(Long headBlockNum) {
+        this.head_block_num = headBlockNum;
     }
 
-    public Integer getLastIrreversibleBlockNum() {
-        return lastIrreversibleBlockNum;
+    public Long getLastIrreversibleBlockNum() {
+        return last_irreversible_block_num;
     }
 
-    public void setLastIrreversibleBlockNum(Integer lastIrreversibleBlockNum) {
-        this.lastIrreversibleBlockNum = lastIrreversibleBlockNum;
+    public void setLastIrreversibleBlockNum(Long lastIrreversibleBlockNum) {
+        this.last_irreversible_block_num = lastIrreversibleBlockNum;
     }
 
     public String getHeadBlockId() {
-        return headBlockId;
+        return head_block_id;
     }
 
     public void setHeadBlockId(String headBlockId) {
-        this.headBlockId = headBlockId;
+        this.head_block_id = headBlockId;
     }
 
     public String getHeadBlockTime() {
-        return headBlockTime;
+        return head_block_time;
     }
 
     public void setHeadBlockTime(String headBlockTime) {
-        this.headBlockTime = headBlockTime;
+        this.head_block_time = headBlockTime;
     }
 
     public String getTimeAfterHeadBlockTime(int diffInMilSec) {
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
-            Date date = sdf.parse( this.headBlockTime);
+            Date date = sdf.parse( this.head_block_time);
 
             Calendar c = Calendar.getInstance();
             c.setTime(date);
@@ -106,38 +117,32 @@ public class EosChainInfo {
 
         } catch (ParseException e) {
             e.printStackTrace();
-            return this.headBlockTime;
+            return this.head_block_time;
         }
     }
 
     public String getHeadBlockProducer() {
-        return headBlockProducer;
+        return head_block_producer;
     }
 
     public void setHeadBlockProducer(String headBlockProducer) {
-        this.headBlockProducer = headBlockProducer;
+        this.head_block_producer = headBlockProducer;
     }
 
-    public String getRecentSlots() {
-        return recentSlots;
-    }
-
-    public void setRecentSlots(String recentSlots) {
-        this.recentSlots = recentSlots;
-    }
-
-    public String getParticipationRate() {
-        return participationRate;
-    }
-
-    public void setParticipationRate(String participationRate) {
-        this.participationRate = participationRate;
-    }
 
     public String getBrief(){
-        return "head block num: " + headBlockNum
-                + "\nlast irreversible block: " + lastIrreversibleBlockNum
-                + "\nhead block time: " + headBlockTime
-                + "\nhead block producer: " + headBlockProducer ;
+        return    "server_version: "  + server_version
+                + "\nhead block num: " + head_block_num
+                + "\nlast irreversible block: " + last_irreversible_block_num
+                + "\nhead block time: " + head_block_time
+                + "\nhead block producer: " + head_block_producer ;
+    }
+
+    public String getChain_id() {
+        return chain_id;
+    }
+
+    public void setChain_id(String chain_id) {
+        this.chain_id = chain_id;
     }
 }

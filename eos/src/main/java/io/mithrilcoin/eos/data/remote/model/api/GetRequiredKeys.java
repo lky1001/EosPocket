@@ -23,34 +23,33 @@
  */
 package io.mithrilcoin.eos.data.remote.model.api;
 
-/**
- * Created by swapnibble on 2017-09-14.
- */
-
 import com.google.gson.annotations.Expose;
 
-public class Key {
+import java.util.ArrayList;
+import java.util.List;
+
+import io.mithrilcoin.eos.data.remote.model.chain.SignedTransaction;
+
+
+/**
+ * Created by swapnibble on 2017-11-15.
+ */
+
+public class GetRequiredKeys {
+    @Expose
+    private SignedTransaction transaction;
 
     @Expose
-    private String key;
+    private List<String> available_keys ;
 
-    @Expose
-    private Integer weight;
+    public GetRequiredKeys(SignedTransaction transaction, List<String> keys ) {
+        this.transaction = transaction;
 
-    public String getKey() {
-        return key;
+        if ( null != keys ) {
+            available_keys = new ArrayList<>(keys);
+        }
+        else {
+            available_keys = new ArrayList<>();
+        }
     }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
 }

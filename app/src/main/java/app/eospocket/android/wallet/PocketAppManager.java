@@ -7,11 +7,16 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.eospocket.android.common.Constants;
 import app.eospocket.android.utils.EncryptUtil;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import app.eospocket.android.wallet.repository.EosAccountTokenRepository;
+import io.mithrilcoin.eos.crypto.ec.EosPrivateKey;
+import io.mithrilcoin.eos.data.remote.model.chain.PackedTransaction;
+import io.mithrilcoin.eos.data.remote.model.chain.SignedTransaction;
+import io.mithrilcoin.eos.data.remote.model.types.TypeChainId;
 import io.reactivex.Single;
 
 @Singleton
@@ -58,5 +63,21 @@ public class PocketAppManager {
 
     public void updateToken(@NonNull EosAccountTokenModel tokenModel) {
         mEosAccountTokenRepository.updateToken(tokenModel);
+    }
+
+    private Single<PackedTransaction> signAndPackTransaction(final int accountId, final String password, final SignedTransaction txnBeforeSign) {
+        return mEosAccountRepository.findOneById(accountId)
+                .map(account -> {
+                    if (account != null) {
+                        // todo decrypt
+                        EosPrivateKey pk = new EosPrivateKey(account.getPrivateKey());
+                        SignedTransaction stxn = new SignedTransaction(txnBeforeSign);
+                        stxn.sign(pk, new TypeChainId(Constants.EOS_MAINNET_CHAIN_ID));
+
+                        return new PackedTransaction(stxn);
+                    }
+
+                    return null;
+                });
     }
 }

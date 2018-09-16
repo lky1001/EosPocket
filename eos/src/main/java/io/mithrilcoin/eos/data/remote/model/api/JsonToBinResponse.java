@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -24,7 +24,6 @@
 package io.mithrilcoin.eos.data.remote.model.api;
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -33,15 +32,12 @@ import java.util.List;
  */
 
 public class JsonToBinResponse {
-    @SerializedName("binargs")
     @Expose
     private String binargs;
 
-    @SerializedName("required_scope")
     @Expose
     private List<String> required_scope;
 
-    @SerializedName("required_auth")
     @Expose
     private List<String> required_auth;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -28,31 +28,38 @@ package io.mithrilcoin.eos.data.remote.model.api;
  */
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+
+import io.mithrilcoin.eos.data.remote.model.chain.TransactionTrace;
+import io.mithrilcoin.eos.util.StringUtils;
 
 public class PushTxnResponse {
 
-    @SerializedName("transaction_id")
     @Expose
-    private String transactionId;
-    @SerializedName("processed")
+    private String transaction_id;
+
     @Expose
-    private Processed processed;
+    private TransactionTrace processed;
 
     public String getTransactionId() {
-        return transactionId;
+        return transaction_id;
     }
 
     public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+        this.transaction_id = transactionId;
     }
 
-    public Processed getProcessed() {
+    public TransactionTrace getProcessed() {
         return processed;
     }
 
-    public void setProcessed(Processed processed) {
+    public void setProcessed(TransactionTrace processed) {
         this.processed = processed;
     }
 
+    @Override
+    public String toString() {
+        if (StringUtils.isEmpty(transaction_id) || (processed == null )) return "";
+
+        return "transaction: " + transaction_id + "\n" + processed.toString();
+    }
 }

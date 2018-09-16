@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Mithril coin.
+ * Copyright (c) 2017-2018 PLACTAL.
  *
  * The MIT License
  *
@@ -28,19 +28,17 @@ package io.mithrilcoin.eos.data.remote.model.api;
  */
 
 import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
 public class RequiredAuth {
 
-    @SerializedName("threshold")
     @Expose
     private Integer threshold;
-    @SerializedName("keys")
+
     @Expose
     private List<Key> keys = null;
-    @SerializedName("accounts")
+
     @Expose
     private List<Object> accounts = null;
 

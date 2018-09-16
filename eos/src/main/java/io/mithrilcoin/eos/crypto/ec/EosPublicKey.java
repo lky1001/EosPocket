@@ -25,9 +25,9 @@ package io.mithrilcoin.eos.crypto.ec;
 
 import java.util.Arrays;
 
+import io.mithrilcoin.eos.crypto.RefValue;
 import io.mithrilcoin.eos.crypto.digest.Ripemd160;
 import io.mithrilcoin.eos.crypto.util.BitUtils;
-import io.mithrilcoin.eos.util.RefValue;
 
 
 /**

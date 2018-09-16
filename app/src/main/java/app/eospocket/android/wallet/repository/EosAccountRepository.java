@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import app.eospocket.android.wallet.db.model.EosAccountModel;
-import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
 
