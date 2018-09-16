@@ -5,10 +5,15 @@ import android.support.annotation.NonNull;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.eospocket.android.eos.eosaction.EosAction;
+import app.eospocket.android.eos.eosaction.TokenTransfer;
 import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.eos.model.ChainInfo;
 import app.eospocket.android.eos.model.account.EosAccount;
@@ -28,7 +33,6 @@ import io.mithrilcoin.eos.data.remote.model.api.JsonToBinRequest;
 import io.mithrilcoin.eos.data.remote.model.chain.Action;
 import io.mithrilcoin.eos.data.remote.model.chain.PackedTransaction;
 import io.mithrilcoin.eos.data.remote.model.chain.SignedTransaction;
-import io.mithrilcoin.eos.data.remote.model.types.EosTransfer;
 import io.mithrilcoin.eos.data.wallet.EosWalletManager;
 import io.mithrilcoin.eos.util.Utils;
 import io.reactivex.Single;
@@ -135,33 +139,44 @@ public class EosManager {
         return mCoinMarketCapService.getListing();
     }
 
-    public Single<SignedTransaction> transfer(String contract, String from, String to, String amount, String memo, String authorization) {
-        EosTransfer transfer = new EosTransfer(from, to, amount, memo);
+    public Single<SignedTransaction> signedEosAction(EosAction eosAction, String authorization) {
+        return pushActionRetJson(eosAction.getContract(), eosAction.getActionName(), Utils.prettyPrintJson(eosAction), new String[] {authorization});
+    }
 
-        return pushActionRetJson(contract, transfer.getActionName(), Utils.prettyPrintJson(transfer),
+    public Single<SignedTransaction> transferTokenAction(String contract, String authorization, TokenTransfer tokenTransfer) {
+        return pushActionRetJson(contract, tokenTransfer.getActionName(), Utils.prettyPrintJson(tokenTransfer),
                 new String[] {authorization});
     }
 
     private Single<SignedTransaction> pushActionRetJson(String contract, String action, String data, String[] permissions) {
         return this.mChainService.jsonToBin(new JsonToBinRequest(contract, action, data))
-                .flatMap(jsonToBinResp -> getChainInfo().map(info -> createTransaction(contract, action, jsonToBinResp.getBinargs(), permissions, info)));
+                .flatMap(jsonToBinResp -> getChainInfo().flatMap(info -> createTransaction(contract, action, jsonToBinResp.getBinargs(), permissions, info)));
     }
 
-    public SignedTransaction createTransaction(String contract, String actionName, String dataAsHex, String[] permissions, ChainInfo chainInfo) {
-        Action action = new Action(contract, actionName);
-        action.setAuthorization(permissions);
-        action.setData(dataAsHex);
+    public Single<SignedTransaction> createTransaction(String contract, String actionName, String dataAsHex, String[] permissions, ChainInfo chainInfo) {
+        return Single.fromCallable(() -> {
+            Action action = new Action(contract, actionName);
+            action.setAuthorization(permissions);
+            action.setData(dataAsHex);
 
-        SignedTransaction txn = new SignedTransaction();
-        txn.addAction(action);
-        txn.putSignatures(new ArrayList<>());
+            return action;
+        }).flatMap(action -> createTransaction(Collections.singletonList(action), chainInfo));
+    }
 
-        if (null != chainInfo) {
-            txn.setReferenceBlock(chainInfo.headBlockId);
-            txn.setExpiration(chainInfo.getTimeAfterHeadBlockTime(TX_EXPIRATION_IN_MS));
-        }
+    public Single<SignedTransaction> createTransaction(List<Action> actions, ChainInfo chainInfo) {
+        return Single.fromCallable(() -> {
+            SignedTransaction txn = new SignedTransaction();
+            txn.setActions( actions );
+            txn.putSignatures( new ArrayList<>());
 
-        return txn;
+
+            if ( null != chainInfo ) {
+                txn.setReferenceBlock(chainInfo.headBlockId);
+                txn.setExpiration(chainInfo.getTimeAfterHeadBlockTime(TX_EXPIRATION_IN_MS));
+            }
+
+            return txn;
+        });
     }
 
     public Single<JsonObject> pushTransactionRetJson(PackedTransaction packedTransaction) {
