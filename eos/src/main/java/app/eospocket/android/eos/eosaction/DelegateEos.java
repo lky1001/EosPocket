@@ -1,5 +1,7 @@
 package app.eospocket.android.eos.eosaction;
 
+import com.google.gson.annotations.SerializedName;
+
 import io.mithrilcoin.eos.data.remote.model.types.EosType;
 import io.mithrilcoin.eos.data.remote.model.types.TypeAccountName;
 
@@ -7,8 +9,13 @@ public class DelegateEos implements EosType.Packer, EosAction {
 
     private TypeAccountName from;
     private TypeAccountName receiver;
+
+    @SerializedName("stake_net_quantity")
     private String stakeCpuQuantity;
+
+    @SerializedName("stake_cpu_quantity")
     private String stakeNetQuantity;
+
     private boolean transfer;
 
     public DelegateEos(TypeAccountName from, TypeAccountName receiver, String stakeCpuQuantity, String stakeNetQuantity, boolean transfer) {
