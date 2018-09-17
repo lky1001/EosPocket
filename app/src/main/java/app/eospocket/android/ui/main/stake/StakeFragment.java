@@ -17,6 +17,7 @@ import app.eospocket.android.R;
 import app.eospocket.android.common.CommonFragment;
 import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.ui.main.MainNavigationFragment;
+import app.eospocket.android.wallet.LoginAccountManager;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +26,9 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
 
     @Inject
     StakePresenter mStakePresenter;
+
+    @Inject
+    LoginAccountManager mLoginAccountManager;
 
     @Inject
     EosAccountRepository mEosAccountRepository;
@@ -40,7 +44,15 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
     private StakeClickListener mStakeClickListener = new StakeClickListener() {
         @Override
         public void onClickStakeCpu() {
-
+            int accountId = mLoginAccountManager.getSelectedId();
+            String from = "login account name";
+            String to = "received account name";
+            double cpuAmount = 0.0000;
+            double netAmount = 0.0000;
+            String pw = "your password";
+            // send eos to account
+            boolean isTransfer = false;
+            mStakePresenter.stakeCpu(accountId, pw, from, to, cpuAmount, netAmount, isTransfer);
         }
 
         @Override

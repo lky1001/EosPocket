@@ -65,7 +65,7 @@ public class PocketAppManager {
         mEosAccountTokenRepository.updateToken(tokenModel);
     }
 
-    private Single<PackedTransaction> signAndPackTransaction(final int accountId, final String password, final SignedTransaction txnBeforeSign) {
+    public Single<PackedTransaction> signAndPackTransaction(final int accountId, final String password, final SignedTransaction txnBeforeSign) {
         return mEosAccountRepository.findOneById(accountId)
                 .map(account -> {
                     if (account != null) {
