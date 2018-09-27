@@ -56,21 +56,23 @@ public class StakePresenter extends BasePresenter<StakeView> {
                 .subscribe(mView::loadEosAccountSuccess, mView::loadEosAccountFail);
     }
 
-    public void stakeCpu(int accountId, String pw, String from, String to, double cpuAmount, double netAmount, boolean isTransfer) {
+    public void stakeCpu(int accountId, String pw, String to, double cpuAmount, double netAmount, int isTransfer) {
+        //TODO to
         this.eosAccountRepository.findOneById(accountId)
         .flatMap(account -> {
-            String cpuQuantity = Utils.formatBalance(cpuAmount);
-            String netQuantity = Utils.formatBalance(netAmount);
+
+            String cpuQuantity = Utils.formatBalance(cpuAmount) + " EOS";
+            String netQuantity = Utils.formatBalance(netAmount) + " EOS";
 
             DelegateEos delegateEos = new DelegateEos(
-                    new TypeAccountName(from),
-                    new TypeAccountName(to),
+                    new TypeAccountName(account.getName()),
+                    new TypeAccountName(account.getName()),
                     cpuQuantity,
                     netQuantity,
                     isTransfer
             );
 
-            return this.eosManager.signedEosAction(delegateEos, account.getName() + "@" + account.getPermission());
+            return this.eosManager.signedEosAction(delegateEos, account.getName() + "@active");
         })
         .flatMap(signedTransaction -> {
             return this.pocketAppManager.signAndPackTransaction(accountId, pw, signedTransaction);
@@ -80,7 +82,13 @@ public class StakePresenter extends BasePresenter<StakeView> {
         })
         .subscribeOn(rxJavaSchedulers.getIo())
         .observeOn(rxJavaSchedulers.getMainThread())
-        .subscribe(jsonObject -> {}, e -> {});
+        .subscribe(jsonObject -> {
+            //TODO REFRESH
+        }, e -> {
+            if (e instanceof IllegalAccessException) {
+                // todo - password error
+            }
+        });
     }
 
     @Override

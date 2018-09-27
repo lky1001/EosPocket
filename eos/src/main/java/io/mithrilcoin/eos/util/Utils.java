@@ -132,6 +132,8 @@ public class Utils {
 
 
     public static String prettyPrintJson(Object object) {
-        return new GsonBuilder().setPrettyPrinting().create().toJson( object );
+        return new GsonBuilder()
+                .registerTypeAdapterFactory(new GsonEosTypeAdapterFactory())
+                .setPrettyPrinting().create().toJson( object );
     }
 }

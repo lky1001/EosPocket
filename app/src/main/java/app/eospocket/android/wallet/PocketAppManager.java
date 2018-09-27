@@ -1,6 +1,7 @@
 package app.eospocket.android.wallet;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.eospocket.android.common.Constants;
+import app.eospocket.android.security.keystore.KeyStore;
 import app.eospocket.android.utils.EncryptUtil;
 import app.eospocket.android.wallet.db.model.EosAccountModel;
 import app.eospocket.android.wallet.db.model.EosAccountTokenModel;
@@ -28,13 +30,16 @@ public class PocketAppManager {
 
     private EncryptUtil mEncryptUtil;
 
+    private KeyStore mKeyStore;
+
     @Inject
     public PocketAppManager(@NonNull EosAccountRepository eosAccountRepository,
             @NonNull EosAccountTokenRepository eosAccountTokenRepository,
-            @NonNull EncryptUtil encryptUtil) {
+            @NonNull EncryptUtil encryptUtil, @NonNull KeyStore keyStore) {
         this.mEosAccountRepository = eosAccountRepository;
         this.mEosAccountTokenRepository = eosAccountTokenRepository;
         this.mEncryptUtil = encryptUtil;
+        this.mKeyStore = keyStore;
     }
 
     public Single<List<EosAccountModel>> findAccount(@NonNull String accountName) {
@@ -70,9 +75,17 @@ public class PocketAppManager {
                 .map(account -> {
                     if (account != null) {
                         // todo decrypt
-                        EosPrivateKey pk = new EosPrivateKey(account.getPrivateKey());
+                        String encPk = account.getPrivateKey();
+                        String decPk = mKeyStore.decryptString(encPk, Constants.KEYSTORE_PRIV_KEY_ALIAS);
+                        String pk = mEncryptUtil.getDecryptString(decPk, password);
+
+                        if (TextUtils.isEmpty(pk)) {
+                            throw new IllegalAccessException("Invalid password.");
+                        }
+
+                        EosPrivateKey eosPrivateKey = new EosPrivateKey(pk);
                         SignedTransaction stxn = new SignedTransaction(txnBeforeSign);
-                        stxn.sign(pk, new TypeChainId(Constants.EOS_MAINNET_CHAIN_ID));
+                        stxn.sign(eosPrivateKey, new TypeChainId(Constants.EOS_MAINNET_CHAIN_ID));
 
                         return new PackedTransaction(stxn);
                     }

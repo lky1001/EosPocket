@@ -45,14 +45,14 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
         @Override
         public void onClickStakeCpu() {
             int accountId = mLoginAccountManager.getSelectedId();
-            String from = "login account name";
             String to = "received account name";
-            double cpuAmount = 0.0000;
-            double netAmount = 0.0000;
-            String pw = "your password";
+            double cpuAmount = 0.1000;
+            double netAmount = 0.1000;
+            String pw = "1234567890abcd!@#";
             // send eos to account
             boolean isTransfer = false;
-            mStakePresenter.stakeCpu(accountId, pw, from, to, cpuAmount, netAmount, isTransfer);
+            //TODO transfer check
+            mStakePresenter.stakeCpu(accountId, pw, to, cpuAmount, netAmount, isTransfer ? 1 : 0);
         }
 
         @Override

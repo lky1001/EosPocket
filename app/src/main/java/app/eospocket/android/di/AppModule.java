@@ -179,8 +179,8 @@ public abstract class AppModule {
     @Provides
     @Singleton
     static PocketAppManager providePocketAppManager(EosAccountRepository eosAccountRepository,
-            EosAccountTokenRepository eosAccountTokenRepository, EncryptUtil encryptUtil) {
-        return new PocketAppManager(eosAccountRepository, eosAccountTokenRepository, encryptUtil);
+            EosAccountTokenRepository eosAccountTokenRepository, EncryptUtil encryptUtil, KeyStore keyStore) {
+        return new PocketAppManager(eosAccountRepository, eosAccountTokenRepository, encryptUtil, keyStore);
     }
 
     @Provides
