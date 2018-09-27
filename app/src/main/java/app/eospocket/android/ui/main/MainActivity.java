@@ -1,5 +1,6 @@
 package app.eospocket.android.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonActivity;
+import app.eospocket.android.ui.importaccount.ImportAccountActivity;
 import app.eospocket.android.ui.main.action.ActionFragment;
 import app.eospocket.android.ui.main.balance.BalanceFragment;
 import app.eospocket.android.ui.main.more.MoreFragment;
@@ -104,8 +106,7 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
         mSideMenu.setNavigationItemSelectedListener(this);
 
         mAccountSpinner = header.findViewById(R.id.account_spinner);
-
-        //TODo add side menu
+        mSideMenu.inflateMenu(R.menu.side_navigation_menu);
     }
 
     private boolean changeFragment(int itemId) {
@@ -165,6 +166,12 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.drawer_item_import_account:
+                Intent intent = new Intent(this, ImportAccountActivity.class);
+                startActivity(intent);
+                return true;
+        }
         return false;
     }
 

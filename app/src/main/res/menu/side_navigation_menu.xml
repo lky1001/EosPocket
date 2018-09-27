@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/drawer_item_import_account"
+        android:icon="@drawable/ic_account"
+        android:iconTint="@android:color/black"
+        android:title="@string/side_menu_title_import_account" />
+</menu>

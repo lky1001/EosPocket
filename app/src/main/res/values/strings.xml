@@ -54,4 +54,6 @@
     <string name="btn_title_stake">Stake</string>
     <string name="btn_title_buy">Buy</string>
     <string name="btn_title_refund">Refund</string>
+
+    <string name="side_menu_title_import_account">Import Account</string>
 </resources>
