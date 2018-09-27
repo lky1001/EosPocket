@@ -3,16 +3,14 @@ package app.eospocket.android.eos.eosaction;
 import io.mithrilcoin.eos.data.remote.model.types.EosType;
 import io.mithrilcoin.eos.data.remote.model.types.TypeAccountName;
 
-public class BuyRamAction implements EosType.Packer, EosAction {
+public class SellRam implements EosType.Packer, EosAction {
 
-    private TypeAccountName payer;
-    private TypeAccountName receiver;
-    private String quant;
+    private TypeAccountName account;
+    private String bytes;
 
-    public BuyRamAction(TypeAccountName payer, TypeAccountName receiver, String quant) {
-        this.payer = payer;
-        this.receiver = receiver;
-        this.quant = quant;
+    public SellRam(TypeAccountName account, String bytes) {
+        this.account = account;
+        this.bytes = bytes;
     }
 
     @Override
@@ -22,11 +20,12 @@ public class BuyRamAction implements EosType.Packer, EosAction {
 
     @Override
     public String getActionName() {
-        return "buyram";
+        return "sellram";
     }
 
     @Override
     public void pack(EosType.Writer writer) {
-
+        account.pack(writer);
+        writer.putString(bytes);
     }
 }

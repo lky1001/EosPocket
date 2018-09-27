@@ -16,9 +16,9 @@ public class DelegateEos implements EosType.Packer, EosAction {
     @SerializedName("stake_cpu_quantity")
     private String stakeNetQuantity;
 
-    private boolean transfer;
+    private int transfer;
 
-    public DelegateEos(TypeAccountName from, TypeAccountName receiver, String stakeCpuQuantity, String stakeNetQuantity, boolean transfer) {
+    public DelegateEos(TypeAccountName from, TypeAccountName receiver, String stakeCpuQuantity, String stakeNetQuantity, int transfer) {
         this.from = from;
         this.receiver = receiver;
         this.stakeCpuQuantity = stakeCpuQuantity;
@@ -32,6 +32,7 @@ public class DelegateEos implements EosType.Packer, EosAction {
         receiver.pack(writer);
         writer.putString(stakeCpuQuantity);
         writer.putString(stakeNetQuantity);
+        writer.putIntLE(transfer);
     }
 
     @Override
