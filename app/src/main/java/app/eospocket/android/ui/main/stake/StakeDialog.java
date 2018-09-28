@@ -20,9 +20,9 @@ public class StakeDialog extends Dialog {
     EditText editTo;
 
     @BindView(R.id.edit_cpu_stake)
-    EditText editCpuStake;
+    DoubleEditText editCpuStake;
     @BindView(R.id.edit_net_stake)
-    EditText editNetStake;
+    DoubleEditText editNetStake;
 
     @BindView(R.id.checkbox_transfer)
     CheckBox checkBoxTransfer;
@@ -54,10 +54,8 @@ public class StakeDialog extends Dialog {
     @OnClick(R.id.btn_confirm)
     public void onClickConfirm() {
         String to  = editTo.getText().toString();
-//        double cpuAmount = editCpuStake.getDoubleValue();
-//        double netAmout = editNetStake.getDoubleValue();
-        double cpuAmount = 0;
-        double netAmout = 0;
+        double cpuAmount = editCpuStake.getDoubleValue();
+        double netAmout = editNetStake.getDoubleValue();
         boolean isTransfer = checkBoxTransfer.isChecked();
 
         if (cpuAmount == DoubleEditText.INVAILD_VALUE || netAmout == DoubleEditText.INVAILD_VALUE) {

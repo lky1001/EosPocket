@@ -29,7 +29,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_to" />
 
-    <EditText
+    <app.eospocket.android.ui.view.DoubleEditText
         android:id="@+id/edit_cpu_stake"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_cpu_stake" />
 
-    <EditText
+    <app.eospocket.android.ui.view.DoubleEditText
         android:id="@+id/edit_net_stake"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -93,13 +93,5 @@
         android:layout_marginRight="10dp"
         app:layout_constraintRight_toLeftOf="@+id/btn_confirm"
         app:layout_constraintTop_toBottomOf="@+id/checkbox_transfer" />
-
-    <!--<Button-->
-        <!--android:id="@+id/btn_cancel"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="10dp"-->
-        <!--android:text="Cancel"-->
-        <!--app:layout_constraintRight_toLeftOf="@+id/btn_confirm" />-->
 
 </android.support.constraint.ConstraintLayout>
