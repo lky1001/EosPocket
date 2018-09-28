@@ -44,15 +44,34 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
     private StakeClickListener mStakeClickListener = new StakeClickListener() {
         @Override
         public void onClickStakeCpu() {
-            int accountId = mLoginAccountManager.getSelectedId();
-            String to = "received account name";
-            double cpuAmount = 0.1000;
-            double netAmount = 0.1000;
-            String pw = "1234567890abcd!@#";
-            // send eos to account
-            boolean isTransfer = false;
-            //TODO transfer check
-            mStakePresenter.stakeCpu(accountId, pw, to, cpuAmount, netAmount, isTransfer ? 1 : 0);
+
+
+            StakeDialog dialog = new StakeDialog(getContext());
+            dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
+                @Override
+                public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
+
+                    int accountId = mLoginAccountManager.getSelectedId();
+                    String pw = "1234567890abcd!@#";
+                    // send eos to account
+                    mStakePresenter.stakeCpu(accountId, pw, to, cpuStake, netStake, isTransfer ? 1 : 0);
+
+                }
+            });
+            dialog.show();
+
+
+
+//            //TODO dialog
+//            int accountId = mLoginAccountManager.getSelectedId();
+//            String to = "received account name";
+//            double cpuAmount = 0.1000;
+//            double netAmount = 0.1000;
+//            String pw = "1234567890abcd!@#";
+//            // send eos to account
+//            boolean isTransfer = false;
+//            //TODO transfer check
+//            mStakePresenter.stakeCpu(accountId, pw, to, cpuAmount, netAmount, isTransfer ? 1 : 0);
         }
 
         @Override

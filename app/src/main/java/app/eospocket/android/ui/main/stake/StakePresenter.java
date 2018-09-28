@@ -66,7 +66,7 @@ public class StakePresenter extends BasePresenter<StakeView> {
 
             DelegateEos delegateEos = new DelegateEos(
                     new TypeAccountName(account.getName()),
-                    new TypeAccountName(account.getName()),
+                    new TypeAccountName(to),
                     cpuQuantity,
                     netQuantity,
                     isTransfer
