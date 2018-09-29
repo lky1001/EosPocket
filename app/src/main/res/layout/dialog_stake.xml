@@ -1,65 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_popup"
     android:focusableInTouchMode="true"
     android:padding="20dp">
 
-    <EditText
+    <app.eospocket.android.ui.view.FormatInputEditText
         android:id="@+id/edit_to"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="to"
-        android:layout_marginTop="10dp"
-        android:textColor="#000000"
-        android:textColorHint="#f1f1f1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        app:hint="To Address.."
+        app:format="_string"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/txt_cpu_title"
-        android:layout_width="wrap_content"
+
+    <app.eospocket.android.ui.view.FormatInputEditText
+        android:id="@+id/edit_cpu_stake"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CPU Stake (in EOS)"
         android:layout_marginTop="20dp"
-        android:textColor="#000000"
+        app:hint="CPU Stake"
+        app:format="_double"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_to" />
 
-    <app.eospocket.android.ui.view.DoubleEditText
-        android:id="@+id/edit_cpu_stake"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="right"
-        android:hint="0.1000"
-        android:textColorHint="#f1f1f1"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_cpu_title" />
-
-    <TextView
-        android:id="@+id/txt_net_title"
-        android:layout_width="wrap_content"
+    <app.eospocket.android.ui.view.FormatInputEditText
+        android:id="@+id/edit_net_stake"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Network Stake (in EOS)"
-        android:textColor="#000000"
+        app:hint="Network Stake"
+        app:format="_double"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_cpu_stake" />
-
-    <app.eospocket.android.ui.view.DoubleEditText
-        android:id="@+id/edit_net_stake"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:gravity="right"
-        android:hint="0.1000"
-        android:textColorHint="#f1f1f1"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txt_net_title" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_cpu_stake"/>
 
     <CheckBox
         android:id="@+id/checkbox_transfer"

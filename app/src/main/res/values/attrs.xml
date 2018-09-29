@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="InputEditText">
+        <attr name="hint" format="string" />
+        <attr name="format" format="enum">
+            <enum name="_string" value="0" />
+            <enum name="_double" value="1" />
+        </attr>
+    </declare-styleable>
+
+</resources>

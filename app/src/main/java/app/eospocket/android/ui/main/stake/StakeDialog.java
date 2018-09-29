@@ -4,12 +4,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.CheckBox;
-import android.widget.EditText;
 
 import app.eospocket.android.R;
-import app.eospocket.android.ui.view.DoubleEditText;
+import app.eospocket.android.ui.view.FormatInputEditText;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -17,12 +16,16 @@ import butterknife.OnClick;
 public class StakeDialog extends Dialog {
 
     @BindView(R.id.edit_to)
-    EditText editTo;
+    FormatInputEditText editTo;
 
     @BindView(R.id.edit_cpu_stake)
-    DoubleEditText editCpuStake;
+    FormatInputEditText editCpuStake;
+
     @BindView(R.id.edit_net_stake)
-    DoubleEditText editNetStake;
+    FormatInputEditText editNetStake;
+
+    @BindView(R.id.btn_confirm)
+    View btnConfirm;
 
     @BindView(R.id.checkbox_transfer)
     CheckBox checkBoxTransfer;
@@ -53,17 +56,15 @@ public class StakeDialog extends Dialog {
 
     @OnClick(R.id.btn_confirm)
     public void onClickConfirm() {
-        String to  = editTo.getText().toString();
-        double cpuAmount = editCpuStake.getDoubleValue();
-        double netAmout = editNetStake.getDoubleValue();
-        boolean isTransfer = checkBoxTransfer.isChecked();
+        if (editTo.checkValid() && editCpuStake.checkValid() && editNetStake.checkValid()) {
+            String to = editTo.getInputValue();
+            double cpuAmount = Double.parseDouble(editCpuStake.getInputValue());
+            double netAmout = Double.parseDouble(editNetStake.getInputValue());
+            boolean isTransfer = checkBoxTransfer.isChecked();
 
-        if (cpuAmount == DoubleEditText.INVAILD_VALUE || netAmout == DoubleEditText.INVAILD_VALUE) {
-            return;
+            stakeDialogCallback.onConfirm(to, cpuAmount, netAmout, isTransfer);
+            dismiss();
         }
-
-        stakeDialogCallback.onConfirm(to, cpuAmount, netAmout, isTransfer);
-        dismiss();
     }
 
     @OnClick(R.id.btn_cancel)
