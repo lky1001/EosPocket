@@ -1,5 +1,6 @@
 package app.eospocket.android.ui.main.balance;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import app.eospocket.android.ui.main.balance.adapters.TransferAdapter;
 import app.eospocket.android.ui.action.ActionActivity;
 import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.LoginAccountManager;
+import app.eospocket.android.wallet.db.model.EosAccountModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -94,6 +96,8 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
 
     private int mPage = 1;
 
+    private EosAccountModel mSelectedAccount;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -145,6 +149,7 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         account -> {
+                            mSelectedAccount = account;
                             mImportAccountButton.setVisibility(View.GONE);
                             mNestedScrollView.setVisibility(View.VISIBLE);
                             mBalancePresenter.getEosBalance(account);
@@ -172,11 +177,6 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
         String accountName = "";
 
         mBalancePresenter.getAccount(accountName);
-    }
-
-    @OnClick(R.id.btn_import_account)
-    public void onImportAccountClick() {
-        startActivity(ImportAccountActivity.class);
     }
 
     @Override
@@ -221,9 +221,24 @@ public class BalanceFragment extends CommonFragment implements MainNavigationFra
         }
     }
 
+    @OnClick(R.id.btn_import_account)
+    public void onImportAccountClick() {
+        startActivity(ImportAccountActivity.class);
+    }
+
     @OnClick(R.id.action_more_button)
     public void onActionMoreClick() {
         startActivity(ActionActivity.class);
+    }
+
+    @OnClick(R.id.reg_private_key_button)
+    public void onRegPrivateKeyClick() {
+        if (mSelectedAccount != null) {
+            Intent intent = new Intent(getActivity(), ImportAccountActivity.class);
+            intent.putExtra(ImportAccountActivity.EXTRA_IMPORT_KEY, true);
+            intent.putExtra(ImportAccountActivity.EXTRA_EXIST_ACCOUNT_NAME, mSelectedAccount.getName());
+            startActivity(intent);
+        }
     }
 
     @Override
