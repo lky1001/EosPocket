@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:paddingTop="@dimen/stake_view_holder_left_padding"
     android:paddingLeft="@dimen/stake_view_holder_left_padding"
     android:paddingRight="@dimen/stake_view_holder_right_padding">
 

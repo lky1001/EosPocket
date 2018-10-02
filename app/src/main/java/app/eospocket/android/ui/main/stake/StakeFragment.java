@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.DecimalFormat;
 
 import javax.inject.Inject;
 
@@ -17,10 +21,12 @@ import app.eospocket.android.R;
 import app.eospocket.android.common.CommonFragment;
 import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.ui.main.MainNavigationFragment;
+import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.LoginAccountManager;
 import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class StakeFragment extends CommonFragment implements MainNavigationFragment, StakeView {
 
@@ -36,59 +42,25 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @BindView(R.id.stake_list_view)
-    RecyclerView mStakeListView;
+    @BindView(R.id.txt_stake_balance_eos)
+    TextView txtStakeBalanceEos;
+    @BindView(R.id.txt_unstake_eos)
+    TextView txtUnStakeEos;
 
+    @BindView(R.id.layout_cpu_stake)
+    View mParentCpuStake;
+    TextView mCpuDesc;
+    TextView mTxtCpuPercent;
 
-    private StakeAdapter mStakeAdapter;
-    private StakeClickListener mStakeClickListener = new StakeClickListener() {
-        @Override
-        public void onClickStakeCpu() {
+    @BindView(R.id.layout_network_stake)
+    View mParentNetworkStake;
+    TextView mNetworkDesc;
+    TextView mTxtNetworkPercent;
 
-
-            StakeDialog dialog = new StakeDialog(getContext());
-            dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
-                @Override
-                public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
-
-                    int accountId = mLoginAccountManager.getSelectedId();
-                    String pw = "1234567890abcd!@#";
-                    // send eos to account
-                    mStakePresenter.stakeCpu(accountId, pw, to, cpuStake, netStake, isTransfer ? 1 : 0);
-
-                }
-            });
-            dialog.show();
-
-
-
-//            //TODO dialog
-//            int accountId = mLoginAccountManager.getSelectedId();
-//            String to = "received account name";
-//            double cpuAmount = 0.1000;
-//            double netAmount = 0.1000;
-//            String pw = "1234567890abcd!@#";
-//            // send eos to account
-//            boolean isTransfer = false;
-//            //TODO transfer check
-//            mStakePresenter.stakeCpu(accountId, pw, to, cpuAmount, netAmount, isTransfer ? 1 : 0);
-        }
-
-        @Override
-        public void onClickStakeNetwork() {
-
-        }
-
-        @Override
-        public void onClickRefund() {
-
-        }
-
-        @Override
-        public void onClickBuyRam() {
-
-        }
-    };
+    @BindView(R.id.layout_ram_stake)
+    View mParentRamStake;
+    TextView mRamDesc;
+    TextView mTxtRamPercent;
 
     @Nullable
     @Override
@@ -96,12 +68,26 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
         View view = inflater.inflate(R.layout.fragment_stake, container, false);
         ButterKnife.bind(this, view);
 
-        mStakeAdapter = new StakeAdapter(mStakeClickListener);
-        mStakeListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mStakeListView.setAdapter(mStakeAdapter);
+        initUi();
+
 
         mStakePresenter.onCreate();
         return view;
+    }
+
+    private void initUi() {
+
+        ((TextView) mParentCpuStake.findViewById(R.id.txt_title)).setText("CPU");
+        mCpuDesc = mParentCpuStake.findViewById(R.id.txt_desc);
+        mTxtCpuPercent = mParentCpuStake.findViewById(R.id.txt_percentage);
+
+        ((TextView) mParentNetworkStake.findViewById(R.id.txt_title)).setText("Network");
+        mNetworkDesc = mParentNetworkStake.findViewById(R.id.txt_desc);
+        mTxtNetworkPercent = mParentNetworkStake.findViewById(R.id.txt_percentage);
+
+        ((TextView) mParentRamStake.findViewById(R.id.txt_title)).setText("RAM");
+        mRamDesc = mParentRamStake.findViewById(R.id.txt_desc);
+        mTxtRamPercent = mParentRamStake.findViewById(R.id.txt_percentage);
     }
 
     @Override
@@ -116,12 +102,69 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
 
     @Override
     public void loadEosAccountSuccess(EosAccount eosAccount) {
-        mStakeAdapter.refresh(eosAccount);
+        double cpuWeight = Double.parseDouble(eosAccount.totalResources.cpuWeight.split(" ")[0]);
+        double netWeight = Double.parseDouble(eosAccount.totalResources.netWeight.split(" ")[0]);
+
+        txtStakeBalanceEos.setText(Utils.formatBalance(cpuWeight + netWeight) + " EOS");
+        txtUnStakeEos.setText(eosAccount.coreLiquidBalance);
+
+        mCpuDesc.setText(getStakeResouceDesc(eosAccount.cpuLimit.used, eosAccount.cpuLimit.max, "ms", R.color.stake_resource_cpu_color));
+        mNetworkDesc.setText(getStakeResouceDesc(eosAccount.netLimit.used, eosAccount.netLimit.max, "bytes", R.color.stake_resource_network_color));
+        mRamDesc.setText(getStakeResouceDesc(eosAccount.ramUsage, eosAccount.ramQuota, "KiB", R.color.stake_resource_ram_color));
+
+        DecimalFormat decimalFormat = new DecimalFormat(".##");
+
+        double percent = eosAccount.cpuLimit.used / (double) eosAccount.cpuLimit.max * 100;
+        mTxtCpuPercent.setText(decimalFormat.format(percent) + "%");
+
+        percent = eosAccount.netLimit.used / (double) eosAccount.netLimit.max * 100;
+        mTxtNetworkPercent.setText(decimalFormat.format(percent) + "%");
+
+        percent = eosAccount.ramUsage / (double) eosAccount.ramQuota * 100;
+        mTxtRamPercent.setText(decimalFormat.format(percent) + "%");
+    }
+
+    private Spannable getStakeResouceDesc(long used, long max, String unit, int strColor) {
+
+        String strUsed = used + " " + unit;
+        String strMax = max + " " + unit;
+
+        SpannableString resultStr = new SpannableString(strUsed + " / " + strMax);
+        resultStr.setSpan(
+                new ForegroundColorSpan(getContext().getResources().getColor(strColor)),
+                0,
+                strUsed.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        return resultStr;
     }
 
     @Override
     public void loadEosAccountFail(Throwable t) {
         Toast.makeText(getContext(), "loadEosAccountFail", Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.btn_stake)
+    public void onClickStake() {
+        StakeDialog dialog = new StakeDialog(getContext());
+        dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
+            @Override
+            public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
+
+                int accountId = mLoginAccountManager.getSelectedId();
+                String pw = "1234567890abcd!@#";
+                // send eos to account
+                mStakePresenter.stakeCpu(accountId, pw, to, cpuStake, netStake, isTransfer ? 1 : 0);
+
+            }
+        });
+        dialog.show();
+    }
+
+    @OnClick(R.id.btn_unstake)
+    public void onClickUnStake() {
+        //TODO unStake
     }
 
     @Override

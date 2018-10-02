@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/stake_view_holder_left_padding"
-    android:paddingRight="@dimen/stake_view_holder_right_padding"
+    android:paddingStart="@dimen/stake_view_holder_left_padding"
+    android:paddingEnd="@dimen/stake_view_holder_right_padding"
     android:paddingBottom="20dp">
 
     <TextView
@@ -15,8 +15,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:textColor="#ffffff"
-        android:textSize="18dp"
+        android:textColor="#000000"
+        android:textSize="18sp"
         android:textStyle="bold"
         tools:text="CPU"
         tools:textColor="#000000"/>
@@ -26,8 +26,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:textSize="16dp"
-        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:textColor="#000000"
         app:layout_constraintTop_toBottomOf="@+id/txt_title"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:text="1.12ms / 0.54ms (0.1000 EOS)"
@@ -44,31 +44,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_desc" />
 
-    <Button
-        android:id="@+id/btn_stake"
+    <TextView
+        android:id="@+id/txt_percentage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="center"
-        android:paddingRight="10dp"
-        android:textSize="12dp"
+        android:gravity="end"
+        android:paddingEnd="10dp"
         app:layout_constraintLeft_toRightOf="@+id/progress"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/progress"
         app:layout_constraintBottom_toBottomOf="@+id/progress"
-        tools:text="Stake"/>
-
-    <!--<TextView-->
-        <!--android:id="@+id/txt_percentage"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="1"-->
-        <!--android:gravity="right"-->
-        <!--android:paddingRight="10dp"-->
-        <!--app:layout_constraintLeft_toRightOf="@+id/progress"-->
-        <!--app:layout_constraintRight_toRightOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="@+id/progress"-->
-        <!--app:layout_constraintBottom_toBottomOf="@+id/progress"-->
-        <!--tools:text="209%"/>-->
+        tools:text="209%"/>
 
 </android.support.constraint.ConstraintLayout>
