@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +28,10 @@ import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.schedulers.Schedulers;
 
-public class StakeFragment extends CommonFragment implements MainNavigationFragment, StakeView {
+public class StakeFragment extends CommonFragment
+        implements MainNavigationFragment, StakeView, SwipeRefreshLayout.OnRefreshListener {
 
     @Inject
     StakePresenter mStakePresenter;
@@ -77,6 +80,8 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
 
     private void initUi() {
 
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
         ((TextView) mParentCpuStake.findViewById(R.id.txt_title)).setText("CPU");
         mCpuDesc = mParentCpuStake.findViewById(R.id.txt_desc);
         mTxtCpuPercent = mParentCpuStake.findViewById(R.id.txt_percentage);
@@ -91,8 +96,15 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
     }
 
     @Override
-    public boolean onBackPressed() {
-        return false;
+    public void onRefresh() {
+        int accountId = mLoginAccountManager.getSelectedId();
+        mEosAccountRepository
+                .findOneById(accountId)
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        eosAccountModel -> mStakePresenter.loadEosAccount(eosAccountModel.getName()),
+                        t -> {}
+                );
     }
 
     @Override
@@ -101,7 +113,13 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
     }
 
     @Override
+    public boolean onBackPressed() {
+        return false;
+    }
+
+    @Override
     public void loadEosAccountSuccess(EosAccount eosAccount) {
+        Log.d("hanseon--", "loadEosAccountSuccess");
         double cpuWeight = Double.parseDouble(eosAccount.totalResources.cpuWeight.split(" ")[0]);
         double netWeight = Double.parseDouble(eosAccount.totalResources.netWeight.split(" ")[0]);
 
@@ -122,6 +140,8 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
 
         percent = eosAccount.ramUsage / (double) eosAccount.ramQuota * 100;
         mTxtRamPercent.setText(decimalFormat.format(percent) + "%");
+
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private Spannable getStakeResouceDesc(long used, long max, String unit, int strColor) {
@@ -175,8 +195,11 @@ public class StakeFragment extends CommonFragment implements MainNavigationFragm
 
     interface StakeClickListener {
         void onClickStakeCpu();
+
         void onClickStakeNetwork();
+
         void onClickRefund();
+
         void onClickBuyRam();
     }
 }

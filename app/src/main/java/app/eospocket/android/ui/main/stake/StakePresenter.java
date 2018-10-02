@@ -83,7 +83,7 @@ public class StakePresenter extends BasePresenter<StakeView> {
         .subscribeOn(rxJavaSchedulers.getIo())
         .observeOn(rxJavaSchedulers.getMainThread())
         .subscribe(jsonObject -> {
-            //TODO REFRESH
+            mView.onRefresh();
         }, e -> {
             if (e instanceof IllegalAccessException) {
                 // todo - password error
