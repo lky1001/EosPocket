@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
+
 import java.text.DecimalFormat;
 
 import javax.inject.Inject;
@@ -54,16 +56,19 @@ public class StakeFragment extends CommonFragment
     View mParentCpuStake;
     TextView mCpuDesc;
     TextView mTxtCpuPercent;
+    RoundCornerProgressBar mCpuProgress;
 
     @BindView(R.id.layout_network_stake)
     View mParentNetworkStake;
     TextView mNetworkDesc;
     TextView mTxtNetworkPercent;
+    RoundCornerProgressBar mNetworkProgress;
 
     @BindView(R.id.layout_ram_stake)
     View mParentRamStake;
     TextView mRamDesc;
     TextView mTxtRamPercent;
+    RoundCornerProgressBar mRamProgress;
 
     @Nullable
     @Override
@@ -85,14 +90,20 @@ public class StakeFragment extends CommonFragment
         ((TextView) mParentCpuStake.findViewById(R.id.txt_title)).setText("CPU");
         mCpuDesc = mParentCpuStake.findViewById(R.id.txt_desc);
         mTxtCpuPercent = mParentCpuStake.findViewById(R.id.txt_percentage);
+        mCpuProgress = mParentCpuStake.findViewById(R.id.progress);
+        mCpuProgress.setProgressColor(getResources().getColor(R.color.stake_resource_cpu_color));
 
         ((TextView) mParentNetworkStake.findViewById(R.id.txt_title)).setText("Network");
         mNetworkDesc = mParentNetworkStake.findViewById(R.id.txt_desc);
         mTxtNetworkPercent = mParentNetworkStake.findViewById(R.id.txt_percentage);
+        mNetworkProgress = mParentNetworkStake.findViewById(R.id.progress);
+        mNetworkProgress.setProgressColor(getResources().getColor(R.color.stake_resource_network_color));
 
         ((TextView) mParentRamStake.findViewById(R.id.txt_title)).setText("RAM");
         mRamDesc = mParentRamStake.findViewById(R.id.txt_desc);
         mTxtRamPercent = mParentRamStake.findViewById(R.id.txt_percentage);
+        mRamProgress = mParentRamStake.findViewById(R.id.progress);
+        mRamProgress.setProgressColor(getResources().getColor(R.color.stake_resource_ram_color));
     }
 
     @Override
@@ -119,7 +130,6 @@ public class StakeFragment extends CommonFragment
 
     @Override
     public void loadEosAccountSuccess(EosAccount eosAccount) {
-        Log.d("hanseon--", "loadEosAccountSuccess");
         double cpuWeight = Double.parseDouble(eosAccount.totalResources.cpuWeight.split(" ")[0]);
         double netWeight = Double.parseDouble(eosAccount.totalResources.netWeight.split(" ")[0]);
 
@@ -134,12 +144,15 @@ public class StakeFragment extends CommonFragment
 
         double percent = eosAccount.cpuLimit.used / (double) eosAccount.cpuLimit.max * 100;
         mTxtCpuPercent.setText(decimalFormat.format(percent) + "%");
+        mCpuProgress.setProgress((float) percent);
 
         percent = eosAccount.netLimit.used / (double) eosAccount.netLimit.max * 100;
         mTxtNetworkPercent.setText(decimalFormat.format(percent) + "%");
+        mNetworkProgress.setProgress((float) percent);
 
         percent = eosAccount.ramUsage / (double) eosAccount.ramQuota * 100;
         mTxtRamPercent.setText(decimalFormat.format(percent) + "%");
+        mRamProgress.setProgress((float) percent);
 
         mSwipeRefreshLayout.setRefreshing(false);
     }

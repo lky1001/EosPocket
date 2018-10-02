@@ -25,6 +25,7 @@
     <color name="stake_resource_ram_color">#ff6363</color>
     <color name="stake_background">#B148DF</color>
     <color name="balance_background">#5353F2</color>
+    <color name="progress_background">#e9eaec</color>
 
 
 </resources>

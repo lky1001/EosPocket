@@ -127,8 +127,8 @@ public class StakeAdapter extends RecyclerView.Adapter<ViewHolder> {
         TextView txtTitle;
         @BindView(R.id.txt_desc)
         TextView txtDesc;
-        @BindView(R.id.progress)
-        View progress;
+//        @BindView(R.id.progress)
+//        View progress;
 //        @BindView(R.id.txt_percentage)
 //        TextView txtPercentage;
         @BindView(R.id.btn_stake)
