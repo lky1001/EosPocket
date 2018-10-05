@@ -8,10 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jakewharton.rxbinding2.view.RxView;
+import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
 import java.util.concurrent.TimeUnit;
@@ -24,7 +27,6 @@ import app.eospocket.android.eos.model.account.EosAccount;
 import app.eospocket.android.utils.PasswordChecker;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -59,6 +61,9 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
 
     @BindView(R.id.password_strength)
     TextView mPasswordStrengthView;
+
+    @BindView(R.id.reg_later_layout)
+    LinearLayout mRegLaterLayout;
 
     @BindView(R.id.reg_later_checkbox)
     CheckBox mRegLaterCheckBox;
@@ -95,6 +100,11 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
             mInputAccountName.setEnabled(false);
             mInputAccountName.setText(mName);
             mImportAccountPresenter.findAccountName(mName);
+            mRegLaterLayout.setVisibility(View.GONE);
+            mToolbar.setTitle(R.string.title_import_private_key);
+        } else {
+            mToolbar.setTitle(R.string.title_import_account);
+            mRegLaterLayout.setVisibility(View.VISIBLE);
         }
 
         mImportAccountPresenter.onCreate();
@@ -161,44 +171,52 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
                             .setColorFilter(color, android.graphics.PorterDuff.Mode.SRC_IN);
                     mPasswordStrengthBar.setProgress(progress);
                 }));
-    }
 
-    @OnClick(R.id.btn_next)
-    public void onNextClick() {
-        if (mEosAccount == null) {
-            Toast.makeText(ImportAccountActivity.this, getString(R.string.invalid_account_msg),
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            mAccountNameLayout.setVisibility(View.GONE);
-            mPrivateKeyLayout.setVisibility(View.VISIBLE);
-            mNextButton.setVisibility(View.GONE);
-            mImportAccountButton.setVisibility(View.VISIBLE);
-            mInputPrivateKey.setEnabled(true);
-        }
-    }
+        mAllDisposables.add(RxCompoundButton.checkedChanges(mRegLaterCheckBox)
+                .subscribe(isChecked -> {
+                    mInputPassword.setEnabled(!isChecked);
+                })
+        );
 
-    @OnClick(R.id.btn_import_account)
-    public void onImportAccountClick() {
-        if (mRegLaterCheckBox.isChecked() && !mImportKey) {
-            mImportAccountPresenter.importAccount(mEosAccount.accountName);
-        } else {
-            mInputPassword.setEnabled(false);
+        mAllDisposables.add(RxView.clicks(mNextButton)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(view -> {
+                    if (mEosAccount == null) {
+                        Toast.makeText(ImportAccountActivity.this, getString(R.string.invalid_account_msg),
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        mAccountNameLayout.setVisibility(View.GONE);
+                        mPrivateKeyLayout.setVisibility(View.VISIBLE);
+                        mNextButton.setVisibility(View.GONE);
+                        mImportAccountButton.setVisibility(View.VISIBLE);
+                        mInputPrivateKey.setEnabled(true);
+                    }
+                }));
 
-            String password = mInputPassword.getText().toString();
+        mAllDisposables.add(RxView.clicks(mImportAccountButton)
+                .throttleFirst(2, TimeUnit.SECONDS)
+                .subscribe(view -> {
+                    if (mRegLaterCheckBox.isChecked() && !mImportKey) {
+                        mImportAccountPresenter.importAccount(mEosAccount.accountName);
+                    } else {
+                        mInputPassword.setEnabled(false);
 
-            int score = PasswordChecker.calculatePasswordStrength(password);
+                        String password = mInputPassword.getText().toString();
 
-            if (score < PasswordChecker.STRONG) {
-                Toast.makeText(ImportAccountActivity.this, getString(R.string.error_password_weak),
-                        Toast.LENGTH_SHORT).show();
-                mInputPassword.setEnabled(true);
-                return;
-            }
+                        int score = PasswordChecker.calculatePasswordStrength(password);
 
-            mImportAccountPresenter.importAccount(mEosAccount.accountName,
-                    mInputPrivateKey.getText().toString(),
-                    password);
-        }
+                        if (score < PasswordChecker.STRONG) {
+                            Toast.makeText(ImportAccountActivity.this, getString(R.string.error_password_weak),
+                                    Toast.LENGTH_SHORT).show();
+                            mInputPassword.setEnabled(true);
+                            return;
+                        }
+
+                        mImportAccountPresenter.importAccount(mEosAccount.accountName,
+                                mInputPrivateKey.getText().toString(),
+                                password);
+                    }
+                }));
     }
 
     @Override
