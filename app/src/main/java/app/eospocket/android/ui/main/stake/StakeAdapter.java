@@ -211,7 +211,7 @@ public class StakeAdapter extends RecyclerView.Adapter<ViewHolder> {
             double cpuWeight = Double.parseDouble(eosAccount.totalResources.cpuWeight.split(" ")[0]);
             double netWeight = Double.parseDouble(eosAccount.totalResources.netWeight.split(" ")[0]);
 
-            txtStakeBalanceEos.setText(Utils.formatBalance(cpuWeight + netWeight) + " EOS");
+            txtStakeBalanceEos.setText(Utils.formatBalanceWithEOSSymbol(cpuWeight + netWeight));
             txtUnStakeEos.setText(eosAccount.coreLiquidBalance);
         }
     }

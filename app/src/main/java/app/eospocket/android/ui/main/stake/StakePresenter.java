@@ -25,8 +25,8 @@ public class StakePresenter extends BasePresenter<StakeView> {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public StakePresenter(StakeView view, EosManager eosManager, RxJavaSchedulers rxJavaSchedulers,
-            LoginAccountManager loginAccountManager, PocketAppManager pocketAppManager,
-            EosAccountRepository eosAccountRepository) {
+                          LoginAccountManager loginAccountManager, PocketAppManager pocketAppManager,
+                          EosAccountRepository eosAccountRepository) {
         super(view);
         this.eosManager = eosManager;
         this.rxJavaSchedulers = rxJavaSchedulers;
@@ -59,36 +59,33 @@ public class StakePresenter extends BasePresenter<StakeView> {
     public void stakeCpu(int accountId, String pw, String to, double cpuAmount, double netAmount, int isTransfer) {
         //TODO to
         this.eosAccountRepository.findOneById(accountId)
-        .flatMap(account -> {
+                .flatMap(account -> {
 
-            String cpuQuantity = Utils.formatBalance(cpuAmount) + " EOS";
-            String netQuantity = Utils.formatBalance(netAmount) + " EOS";
+                    DelegateEos delegateEos = new DelegateEos(
+                            new TypeAccountName(account.getName()),
+                            new TypeAccountName(to),
+                            Utils.formatBalanceWithEOSSymbol(cpuAmount),
+                            Utils.formatBalanceWithEOSSymbol(netAmount),
+                            isTransfer
+                    );
 
-            DelegateEos delegateEos = new DelegateEos(
-                    new TypeAccountName(account.getName()),
-                    new TypeAccountName(to),
-                    cpuQuantity,
-                    netQuantity,
-                    isTransfer
-            );
-
-            return this.eosManager.signedEosAction(delegateEos, account.getName() + "@active");
-        })
-        .flatMap(signedTransaction -> {
-            return this.pocketAppManager.signAndPackTransaction(accountId, pw, signedTransaction);
-        })
-        .flatMap(packedTransaction -> {
-            return this.eosManager.pushTransactionRetJson(packedTransaction);
-        })
-        .subscribeOn(rxJavaSchedulers.getIo())
-        .observeOn(rxJavaSchedulers.getMainThread())
-        .subscribe(jsonObject -> {
-            mView.onRefresh();
-        }, e -> {
-            if (e instanceof IllegalAccessException) {
-                // todo - password error
-            }
-        });
+                    return this.eosManager.signedEosAction(delegateEos, account.getName() + "@active");
+                })
+                .flatMap(signedTransaction -> {
+                    return this.pocketAppManager.signAndPackTransaction(accountId, pw, signedTransaction);
+                })
+                .flatMap(packedTransaction -> {
+                    return this.eosManager.pushTransactionRetJson(packedTransaction);
+                })
+                .subscribeOn(rxJavaSchedulers.getIo())
+                .observeOn(rxJavaSchedulers.getMainThread())
+                .subscribe(jsonObject -> {
+                    mView.onRefresh();
+                }, e -> {
+                    if (e instanceof IllegalAccessException) {
+                        // todo - password error
+                    }
+                });
     }
 
     @Override

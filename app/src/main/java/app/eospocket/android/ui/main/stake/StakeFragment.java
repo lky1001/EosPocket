@@ -133,7 +133,7 @@ public class StakeFragment extends CommonFragment
         double cpuWeight = Double.parseDouble(eosAccount.totalResources.cpuWeight.split(" ")[0]);
         double netWeight = Double.parseDouble(eosAccount.totalResources.netWeight.split(" ")[0]);
 
-        txtStakeBalanceEos.setText(Utils.formatBalance(cpuWeight + netWeight) + " EOS");
+        txtStakeBalanceEos.setText(Utils.formatBalanceWithEOSSymbol(cpuWeight + netWeight));
         txtUnStakeEos.setText(eosAccount.coreLiquidBalance);
 
         mCpuDesc.setText(getStakeResouceDesc(eosAccount.cpuLimit.used, eosAccount.cpuLimit.max, "ms", R.color.stake_resource_cpu_color));
@@ -198,6 +198,8 @@ public class StakeFragment extends CommonFragment
     @OnClick(R.id.btn_unstake)
     public void onClickUnStake() {
         //TODO unStake
+        int accountId = mLoginAccountManager.getSelectedId();
+
     }
 
     @Override

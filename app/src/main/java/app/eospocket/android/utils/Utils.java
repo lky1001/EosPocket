@@ -6,6 +6,8 @@ import android.content.Context;
 
 import java.text.DecimalFormat;
 
+import app.eospocket.android.common.Constants;
+
 public class Utils {
 
     private static final DecimalFormat BALANCE_FORMAT = new DecimalFormat("#,##0.0000");
@@ -15,6 +17,14 @@ public class Utils {
 
     public static String formatBalance(double balance) {
         return BALANCE_FORMAT.format(balance);
+    }
+
+    public static String formatBalanceWithEOSSymbol(double balance) {
+        return formatBalanceWithSymbol(balance, Constants.EOS_SYMBOL);
+    }
+
+    public static String formatBalanceWithSymbol(double balance, String symbol) {
+        return BALANCE_FORMAT.format(balance) + " " + symbol;
     }
 
     public static String formatUsd(double balance) {

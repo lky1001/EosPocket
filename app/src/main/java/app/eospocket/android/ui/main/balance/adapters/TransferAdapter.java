@@ -54,14 +54,14 @@ public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.Transf
             transferViewHolder.sendLayout.setVisibility(View.VISIBLE);
             transferViewHolder.receiveLayout.setVisibility(View.GONE);
             transferViewHolder.sendAccountNameText.setText(transfer.getTo());
-            transferViewHolder.sendQuantityText.setText(Utils.formatBalance(transfer.getQuantity()) + " " + transfer.getSymbol());
+            transferViewHolder.sendQuantityText.setText(Utils.formatBalanceWithSymbol(transfer.getQuantity(), transfer.getSymbol()));
             transferViewHolder.sendMemoText.setText(transfer.getMemo());
             transferViewHolder.sendDateText.setText(transfer.getCreated());
         } else {
             transferViewHolder.sendLayout.setVisibility(View.GONE);
             transferViewHolder.receiveLayout.setVisibility(View.VISIBLE);
             transferViewHolder.receiveAccountNameText.setText(transfer.getFrom());
-            transferViewHolder.receiveQuantityText.setText(Utils.formatBalance(transfer.getQuantity()) + " " + transfer.getSymbol());
+            transferViewHolder.receiveQuantityText.setText(Utils.formatBalanceWithSymbol(transfer.getQuantity(), transfer.getSymbol()));
             transferViewHolder.receiveMemoTest.setText(transfer.getMemo());
             transferViewHolder.receiveDateText.setText(transfer.getCreated());
         }
