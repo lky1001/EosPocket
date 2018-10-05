@@ -180,7 +180,7 @@ public class StakeFragment extends CommonFragment
 
     @OnClick(R.id.btn_stake)
     public void onClickStake() {
-        StakeDialog dialog = new StakeDialog(getContext());
+        StakeDialog dialog = new StakeDialog(getContext(), 10f);
         dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
             @Override
             public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
