@@ -16,9 +16,9 @@ public class UnDelegateEos implements EosType.Packer, EosAction {
     @SerializedName("unstake_cpu_quantity")
     private String unStakeNetQuantity;
 
-    public UnDelegateEos(TypeAccountName from, TypeAccountName receiver, String unStakeCpuQuantity, String unStakeNetQuantity) {
-        this.from = from;
-        this.receiver = receiver;
+    public UnDelegateEos(TypeAccountName owner, TypeAccountName holder, String unStakeCpuQuantity, String unStakeNetQuantity) {
+        this.from = owner;
+        this.receiver = holder;
         this.unStakeCpuQuantity = unStakeCpuQuantity;
         this.unStakeNetQuantity = unStakeNetQuantity;
     }

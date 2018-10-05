@@ -188,7 +188,7 @@ public class StakeFragment extends CommonFragment
                 int accountId = mLoginAccountManager.getSelectedId();
                 String pw = "1234567890abcd!@#";
                 // send eos to account
-                mStakePresenter.stakeCpu(accountId, pw, to, cpuStake, netStake, isTransfer ? 1 : 0);
+                mStakePresenter.stakeEos(accountId, pw, to, cpuStake, netStake, isTransfer ? 1 : 0);
 
             }
         });

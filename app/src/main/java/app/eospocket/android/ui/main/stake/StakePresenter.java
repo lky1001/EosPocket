@@ -1,9 +1,12 @@
 package app.eospocket.android.ui.main.stake;
 
+import android.support.annotation.NonNull;
+
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
 import app.eospocket.android.eos.eosaction.DelegateEos;
+import app.eospocket.android.eos.eosaction.UnDelegateEos;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.LoginAccountManager;
@@ -56,8 +59,7 @@ public class StakePresenter extends BasePresenter<StakeView> {
                 .subscribe(mView::loadEosAccountSuccess, mView::loadEosAccountFail);
     }
 
-    public void stakeCpu(int accountId, String pw, String to, double cpuAmount, double netAmount, int isTransfer) {
-        //TODO to
+    public void stakeEos(int accountId, @NonNull String pw, @NonNull String to, double cpuAmount, double netAmount, int isTransfer) {
         this.eosAccountRepository.findOneById(accountId)
                 .flatMap(account -> {
 
@@ -69,7 +71,36 @@ public class StakePresenter extends BasePresenter<StakeView> {
                             isTransfer
                     );
 
+                    //TODO "@active" -> "@" + account.getPermission();
                     return this.eosManager.signedEosAction(delegateEos, account.getName() + "@active");
+                })
+                .flatMap(signedTransaction -> {
+                    return this.pocketAppManager.signAndPackTransaction(accountId, pw, signedTransaction);
+                })
+                .flatMap(packedTransaction -> {
+                    return this.eosManager.pushTransactionRetJson(packedTransaction);
+                })
+                .subscribeOn(rxJavaSchedulers.getIo())
+                .observeOn(rxJavaSchedulers.getMainThread())
+                .subscribe(jsonObject -> {
+                    mView.onRefresh();
+                }, e -> {
+                    if (e instanceof IllegalAccessException) {
+                        // todo - password error
+                    }
+                });
+    }
+
+    public void unStakeEos(int accountId, @NonNull String pw, @NonNull String to, double cpuAmount, double netAmount) {
+        this.eosAccountRepository.findOneById(accountId)
+                .flatMap(account -> {
+                    UnDelegateEos unDelegateEos = new UnDelegateEos(
+                           new TypeAccountName(account.getName()),
+                           new TypeAccountName(to),
+                           Utils.formatBalanceWithEOSSymbol(cpuAmount),
+                           Utils.formatBalanceWithEOSSymbol(netAmount)
+                    );
+                    return this.eosManager.signedEosAction(unDelegateEos, account.getName() + "@active");
                 })
                 .flatMap(signedTransaction -> {
                     return this.pocketAppManager.signAndPackTransaction(accountId, pw, signedTransaction);
