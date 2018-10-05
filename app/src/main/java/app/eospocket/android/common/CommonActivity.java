@@ -14,10 +14,12 @@ import com.afollestad.materialdialogs.MaterialDialog;
 
 import app.eospocket.android.R;
 import dagger.android.support.DaggerAppCompatActivity;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class CommonActivity extends DaggerAppCompatActivity {
 
     protected MaterialDialog mMaterialDialog;
+    protected CompositeDisposable mAllDisposables = new CompositeDisposable();
 
     protected boolean checkAllPermissionGranted(@NonNull int[] grantResults) {
         for (int grantResult : grantResults) {
@@ -55,6 +57,7 @@ public class CommonActivity extends DaggerAppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        mAllDisposables.clear();
         hideDialog();
         super.onDestroy();
     }
