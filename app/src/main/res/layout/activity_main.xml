@@ -50,8 +50,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/layout_navigation_header"
-        android:background="@android:color/white"
-        app:itemIconTint="@color/colorPrimary"
-        app:itemTextColor="@color/colorPrimary"/>
+        app:itemIconTint="@color/nav_icon_selected_color"
+        app:itemTextColor="@color/nav_icon_selected_color"/>
 
 </android.support.v4.widget.DrawerLayout>
