@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -43,6 +44,9 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R.id.title_text)
+    TextView mTitleText;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
@@ -119,7 +123,7 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
                         .hide(mActionFragment)
                         .hide(mMoreFragment)
                         .commit();
-                mToolbar.setTitle(R.string.title_balance);
+                mTitleText.setText(R.string.title_balance);
                 return true;
             case R.id.navigation_stake:
                 getSupportFragmentManager()
@@ -129,7 +133,7 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
                         .hide(mActionFragment)
                         .hide(mMoreFragment)
                         .commit();
-                mToolbar.setTitle(R.string.title_stake);
+                mTitleText.setText(R.string.title_stake);
                 return true;
             case R.id.navigation_action:
                 getSupportFragmentManager()
@@ -139,7 +143,8 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
                         .show(mActionFragment)
                         .hide(mMoreFragment)
                         .commit();
-                mToolbar.setTitle(R.string.title_action);
+                mTitleText.setText(R.string.title_action);
+                return true;
             case R.id.navigation_more:
                 getSupportFragmentManager()
                         .beginTransaction()
@@ -148,7 +153,7 @@ public class MainActivity extends CommonActivity implements MainView, Navigation
                         .hide(mStakeFragment)
                         .show(mMoreFragment)
                         .commit();
-                mToolbar.setTitle(R.string.title_more);
+                mTitleText.setText(R.string.title_more);
                 return true;
         }
 
