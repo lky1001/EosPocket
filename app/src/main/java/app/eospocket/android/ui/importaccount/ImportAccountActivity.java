@@ -199,16 +199,17 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
         mAllDisposables.add(RxView.clicks(mImportAccountButton)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe(view -> {
-                    String pk = mInputPrivateKey.getText().toString();
-                    if (TextUtils.isEmpty(pk)) {
-                        Toast.makeText(ImportAccountActivity.this, getString(R.string.required_private_key_text),
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
                     if (mRegLaterCheckBox.isChecked() && !mImportKey) {
                         mImportAccountPresenter.importAccount(mEosAccount.accountName);
                     } else {
+                        String pk = mInputPrivateKey.getText().toString();
+
+                        if (TextUtils.isEmpty(pk)) {
+                            Toast.makeText(ImportAccountActivity.this, getString(R.string.required_private_key_text),
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         mInputPassword.setEnabled(false);
 
                         String password = mInputPassword.getText().toString();
