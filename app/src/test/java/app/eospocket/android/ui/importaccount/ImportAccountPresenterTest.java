@@ -5,21 +5,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
-
 import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
-import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.security.keystore.KeyStore;
 import app.eospocket.android.utils.EncryptUtil;
 import app.eospocket.android.wallet.PocketAppManager;
 import io.reactivex.Scheduler;
-import io.reactivex.Single;
 import io.reactivex.schedulers.TestScheduler;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
 
 public class ImportAccountPresenterTest {
 
@@ -72,43 +64,6 @@ public class ImportAccountPresenterTest {
                 return testScheduler;
             }
         });
-    }
-
-    @Test
-    public void testFindAccount_success() {
-        AccountList accountList = new AccountList();
-        accountList.accounts = Arrays.asList("test");
-
-        doReturn(Single.just(accountList)).when(eosManager).findAccountByPublicKey(any());
-
-        presenter.findAccount(TESTABLE_PRIVATE_KEY);
-        testScheduler.triggerActions();
-
-        verify(view).getAccount(any());
-    }
-
-    @Test
-    public void testNoAccount_success() {
-        AccountList accountList = new AccountList();
-
-        doReturn(Single.just(accountList)).when(eosManager).findAccountByPublicKey(any());
-
-        presenter.findAccount(TESTABLE_PRIVATE_KEY);
-        testScheduler.triggerActions();
-
-        verify(view).noAccount();
-    }
-
-    @Test
-    public void testInvalidPrivateKey_success() {
-        AccountList accountList = new AccountList();
-
-        doReturn(Single.just(accountList)).when(eosManager).findAccountByPublicKey(any());
-
-        presenter.findAccount("test");
-        testScheduler.triggerActions();
-
-        verify(view).noAccount();
     }
 
     @Test

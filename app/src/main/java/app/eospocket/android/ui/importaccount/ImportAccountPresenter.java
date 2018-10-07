@@ -10,6 +10,7 @@ import app.eospocket.android.common.Constants;
 import app.eospocket.android.common.mvp.BasePresenter;
 import app.eospocket.android.common.rxjava.RxJavaSchedulers;
 import app.eospocket.android.eos.EosManager;
+import app.eospocket.android.eos.model.AccountList;
 import app.eospocket.android.eos.request.AccountRequest;
 import app.eospocket.android.eos.request.KeyAccountsRequest;
 import app.eospocket.android.security.keystore.KeyStore;
@@ -21,6 +22,9 @@ import io.mithrilcoin.eos.crypto.ec.EosPublicKey;
 import io.reactivex.Single;
 
 public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
+
+    private static final int IMPORT_ACCOUNT_SUCCESS = 0;
+    private static final int IMPORT_ACCOUNT_EXIST = -1;
 
     private EosManager mEosManager;
 
@@ -62,31 +66,6 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
     }
 
-    public void findAccount(@Nullable String privateKey) {
-        Single.fromCallable(() -> {
-            EosPrivateKey eosPrivateKey = new EosPrivateKey(privateKey);
-            EosPublicKey eosPublicKey = eosPrivateKey.getPublicKey();
-            return eosPublicKey.toString();
-        })
-        .flatMap(publicKey -> {
-            KeyAccountsRequest request = new KeyAccountsRequest();
-            request.publicKey = publicKey;
-            return mEosManager.findAccountByPublicKey(request);
-        })
-        .subscribeOn(mRxJavaSchedulers.getIo())
-        .observeOn(mRxJavaSchedulers.getMainThread())
-        .subscribe(result -> {
-            if (result != null && result.accounts != null && !result.accounts.isEmpty()) {
-                mView.getAccount(result.accounts.get(0));
-            } else {
-                mView.noPrivateKeyAccount();
-            }
-        }, e -> {
-            e.printStackTrace();
-            mView.noPrivateKeyAccount();
-        });
-    }
-
     public void findAccountName(String accountName) {
         Single.fromCallable(() -> {
             AccountRequest request = new AccountRequest();
@@ -110,10 +89,47 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
     }
 
     public void importAccount(@NonNull String accountName, @Nullable String privateKey, @Nullable String password) {
-        mPocketAppManager.findAccount(accountName)
+        Single.fromCallable(() -> {
+            if (!TextUtils.isEmpty(privateKey)) {
+                EosPrivateKey eosPrivateKey = new EosPrivateKey(privateKey);
+                EosPublicKey eosPublicKey = eosPrivateKey.getPublicKey();
+                return eosPublicKey.toString();
+            }
+
+            return "";
+        })
+        .flatMap(publicKey -> {
+            if (!TextUtils.isEmpty(publicKey)) {
+                KeyAccountsRequest request = new KeyAccountsRequest();
+                request.publicKey = publicKey;
+                return mEosManager.findAccountByPublicKey(request);
+            }
+
+            return Single.fromCallable(() -> new AccountList());
+        })
+        .map(accountList -> {
+            if (accountList.accounts != null) {
+                for (String account : accountList.accounts) {
+                    if (accountName.equals(account)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            return true;
+        })
+        .flatMap(matchPrivateKey -> {
+            // private key matched account name
+            if (matchPrivateKey) {
+                return mPocketAppManager.findAccount(accountName);
+            }
+
+            throw new IllegalAccessException("Account key and private key does not match.");
+        })
         .map(accounts -> {
             if (accounts.isEmpty()) {
-                // todo - update if exist account name
                 EosAccountModel eosAccountModel = EosAccountModel
                         .builder()
                         .name(accountName)
@@ -135,20 +151,34 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
 
                 mPocketAppManager.insert(eosAccountModel);
 
-                return true;
-            }
+                return IMPORT_ACCOUNT_SUCCESS;
+            } else {
+                EosAccountModel eosAccountModel = accounts.get(0);
 
-            return false;
+                if (TextUtils.isEmpty(privateKey) || !TextUtils.isEmpty(eosAccountModel.getPrivateKey())) {
+                    return IMPORT_ACCOUNT_EXIST;
+                } else {
+                    // update private key
+                    eosAccountModel.setPrivateKey(privateKey);
+                    mPocketAppManager.update(eosAccountModel);
+
+                    return IMPORT_ACCOUNT_SUCCESS;
+                }
+            }
         })
         .subscribeOn(mRxJavaSchedulers.getIo())
         .observeOn(mRxJavaSchedulers.getMainThread())
         .subscribe(result -> {
-            if (result) {
+            if (result == IMPORT_ACCOUNT_SUCCESS) {
                 mView.successImport();
-            } else {
+            } else if (result == IMPORT_ACCOUNT_EXIST) {
                 mView.existAccount();
             }
         }, e -> {
+            if (e instanceof IllegalAccessException) {
+                mView.privateKeyNotMatched();
+            }
+
             e.printStackTrace();
         });
     }

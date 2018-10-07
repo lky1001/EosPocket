@@ -1,9 +1,11 @@
 package app.eospocket.android.wallet.db;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -19,6 +21,12 @@ public interface EosAccountDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(EosAccountModel eosAccountModel);
+
+    @Update
+    void update(EosAccountModel eosAccountModel);
+
+    @Delete
+    void delete(EosAccountModel eosAccountModel);
 
     @Query("DELETE FROM eos_account WHERE account_name = :accountName")
     void delete(String accountName);

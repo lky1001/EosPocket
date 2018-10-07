@@ -14,6 +14,10 @@ public interface EosAccountRepository {
 
     void insert(@NonNull EosAccountModel eosAccountModel);
 
+    void update(@NonNull EosAccountModel eosAccountModel);
+
+    void delete(@NonNull EosAccountModel eosAccountModel);
+
     void delete(@NonNull String accountName);
 
     void deleteAll();

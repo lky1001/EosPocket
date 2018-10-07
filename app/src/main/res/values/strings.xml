@@ -35,7 +35,7 @@
     <string name="invalid_account_msg">Please input your account name.</string>
     <string name="reg_later_text">I will register my private key later.</string>
     <string name="account_name_aleady_exist">Account name is already exist.</string>
-    <string name="not_found_account">Can not found account.</string>
+    <string name="private_key_does_not_match">Account and private key does not matched.</string>
     <string name="success_import_account">Success.</string>
     <string name="title_balance">Balance</string>
     <string name="title_stake">Stake</string>
@@ -60,4 +60,5 @@
     <string name="title_import_private_key">Import Private Key</string>
     <string name="title_import_account">Import Account</string>
     <string name="balance_text">Balance</string>
+    <string name="required_private_key_text">Private key is required.</string>
 </resources>

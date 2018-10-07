@@ -1,5 +1,7 @@
 package app.eospocket.android.wallet.repository;
 
+import android.support.annotation.NonNull;
+
 import java.util.List;
 
 import app.eospocket.android.wallet.db.AppDatabase;
@@ -16,17 +18,27 @@ public class EosAccountRepositoryImpl implements EosAccountRepository {
     }
 
     @Override
-    public Single<List<EosAccountModel>> findAccount(String accountName) {
+    public Single<List<EosAccountModel>> findAccount(@NonNull String accountName) {
         return mAppDatabase.eosAccountDao().findAccount(accountName);
     }
 
     @Override
-    public void insert(EosAccountModel eosAccountModel) {
+    public void insert(@NonNull EosAccountModel eosAccountModel) {
         mAppDatabase.eosAccountDao().insert(eosAccountModel);
     }
 
     @Override
-    public void delete(String accountName) {
+    public void update(@NonNull EosAccountModel eosAccountModel) {
+        mAppDatabase.eosAccountDao().update(eosAccountModel);
+    }
+
+    @Override
+    public void delete(@NonNull EosAccountModel eosAccountModel) {
+        mAppDatabase.eosAccountDao().delete(eosAccountModel);
+    }
+
+    @Override
+    public void delete(@NonNull String accountName) {
         mAppDatabase.eosAccountDao().delete(accountName);
     }
 

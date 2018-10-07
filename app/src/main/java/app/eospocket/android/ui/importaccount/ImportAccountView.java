@@ -5,8 +5,6 @@ import app.eospocket.android.eos.model.account.EosAccount;
 
 public interface ImportAccountView extends IView {
 
-    void getAccount(String account);
-
     void noAccount();
 
     void foundAccount(EosAccount result);
@@ -15,5 +13,5 @@ public interface ImportAccountView extends IView {
 
     void existAccount();
 
-    void noPrivateKeyAccount();
+    void privateKeyNotMatched();
 }

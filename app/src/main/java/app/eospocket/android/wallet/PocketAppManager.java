@@ -50,6 +50,14 @@ public class PocketAppManager {
         mEosAccountRepository.insert(eosAccountModel);
     }
 
+    public void update(@NonNull EosAccountModel eosAccountModel) {
+        mEosAccountRepository.update(eosAccountModel);
+    }
+
+    public void delete(@NonNull EosAccountModel eosAccountModel) {
+        mEosAccountRepository.delete(eosAccountModel);
+    }
+
     public void insertAllTokens(@NonNull List<EosAccountTokenModel> eosAccountTokenModels) {
         mEosAccountTokenRepository.insertAll(eosAccountTokenModels);
     }

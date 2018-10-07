@@ -124,15 +124,6 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
                     }
                 }));
 
-        mAllDisposables.add(RxTextView.textChanges(mInputPrivateKey)
-                .debounce(1, TimeUnit.SECONDS)
-                .map(CharSequence::toString)
-                .subscribe(pk -> {
-                    if (!TextUtils.isEmpty(pk)) {
-                        mImportAccountPresenter.findAccount(pk);
-                    }
-                }));
-
         mAllDisposables.add(RxTextView.textChanges(mInputPassword)
                 .debounce(1, TimeUnit.SECONDS)
                 .map(input -> {
@@ -208,6 +199,13 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
         mAllDisposables.add(RxView.clicks(mImportAccountButton)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe(view -> {
+                    String pk = mInputPrivateKey.getText().toString();
+                    if (TextUtils.isEmpty(pk)) {
+                        Toast.makeText(ImportAccountActivity.this, getString(R.string.required_private_key_text),
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     if (mRegLaterCheckBox.isChecked() && !mImportKey) {
                         mImportAccountPresenter.importAccount(mEosAccount.accountName);
                     } else {
@@ -225,18 +223,10 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
                         }
 
                         mImportAccountPresenter.importAccount(mEosAccount.accountName,
-                                mInputPrivateKey.getText().toString(),
+                                pk,
                                 password);
                     }
                 }));
-    }
-
-    @Override
-    public void getAccount(String account) {
-        if (!mEosAccount.accountName.equals(account)) {
-            Toast.makeText(ImportAccountActivity.this, getString(R.string.not_found_account),
-                    Toast.LENGTH_SHORT).show();
-        }
     }
 
     @Override
@@ -271,8 +261,8 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
     }
 
     @Override
-    public void noPrivateKeyAccount() {
-        Toast.makeText(ImportAccountActivity.this, getString(R.string.not_found_account),
+    public void privateKeyNotMatched() {
+        Toast.makeText(ImportAccountActivity.this, getString(R.string.private_key_does_not_match),
                 Toast.LENGTH_SHORT).show();
     }
 }
