@@ -14,4 +14,6 @@ public interface ImportAccountView extends IView {
     void successImport();
 
     void existAccount();
+
+    void noPrivateKeyAccount();
 }

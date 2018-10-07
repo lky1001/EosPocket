@@ -79,11 +79,11 @@ public class ImportAccountPresenter extends BasePresenter<ImportAccountView> {
             if (result != null && result.accounts != null && !result.accounts.isEmpty()) {
                 mView.getAccount(result.accounts.get(0));
             } else {
-                mView.noAccount();
+                mView.noPrivateKeyAccount();
             }
         }, e -> {
             e.printStackTrace();
-            mView.noAccount();
+            mView.noPrivateKeyAccount();
         });
     }
 
