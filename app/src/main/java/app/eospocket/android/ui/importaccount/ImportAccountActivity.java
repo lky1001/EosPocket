@@ -44,8 +44,14 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
     @BindView(R.id.private_key_layout)
     View mPrivateKeyLayout;
 
-    @BindView(R.id.input_account_name_layout)
-    View mAccountNameLayout;
+    @BindView(R.id.account_layout)
+    View mAccountLayout;
+
+    @BindView(R.id.account_name_text)
+    TextView mAccountNameText;
+
+    @BindView(R.id.balance_text)
+    TextView mBalanceText;
 
     @BindView(R.id.input_private_key)
     EditText mInputPrivateKey;
@@ -110,19 +116,19 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
         mImportAccountPresenter.onCreate();
 
         mAllDisposables.add(RxTextView.textChanges(mInputAccountName)
-                .debounce(2, TimeUnit.SECONDS)
+                .debounce(1, TimeUnit.SECONDS)
                 .map(CharSequence::toString)
                 .subscribe(accountName -> mImportAccountPresenter.findAccountName(accountName)));
 
         mAllDisposables.add(RxTextView.textChanges(mInputPrivateKey)
-                .debounce(2, TimeUnit.SECONDS)
+                .debounce(1, TimeUnit.SECONDS)
                 .map(CharSequence::toString)
                 .subscribe(pk -> {
                     mImportAccountPresenter.findAccount(pk);
                 }));
 
         mAllDisposables.add(RxTextView.textChanges(mInputPassword)
-                .debounce(2, TimeUnit.SECONDS)
+                .debounce(1, TimeUnit.SECONDS)
                 .map(input -> {
                     String password = input.toString();
 
@@ -185,7 +191,7 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
                         Toast.makeText(ImportAccountActivity.this, getString(R.string.invalid_account_msg),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        mAccountNameLayout.setVisibility(View.GONE);
+                        mAccountLayout.setVisibility(View.GONE);
                         mPrivateKeyLayout.setVisibility(View.VISIBLE);
                         mNextButton.setVisibility(View.GONE);
                         mImportAccountButton.setVisibility(View.VISIBLE);
@@ -229,6 +235,8 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
         hideDialog();
         mNextButton.setEnabled(false);
         mEosAccount = null;
+        mAccountNameText.setText("-");
+        mBalanceText.setText("-");
     }
 
     @Override
@@ -236,6 +244,8 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
         hideDialog();
         mNextButton.setEnabled(true);
         mEosAccount = result;
+        mAccountNameText.setText(mEosAccount.accountName);
+        mBalanceText.setText(mEosAccount.coreLiquidBalance);
     }
 
     @Override

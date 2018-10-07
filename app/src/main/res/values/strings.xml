@@ -58,4 +58,5 @@
     <string name="side_menu_title_import_account">Import Account</string>
     <string name="title_import_private_key">Import Private Key</string>
     <string name="title_import_account">Import Account</string>
+    <string name="balance_text">Balance</string>
 </resources>
