@@ -54,12 +54,14 @@ public class StakeFragment extends CommonFragment
 
     @BindView(R.id.layout_cpu_stake)
     View mParentCpuStake;
+    TextView mTxtCpuTitle;
     TextView mCpuDesc;
     TextView mTxtCpuPercent;
     RoundCornerProgressBar mCpuProgress;
 
     @BindView(R.id.layout_network_stake)
     View mParentNetworkStake;
+    TextView mTxtNetworkTitle;
     TextView mNetworkDesc;
     TextView mTxtNetworkPercent;
     RoundCornerProgressBar mNetworkProgress;
@@ -87,13 +89,13 @@ public class StakeFragment extends CommonFragment
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        ((TextView) mParentCpuStake.findViewById(R.id.txt_title)).setText("CPU");
+        mTxtCpuTitle = mParentCpuStake.findViewById(R.id.txt_title);
         mCpuDesc = mParentCpuStake.findViewById(R.id.txt_desc);
         mTxtCpuPercent = mParentCpuStake.findViewById(R.id.txt_percentage);
         mCpuProgress = mParentCpuStake.findViewById(R.id.progress);
         mCpuProgress.setProgressColor(getResources().getColor(R.color.stake_resource_cpu_color));
 
-        ((TextView) mParentNetworkStake.findViewById(R.id.txt_title)).setText("Network");
+        mTxtNetworkTitle = mParentNetworkStake.findViewById(R.id.txt_title);
         mNetworkDesc = mParentNetworkStake.findViewById(R.id.txt_desc);
         mTxtNetworkPercent = mParentNetworkStake.findViewById(R.id.txt_percentage);
         mNetworkProgress = mParentNetworkStake.findViewById(R.id.progress);
@@ -128,13 +130,24 @@ public class StakeFragment extends CommonFragment
         return false;
     }
 
+    private float useableBalance;
+    private float stakingCpu;
+    private float stakingNetwork;
+
     @Override
     public void loadEosAccountSuccess(EosAccount eosAccount) {
-        double cpuWeight = Double.parseDouble(eosAccount.totalResources.cpuWeight.split(" ")[0]);
-        double netWeight = Double.parseDouble(eosAccount.totalResources.netWeight.split(" ")[0]);
+        String cpuWeight = eosAccount.totalResources.cpuWeight;
+        String netWeight = eosAccount.totalResources.netWeight;
 
-        txtStakeBalanceEos.setText(Utils.formatBalanceWithEOSSymbol(cpuWeight + netWeight));
+        stakingCpu = Float.parseFloat(eosAccount.totalResources.cpuWeight.split(" ")[0]);
+        stakingNetwork = Float.parseFloat(eosAccount.totalResources.netWeight.split(" ")[0]);
+
+        txtStakeBalanceEos.setText(Utils.formatBalanceWithEOSSymbol(stakingCpu + stakingNetwork));
+        useableBalance = Float.parseFloat(eosAccount.coreLiquidBalance.split(" ")[0]);
         txtUnStakeEos.setText(eosAccount.coreLiquidBalance);
+
+        mTxtCpuTitle.setText("CPU " + cpuWeight);
+        mTxtNetworkTitle.setText("Network " + netWeight);
 
         mCpuDesc.setText(getStakeResouceDesc(eosAccount.cpuLimit.used, eosAccount.cpuLimit.max, "ms", R.color.stake_resource_cpu_color));
         mNetworkDesc.setText(getStakeResouceDesc(eosAccount.netLimit.used, eosAccount.netLimit.max, "bytes", R.color.stake_resource_network_color));
@@ -180,7 +193,7 @@ public class StakeFragment extends CommonFragment
 
     @OnClick(R.id.btn_stake)
     public void onClickStake() {
-        StakeDialog dialog = new StakeDialog(getContext());
+        StakeDialog dialog = new StakeDialog(getContext(), useableBalance);
         dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
             @Override
             public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
@@ -198,8 +211,16 @@ public class StakeFragment extends CommonFragment
     @OnClick(R.id.btn_unstake)
     public void onClickUnStake() {
         //TODO unStake
-        int accountId = mLoginAccountManager.getSelectedId();
-
+        StakeDialog dialog = new StakeDialog(getContext(), stakingCpu + stakingNetwork);
+        dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
+            @Override
+            public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
+                int accountId = mLoginAccountManager.getSelectedId();
+                String pw = "1234567890abcd!@#";
+                mStakePresenter.unStakeEos(accountId, pw, to, cpuStake, netStake);
+            }
+        });
+        dialog.show();
     }
 
     @Override

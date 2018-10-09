@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.Toast;
 
 import app.eospocket.android.R;
 import app.eospocket.android.ui.view.FormatInputEditText;
@@ -31,12 +32,14 @@ public class StakeDialog extends Dialog {
     CheckBox checkBoxTransfer;
 
     private StakeDialogCallback stakeDialogCallback;
+    private float maxValue;
 
-    public StakeDialog(@NonNull Context context) {
+    public StakeDialog(@NonNull Context context, float maxValue) {
         this(context, R.style.TransparentDialog);
+        this.maxValue = maxValue;
     }
 
-    public StakeDialog(@NonNull Context context, int themeResId) {
+    private StakeDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
     }
 
@@ -59,9 +62,14 @@ public class StakeDialog extends Dialog {
     public void onClickConfirm() {
         if (editTo.checkValid() && editCpuStake.checkValid() && editNetStake.checkValid()) {
             String to = editTo.getInputValue();
-            double cpuAmount = Double.parseDouble(editCpuStake.getInputValue());
-            double netAmout = Double.parseDouble(editNetStake.getInputValue());
+            float cpuAmount = Float.parseFloat(editCpuStake.getInputValue());
+            float netAmout = Float.parseFloat(editNetStake.getInputValue());
             boolean isTransfer = checkBoxTransfer.isChecked();
+
+            if (cpuAmount + netAmout > maxValue) {
+                Toast.makeText(getContext(), "cputAmount + netAmount > BALANCE", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             stakeDialogCallback.onConfirm(to, cpuAmount, netAmout, isTransfer);
             dismiss();

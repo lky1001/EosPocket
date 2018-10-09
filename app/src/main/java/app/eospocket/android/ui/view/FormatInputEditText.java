@@ -89,6 +89,14 @@ public class FormatInputEditText extends FrameLayout implements TextWatcher, Vie
                     inputLayout.setError("Input is Invaild ");
                     return false;
                 }
+            case FLOAT:
+                try {
+                    float floatValue = Float.parseFloat(string);
+                } catch (NumberFormatException e) {
+                    inputLayout.setError("Input is Invaild ");
+                    return false;
+                }
+
         }
         return true;
     }
@@ -99,7 +107,7 @@ public class FormatInputEditText extends FrameLayout implements TextWatcher, Vie
     }
 
     private enum Format {
-        STRING, DOUBLE;
+        STRING, FLOAT, DOUBLE;
 
         static Format valueOf(int o) {
             for (Format f : values()) {

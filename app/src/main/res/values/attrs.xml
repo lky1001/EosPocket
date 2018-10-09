@@ -4,7 +4,8 @@
         <attr name="hint" format="string" />
         <attr name="format" format="enum">
             <enum name="_string" value="0" />
-            <enum name="_double" value="1" />
+            <enum name="_float" value="1" />
+            <enum name="_double" value="2" />
         </attr>
     </declare-styleable>
 
