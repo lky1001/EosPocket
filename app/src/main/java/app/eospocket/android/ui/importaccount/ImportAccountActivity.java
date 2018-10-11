@@ -115,7 +115,7 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
 
         mImportAccountPresenter.onCreate();
 
-        mAllDisposables.add(RxTextView.textChanges(mInputAccountName)
+        addDisposable(RxTextView.textChanges(mInputAccountName)
                 .debounce(1, TimeUnit.SECONDS)
                 .map(CharSequence::toString)
                 .subscribe(accountName -> {
@@ -124,7 +124,7 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
                     }
                 }));
 
-        mAllDisposables.add(RxTextView.textChanges(mInputPassword)
+        addDisposable(RxTextView.textChanges(mInputPassword)
                 .debounce(1, TimeUnit.SECONDS)
                 .map(input -> {
                     String password = input.toString();
@@ -175,13 +175,13 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
                     mPasswordStrengthBar.setProgress(progress);
                 }));
 
-        mAllDisposables.add(RxCompoundButton.checkedChanges(mRegLaterCheckBox)
+        addDisposable(RxCompoundButton.checkedChanges(mRegLaterCheckBox)
                 .subscribe(isChecked -> {
                     mInputPassword.setEnabled(!isChecked);
                 })
         );
 
-        mAllDisposables.add(RxView.clicks(mNextButton)
+        addDisposable(RxView.clicks(mNextButton)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe(view -> {
                     if (mEosAccount == null) {
@@ -196,7 +196,7 @@ public class ImportAccountActivity extends CommonActivity implements ImportAccou
                     }
                 }));
 
-        mAllDisposables.add(RxView.clicks(mImportAccountButton)
+        addDisposable(RxView.clicks(mImportAccountButton)
                 .throttleFirst(2, TimeUnit.SECONDS)
                 .subscribe(view -> {
                     if (mRegLaterCheckBox.isChecked() && !mImportKey) {

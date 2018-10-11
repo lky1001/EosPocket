@@ -19,7 +19,7 @@ import io.reactivex.disposables.CompositeDisposable;
 public class CommonActivity extends DaggerAppCompatActivity {
 
     protected MaterialDialog mMaterialDialog;
-    protected CompositeDisposable mAllDisposables = new CompositeDisposable();
+    private CompositeDisposable mAllDisposables = new CompositeDisposable();
 
     protected boolean checkAllPermissionGranted(@NonNull int[] grantResults) {
         for (int grantResult : grantResults) {
@@ -53,6 +53,10 @@ public class CommonActivity extends DaggerAppCompatActivity {
         } else {
             finish();
         }
+    }
+
+    protected void addDisposable(Disposable disposable) {
+        mAllDisposables.add(disposable);
     }
 
     @Override
