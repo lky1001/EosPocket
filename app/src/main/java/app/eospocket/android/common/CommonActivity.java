@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import app.eospocket.android.R;
 import dagger.android.support.DaggerAppCompatActivity;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 public class CommonActivity extends DaggerAppCompatActivity {
 
