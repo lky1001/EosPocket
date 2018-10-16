@@ -106,6 +106,10 @@ public class FormatInputEditText extends FrameLayout implements TextWatcher, Vie
         return inputEditText.getText().toString();
     }
 
+    public void setText(String text) {
+        inputEditText.setText(text);
+    }
+
     private enum Format {
         STRING, FLOAT, DOUBLE;
 

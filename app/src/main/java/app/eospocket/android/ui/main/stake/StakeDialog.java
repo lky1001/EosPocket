@@ -31,7 +31,7 @@ public class StakeDialog extends Dialog {
     @BindView(R.id.checkbox_transfer)
     CheckBox checkBoxTransfer;
 
-    private StakeDialogCallback stakeDialogCallback;
+    private StakeDialog.DialogCallback stakeDialogCallback;
     private float maxValue;
 
     public StakeDialog(@NonNull Context context, float maxValue) {
@@ -43,7 +43,7 @@ public class StakeDialog extends Dialog {
         super(context, themeResId);
     }
 
-    public void setStakeDialogCallback(StakeDialogCallback stakeDialogCallback) {
+    public void setStakeDialogCallback(StakeDialog.DialogCallback stakeDialogCallback) {
         this.stakeDialogCallback = stakeDialogCallback;
     }
 
@@ -81,7 +81,7 @@ public class StakeDialog extends Dialog {
         dismiss();
     }
 
-    interface StakeDialogCallback {
+    interface DialogCallback {
         void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer);
     }
 }

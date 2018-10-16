@@ -35,6 +35,7 @@ import app.eospocket.android.wallet.repository.EosAccountRepository;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 public class StakeFragment extends CommonFragment
@@ -154,7 +155,9 @@ public class StakeFragment extends CommonFragment
     }
 
     private float availableStakeEos;    //스태이크 가능한 이오스(순수 밸런스)
-    private float totalStakedEos;
+//    private float totalStakedEos;
+    private float stakedCputEos;
+    private float stakedNetEos;
 
     @Override
     public void loadEosAccountSuccess(EosAccount eosAccount) {
@@ -164,9 +167,9 @@ public class StakeFragment extends CommonFragment
         txtBalanceEos.setText(eosAccount.coreLiquidBalance);
         availableStakeEos = Float.parseFloat(eosAccount.coreLiquidBalance.split(" ")[0]);
 
-        float stakedCpu = Float.parseFloat(eosAccount.totalResources.cpuWeight.split(" ")[0]);
-        float stakedNetwork = Float.parseFloat(eosAccount.totalResources.netWeight.split(" ")[0]);
-        totalStakedEos = stakedCpu + stakedNetwork;
+        stakedCputEos = Float.parseFloat(eosAccount.totalResources.cpuWeight.split(" ")[0]);
+        stakedNetEos = Float.parseFloat(eosAccount.totalResources.netWeight.split(" ")[0]);
+        float totalStakedEos = stakedCputEos + stakedNetEos;
 
         txtStakedEos.setText(Utils.formatBalanceWithEOSSymbol(totalStakedEos));
 
@@ -257,7 +260,7 @@ public class StakeFragment extends CommonFragment
     @OnClick(R.id.btn_stake)
     public void onClickStake() {
         StakeDialog dialog = new StakeDialog(getContext(), availableStakeEos);
-        dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
+        dialog.setStakeDialogCallback(new StakeDialog.DialogCallback() {
             @Override
             public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
 
@@ -273,17 +276,23 @@ public class StakeFragment extends CommonFragment
 
     @OnClick(R.id.btn_unstake)
     public void onClickUnStake() {
-        //TODO unStake
-        StakeDialog dialog = new StakeDialog(getContext(), totalStakedEos);
-        dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
-            @Override
-            public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
-                int accountId = mLoginAccountManager.getSelectedId();
-                String pw = "1234567890abcd!@#";
-                mStakePresenter.unStakeEos(accountId, pw, to, cpuStake, netStake);
-            }
-        });
-        dialog.show();
+        int selectedId = mLoginAccountManager.getSelectedId();
+        mEosAccountRepository.findOneById(selectedId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(eosAccountModel -> {
+                    UnStakeDialog dialog = new UnStakeDialog(getContext(), eosAccountModel.getName(),
+                            stakedCputEos, stakedNetEos);
+                    dialog.setStakeDialogCallback(new UnStakeDialog.DialogCallback() {
+                        @Override
+                        public void onConfirm(String to, double unStakeCpu, double unStakeNet) {
+                            int accountId = mLoginAccountManager.getSelectedId();
+                            String pw = "1234567890abcd!@#";
+                            mStakePresenter.unStakeEos(accountId, pw, to, unStakeCpu, unStakeNet);
+                        }
+                    });
+                    dialog.show();
+                });
     }
 
     @Override

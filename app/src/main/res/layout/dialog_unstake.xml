@@ -18,36 +18,24 @@
 
 
     <app.eospocket.android.ui.view.FormatInputEditText
-        android:id="@+id/edit_cpu_stake"
+        android:id="@+id/edit_cpu_unstake"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:hint="CPU Stake"
+        app:hint="CPU UnStake"
         app:format="_float"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_to" />
 
     <app.eospocket.android.ui.view.FormatInputEditText
-        android:id="@+id/edit_net_stake"
+        android:id="@+id/edit_net_unstake"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:hint="Network Stake"
+        app:hint="Network UnStake"
         app:format="_float"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_cpu_stake"/>
-
-    <CheckBox
-        android:id="@+id/checkbox_transfer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layoutDirection="rtl"
-        android:text="Transfer"
-        android:textColor="#000000"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_net_stake" />
-
+        app:layout_constraintTop_toBottomOf="@+id/edit_cpu_unstake"/>
 
     <Button
         android:id="@+id/btn_confirm"
@@ -57,7 +45,7 @@
         android:padding="10dp"
         android:text="Confirm"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkbox_transfer" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_net_unstake" />
 
     <Button
         android:id="@+id/btn_cancel"
@@ -68,6 +56,6 @@
         android:text="Cancel"
         android:layout_marginRight="10dp"
         app:layout_constraintRight_toLeftOf="@+id/btn_confirm"
-        app:layout_constraintTop_toBottomOf="@+id/checkbox_transfer" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_net_unstake" />
 
 </android.support.constraint.ConstraintLayout>
