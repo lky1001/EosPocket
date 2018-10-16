@@ -42,25 +42,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
-        <TextView
-            android:id="@+id/temp1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="#7dffffff"
-            android:text="EOS"
-            app:layout_constraintTop_toBottomOf="@+id/txt_stake_balance_eos"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-        <TextView
+        <Button
             android:id="@+id/btn_stake"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:textColor="#ffffff"
             android:text="STAKE"
-            app:layout_constraintTop_toBottomOf="@+id/temp1"
+            app:layout_constraintTop_toBottomOf="@+id/txt_stake_balance_eos"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
@@ -79,7 +68,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#7dffffff"
-            tools:text="Stake"
+            android:text="Staked"
+            tools:text="Staked"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
@@ -97,25 +87,14 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 
-        <TextView
-            android:id="@+id/temp2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="#7dffffff"
-            android:text="EOS"
-            app:layout_constraintTop_toBottomOf="@+id/txt_unstake_eos"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-
-        <TextView
+        <Button
             android:id="@+id/btn_unstake"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:textColor="#ffffff"
             android:text="UNSTAKE"
-            app:layout_constraintTop_toBottomOf="@+id/temp2"
+            app:layout_constraintTop_toBottomOf="@+id/txt_unstake_eos"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"/>
 

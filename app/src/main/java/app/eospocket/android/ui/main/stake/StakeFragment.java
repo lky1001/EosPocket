@@ -55,9 +55,9 @@ public class StakeFragment extends CommonFragment
     SwipeRefreshLayout mSwipeRefreshLayout;
 
     @BindView(R.id.txt_stake_balance_eos)
-    TextView txtStakeBalanceEos;
+    TextView txtBalanceEos;
     @BindView(R.id.txt_unstake_eos)
-    TextView txtUnStakeEos;
+    TextView txtStakedEos;
 
     @BindView(R.id.layout_cpu_stake)
     View mParentCpuStake;
@@ -100,7 +100,6 @@ public class StakeFragment extends CommonFragment
     }
 
     private void initUi() {
-
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
         mTxtCpuTitle = mParentCpuStake.findViewById(R.id.txt_title);
@@ -154,21 +153,22 @@ public class StakeFragment extends CommonFragment
         return false;
     }
 
-    private float useableBalance;
-    private float stakingCpu;
-    private float stakingNetwork;
+    private float availableStakeEos;    //스태이크 가능한 이오스(순수 밸런스)
+    private float totalStakedEos;
 
     @Override
     public void loadEosAccountSuccess(EosAccount eosAccount) {
         String cpuWeight = eosAccount.totalResources.cpuWeight;
         String netWeight = eosAccount.totalResources.netWeight;
 
-        stakingCpu = Float.parseFloat(eosAccount.totalResources.cpuWeight.split(" ")[0]);
-        stakingNetwork = Float.parseFloat(eosAccount.totalResources.netWeight.split(" ")[0]);
+        txtBalanceEos.setText(eosAccount.coreLiquidBalance);
+        availableStakeEos = Float.parseFloat(eosAccount.coreLiquidBalance.split(" ")[0]);
 
-        txtStakeBalanceEos.setText(Utils.formatBalanceWithEOSSymbol(stakingCpu + stakingNetwork));
-        useableBalance = Float.parseFloat(eosAccount.coreLiquidBalance.split(" ")[0]);
-        txtUnStakeEos.setText(eosAccount.coreLiquidBalance);
+        float stakedCpu = Float.parseFloat(eosAccount.totalResources.cpuWeight.split(" ")[0]);
+        float stakedNetwork = Float.parseFloat(eosAccount.totalResources.netWeight.split(" ")[0]);
+        totalStakedEos = stakedCpu + stakedNetwork;
+
+        txtStakedEos.setText(Utils.formatBalanceWithEOSSymbol(totalStakedEos));
 
         mTxtCpuTitle.setText("CPU " + cpuWeight);
         mTxtNetworkTitle.setText("Network " + netWeight);
@@ -194,7 +194,6 @@ public class StakeFragment extends CommonFragment
         //Bind refund resource
         Refund refund = eosAccount.refundRequest;
         float refundUsed = 0f;
-        float refundMax = stakingCpu + stakingNetwork;
         if (refund != null) {
             float cpuUsedAmount = Float.parseFloat(refund.cpu_amount.split(" ")[0]);
             float netUsedAmount = Float.parseFloat(refund.net_amount.split(" ")[0]);
@@ -213,13 +212,13 @@ public class StakeFragment extends CommonFragment
             mRefundButton.setEnabled(false);
         }
 
-        if (refundMax > 0) {
-            percent = refundUsed / (double) refundMax * 100;
+        if (totalStakedEos > 0) {
+            percent = refundUsed / (double) totalStakedEos * 100;
         } else {
             percent = 0d;
         }
         String strRefundUsed = Utils.formatBalanceWithEOSSymbol(refundUsed);
-        String strRefundMax = Utils.formatBalanceWithEOSSymbol(refundMax);
+        String strRefundMax = Utils.formatBalanceWithEOSSymbol(totalStakedEos);
         SpannableString resultStr = new SpannableString(strRefundUsed + " / " + strRefundMax);
         resultStr.setSpan(
                 new ForegroundColorSpan(getContext().getResources().getColor(R.color.stake_resource_refunding_color)),
@@ -257,7 +256,7 @@ public class StakeFragment extends CommonFragment
 
     @OnClick(R.id.btn_stake)
     public void onClickStake() {
-        StakeDialog dialog = new StakeDialog(getContext(), useableBalance);
+        StakeDialog dialog = new StakeDialog(getContext(), availableStakeEos);
         dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
             @Override
             public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
@@ -275,7 +274,7 @@ public class StakeFragment extends CommonFragment
     @OnClick(R.id.btn_unstake)
     public void onClickUnStake() {
         //TODO unStake
-        StakeDialog dialog = new StakeDialog(getContext(), stakingCpu + stakingNetwork);
+        StakeDialog dialog = new StakeDialog(getContext(), totalStakedEos);
         dialog.setStakeDialogCallback(new StakeDialog.StakeDialogCallback() {
             @Override
             public void onConfirm(String to, double cpuStake, double netStake, boolean isTransfer) {
