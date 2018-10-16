@@ -11,18 +11,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.roundcornerprogressbar.RoundCornerProgressBar;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.inject.Inject;
 
 import app.eospocket.android.R;
 import app.eospocket.android.common.CommonFragment;
 import app.eospocket.android.eos.model.account.EosAccount;
+import app.eospocket.android.eos.model.account.Refund;
 import app.eospocket.android.ui.main.MainNavigationFragment;
 import app.eospocket.android.utils.Utils;
 import app.eospocket.android.wallet.LoginAccountManager;
@@ -34,6 +39,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StakeFragment extends CommonFragment
         implements MainNavigationFragment, StakeView, SwipeRefreshLayout.OnRefreshListener {
+
+    private static final String REFUND_REQUEST_TIME_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     @Inject
     StakePresenter mStakePresenter;
@@ -72,6 +79,13 @@ public class StakeFragment extends CommonFragment
     TextView mTxtRamPercent;
     RoundCornerProgressBar mRamProgress;
 
+    @BindView(R.id.layout_refund)
+    View mParentRefund;
+    TextView mRefundDesc;
+    TextView mRefundPercent;
+    RoundCornerProgressBar mRefundProgress;
+    Button mRefundButton;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -106,6 +120,15 @@ public class StakeFragment extends CommonFragment
         mTxtRamPercent = mParentRamStake.findViewById(R.id.txt_percentage);
         mRamProgress = mParentRamStake.findViewById(R.id.progress);
         mRamProgress.setProgressColor(getResources().getColor(R.color.stake_resource_ram_color));
+
+        ((TextView) mParentRefund.findViewById(R.id.txt_title)).setText("Refund");
+        mRefundDesc = mParentRefund.findViewById(R.id.txt_desc);
+        mRefundPercent = mParentRefund.findViewById(R.id.txt_percentage);
+        mRefundProgress = mParentRefund.findViewById(R.id.progress);
+        mRefundButton = mParentRefund.findViewById(R.id.feature_button);
+        mRefundButton.setVisibility(View.VISIBLE);
+        mRefundButton.setText("REQUEST");
+        mRefundProgress.setProgressColor(getResources().getColor(R.color.stake_resource_refunding_color));
     }
 
     @Override
@@ -116,7 +139,8 @@ public class StakeFragment extends CommonFragment
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                         eosAccountModel -> mStakePresenter.loadEosAccount(eosAccountModel.getName()),
-                        t -> {}
+                        t -> {
+                        }
                 );
     }
 
@@ -153,7 +177,7 @@ public class StakeFragment extends CommonFragment
         mNetworkDesc.setText(getStakeResouceDesc(eosAccount.netLimit.used, eosAccount.netLimit.max, "bytes", R.color.stake_resource_network_color));
         mRamDesc.setText(getStakeResouceDesc(eosAccount.ramUsage, eosAccount.ramQuota, "KiB", R.color.stake_resource_ram_color));
 
-        DecimalFormat decimalFormat = new DecimalFormat(".##");
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
         double percent = eosAccount.cpuLimit.used / (double) eosAccount.cpuLimit.max * 100;
         mTxtCpuPercent.setText(decimalFormat.format(percent) + "%");
@@ -167,11 +191,51 @@ public class StakeFragment extends CommonFragment
         mTxtRamPercent.setText(decimalFormat.format(percent) + "%");
         mRamProgress.setProgress((float) percent);
 
+        //Bind refund resource
+        Refund refund = eosAccount.refundRequest;
+        float refundUsed = 0f;
+        float refundMax = stakingCpu + stakingNetwork;
+        if (refund != null) {
+            float cpuUsedAmount = Float.parseFloat(refund.cpu_amount.split(" ")[0]);
+            float netUsedAmount = Float.parseFloat(refund.net_amount.split(" ")[0]);
+            refundUsed = cpuUsedAmount + netUsedAmount;
+
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(REFUND_REQUEST_TIME_DATE_FORMAT);
+                Date requestDate = dateFormat.parse(refund.request_time);
+                mRefundButton.setEnabled(requestDate.getTime() < System.currentTimeMillis());
+            } catch (ParseException e) {
+                mRefundButton.setEnabled(false);
+                e.printStackTrace();
+            }
+
+        } else {
+            mRefundButton.setEnabled(false);
+        }
+
+        if (refundMax > 0) {
+            percent = refundUsed / (double) refundMax * 100;
+        } else {
+            percent = 0d;
+        }
+        String strRefundUsed = Utils.formatBalanceWithEOSSymbol(refundUsed);
+        String strRefundMax = Utils.formatBalanceWithEOSSymbol(refundMax);
+        SpannableString resultStr = new SpannableString(strRefundUsed + " / " + strRefundMax);
+        resultStr.setSpan(
+                new ForegroundColorSpan(getContext().getResources().getColor(R.color.stake_resource_refunding_color)),
+                0,
+                strRefundUsed.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        );
+
+        mRefundDesc.setText(resultStr);
+        mRefundPercent.setText(decimalFormat.format(percent) + "%");
+        mRefundProgress.setProgress((float) percent);
+
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private Spannable getStakeResouceDesc(long used, long max, String unit, int strColor) {
-
         String strUsed = used + " " + unit;
         String strMax = max + " " + unit;
 
