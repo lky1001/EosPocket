@@ -41,6 +41,7 @@ import io.reactivex.schedulers.Schedulers;
 public class StakeFragment extends CommonFragment
         implements MainNavigationFragment, StakeView, SwipeRefreshLayout.OnRefreshListener {
 
+    private static final long REFUND_AVAILABLE_DAY = 1000 * 60 * 60 * 24 * 3;
     private static final String REFUND_REQUEST_TIME_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
     @Inject
@@ -205,7 +206,8 @@ public class StakeFragment extends CommonFragment
             try {
                 SimpleDateFormat dateFormat = new SimpleDateFormat(REFUND_REQUEST_TIME_DATE_FORMAT);
                 Date requestDate = dateFormat.parse(refund.request_time);
-                mRefundButton.setEnabled(requestDate.getTime() < System.currentTimeMillis());
+                mRefundButton.setEnabled(requestDate.getTime() + REFUND_AVAILABLE_DAY
+                        < System.currentTimeMillis());
             } catch (ParseException e) {
                 mRefundButton.setEnabled(false);
                 e.printStackTrace();
